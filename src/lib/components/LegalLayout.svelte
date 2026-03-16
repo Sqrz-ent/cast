@@ -7,21 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </svelte:head>
 
-<!-- ── NAV ──────────────────────────────────────────────────────── -->
-<nav>
-  <a href="/" class="logo">SQRZ</a>
-  <div class="nav-links">
-    <a href="/grow" class="nav-link">Grow</a>
-    <a href="/studio" class="nav-link">Cast</a>
-    <a href="/blog" class="nav-link">Blog</a>
-    <a href="https://jobs.sqrz.com" class="nav-link">Jobs</a>
-  </div>
-  <div class="nav-actions">
-    <a href="/login" class="btn-ghost">Log In</a>
-    <a href="/signup" class="btn-primary">Join SQRZ</a>
-  </div>
-</nav>
-
 <!-- ── CONTENT ───────────────────────────────────────────────────── -->
 <main>
   <div class="container">
@@ -29,22 +14,6 @@
   </div>
 </main>
 
-<!-- ── FOOTER ────────────────────────────────────────────────────── -->
-<footer>
-  <div class="footer-container footer-inner">
-    <a href="/" class="footer-logo">SQRZ</a>
-    <nav class="footer-nav">
-      <a href="/studio">Cast</a>
-      <a href="/grow">Grow</a>
-      <a href="/blog">Blog</a>
-      <a href="https://jobs.sqrz.com">Jobs</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/cookies">Cookies</a>
-    </nav>
-    <p class="footer-copy">© {new Date().getFullYear()} SQRZ Enterprises Inc.</p>
-  </div>
-</footer>
 
 <style>
   :global(*, *::before, *::after) { box-sizing: border-box; margin: 0; padding: 0; }
@@ -66,80 +35,10 @@
     --radius-btn:  999px;
   }
 
-  /* ── NAV ──────────────────────────────────────────────────────── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    height: 64px;
-    background: rgba(17,17,17,0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: 0.06em;
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 32px;
-  }
-
-  .nav-link {
-    font-size: 0.82rem;
-    color: var(--mid);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: color 0.2s;
-  }
-  .nav-link:hover { color: var(--white); }
-
-  .nav-actions { display: flex; align-items: center; gap: 12px; }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--dark);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border: none;
-    border-radius: var(--radius-btn);
-    padding: 10px 22px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity 0.2s;
-    display: inline-block;
-  }
-  .btn-primary:hover { opacity: 0.88; }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--mid);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: var(--radius-btn);
-    padding: 10px 22px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: border-color 0.2s, color 0.2s;
-    display: inline-block;
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
 
   /* ── MAIN ─────────────────────────────────────────────────────── */
   main {
-    padding: 120px 0 100px;
+    padding: 80px 0 100px;
     min-height: 100vh;
     background: #ffffff;
   }
@@ -237,46 +136,6 @@
     margin: 40px 0;
   }
 
-  /* ── FOOTER ───────────────────────────────────────────────────── */
-  footer {
-    background: #111111;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 48px 0;
-  }
-
-  .footer-container {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
-
-  .footer-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-
-  .footer-logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .footer-nav { display: flex; gap: 24px; flex-wrap: wrap; }
-  .footer-nav a {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.3);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .footer-nav a:hover { color: #ffffff; }
-
-  .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.18); }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────── */
   @media (max-width: 900px) {

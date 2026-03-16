@@ -1,0 +1,191 @@
+<script>
+  import { slide } from 'svelte/transition';
+
+  const faqs = [
+    {
+      q: 'Is SQRZ Grow a subscription?',
+      a: 'No. SQRZ Grow is a time-limited growth program. Pro plans run 3–6 months. Starter plans can be cancelled monthly.',
+    },
+    {
+      q: 'Who is SQRZ Grow for?',
+      a: 'Independent professionals who already take their work seriously and want consistent, higher-quality opportunities.',
+    },
+    {
+      q: 'What am I actually investing in?',
+      a: 'A complete growth system: profile, tracking, campaigns, and booking infrastructure — not just ads.',
+    },
+    {
+      q: 'What ad budget do you recommend?',
+      a: 'Budgets depend on industry and offer value. For most professionals, we recommend $200–500/month in controlled growth cycles.',
+    },
+    {
+      q: 'How long should campaigns run?',
+      a: 'SQRZ Grow operates in waves — define, activate, measure, refine. The goal isn\'t short bursts of traffic or vanity metrics.',
+    },
+    {
+      q: 'Do you guarantee bookings?',
+      a: 'No. We don\'t promise outcomes we can\'t control — we build systems that increase the probability of real demand over time.',
+    },
+    {
+      q: 'How does the booking wallet work?',
+      a: 'Each booking runs through its own structured wallet, with deposits processed via Stripe and assigned to that project. Funds can be allocated and released according to agreed terms, including team payments.',
+    },
+    {
+      q: 'Who holds the funds?',
+      a: 'All payments are processed securely through Stripe under its regulatory framework. SQRZ provides the booking structure — not custody of funds.',
+    },
+  ];
+
+  const col1 = faqs.slice(0, 4);
+  const col2 = faqs.slice(4);
+
+  let openIndex = $state(null);
+
+  function toggle(i) {
+    openIndex = openIndex === i ? null : i;
+  }
+</script>
+
+<section class="faq-section">
+  <div class="container">
+    <p class="section-tag">FAQ</p>
+    <h2 class="section-headline centered">Common<br><em>questions</em></h2>
+    <div class="faq-grid">
+      {#each [col1, col2] as col, colIdx}
+        <div class="faq-list">
+          {#each col as faq, rowIdx}
+            {@const i = colIdx * 4 + rowIdx}
+            <div class="faq-item" class:open={openIndex === i}>
+              <button class="faq-question" onclick={() => toggle(i)} aria-expanded={openIndex === i}>
+                <span class="q-text">{faq.q}</span>
+                <span class="faq-arrow" class:rotated={openIndex === i}>›</span>
+              </button>
+              {#if openIndex === i}
+                <div class="faq-answer" transition:slide={{ duration: 240 }}>
+                  <p>{faq.a}</p>
+                </div>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section {
+    background: #111111;
+    padding: 100px 0 120px;
+  }
+
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .section-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #F5A623;
+    text-align: center;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .section-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 8px 0 56px;
+  }
+  .section-headline.centered { text-align: center; }
+  .section-headline em { font-style: normal; color: #F5A623; }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .faq-item {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+  }
+  .faq-item.open {
+    border-color: rgba(245,166,35,0.3);
+  }
+
+  .faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 24px;
+    background: rgba(255,255,255,0.03);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+  }
+  .faq-question:hover { background: rgba(255,255,255,0.05); }
+  .faq-item.open .faq-question { background: rgba(245,166,35,0.06); }
+
+  .q-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #F5A623;
+    line-height: 1.4;
+  }
+
+  .faq-arrow {
+    font-size: 1.4rem;
+    color: rgba(245,166,35,0.5);
+    flex-shrink: 0;
+    line-height: 1;
+    transition: transform 0.25s ease, color 0.2s;
+    display: inline-block;
+    transform: rotate(90deg);
+  }
+  .faq-arrow.rotated {
+    transform: rotate(270deg);
+    color: #F5A623;
+  }
+
+  .faq-answer {
+    padding: 0 24px 22px;
+    background: rgba(245,166,35,0.04);
+  }
+
+  .faq-answer p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.8;
+    padding-top: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .faq-grid { grid-template-columns: 1fr; }
+    .container { padding: 0 24px; }
+  }
+</style>

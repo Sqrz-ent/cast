@@ -1,23 +1,39 @@
+<script>
+  import { createClient } from '@supabase/supabase-js';
+  import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
+
+  const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+
+  let username = $state('');
+  let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
+  let debounceTimer;
+
+  function onInput(e) {
+    username = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+    status = 'idle';
+    clearTimeout(debounceTimer);
+    if (username.length < 3) return;
+    status = 'checking';
+    debounceTimer = setTimeout(checkUsername, 500);
+  }
+
+  async function checkUsername() {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('slug')
+      .eq('slug', username)
+      .maybeSingle();
+    if (error) { status = 'idle'; return; }
+    status = data ? 'taken' : 'available';
+  }
+</script>
+
 <svelte:head>
   <title>SQRZ — The LinkInBio That Gets You Booked</title>
   <meta name="description" content="One professional profile to promote your work, manage bookings, and secure payments with clarity and trust.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
-
-<!-- ── NAV ──────────────────────────────────────────────────────── -->
-<nav>
-  <a href="/" class="logo">SQRZ</a>
-  <div class="nav-links">
-    <a href="/grow" class="nav-link">Grow</a>
-    <a href="/studio" class="nav-link">Cast</a>
-    <a href="https://jobs.sqrz.com" class="nav-link">Jobs</a>
-  </div>
-  <div class="nav-actions">
-    <a href="/login" class="btn-ghost">Log In</a>
-    <a href="/signup" class="btn-primary">Join SQRZ</a>
-  </div>
-</nav>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
 <section class="hero">
@@ -29,9 +45,36 @@
         One professional profile to promote your work, manage bookings,
         and secure payments with clarity and trust.
       </p>
-      <div class="hero-btns">
-        <button class="btn-primary btn-lg">Join SQRZ — It's Free</button>
-        <button class="btn-outline btn-lg">See How It Works</button>
+      <!-- Username availability checker -->
+      <div class="username-checker">
+        <div class="username-input-row">
+          <input
+            type="text"
+            class="username-input"
+            placeholder="yourname"
+            value={username}
+            oninput={onInput}
+            maxlength="30"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
+          <span class="username-suffix">.sqrz.com</span>
+        </div>
+        <div class="username-feedback" aria-live="polite">
+          {#if status === 'checking'}
+            <span class="status-checking">Checking…</span>
+          {:else if status === 'taken'}
+            <span class="status-taken">Already taken</span>
+          {:else if status === 'available'}
+            <a href="https://sqrz.com/dashboard" class="status-available">
+              {username}.sqrz.com is available! →
+            </a>
+          {:else if username.length > 0 && username.length < 3}
+            <span class="status-hint">At least 3 characters</span>
+          {/if}
+        </div>
       </div>
     </div>
     <div class="hero-visual">
@@ -277,22 +320,6 @@
   </div>
 </section>
 
-<!-- ── FOOTER ────────────────────────────────────────────────────── -->
-<footer>
-  <div class="container footer-inner">
-    <a href="/" class="footer-logo">SQRZ</a>
-    <nav class="footer-nav">
-      <a href="/studio">Cast</a>
-      <a href="/grow">Grow</a>
-      <a href="/blog">Blog</a>
-      <a href="https://jobs.sqrz.com">Jobs</a>
-      <a href="/privacy">Privacy</a>
-      <a href="/terms">Terms</a>
-      <a href="/cookies">Cookies</a>
-    </nav>
-    <p class="footer-copy">© {new Date().getFullYear()} SQRZ Enterprises Inc.</p>
-  </div>
-</footer>
 
 <style>
   /* ── RESET & BASE ───────────────────────────────────────────────── */
@@ -330,50 +357,6 @@
     padding: 0 40px;
   }
 
-  /* ── NAV ────────────────────────────────────────────────────────── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
-    height: 64px;
-    background: rgba(17,17,17,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: 0.06em;
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 32px;
-  }
-
-  .nav-link {
-    font-size: 0.82rem;
-    font-weight: 400;
-    color: var(--mid);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    transition: color 0.2s;
-  }
-  .nav-link:hover { color: var(--white); }
-
-  .nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
 
   /* ── BUTTONS ────────────────────────────────────────────────────── */
   .btn-primary {
@@ -520,7 +503,7 @@
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
     background: var(--dark);
-    padding: 160px 0 100px;
+    padding: 100px 0 100px;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -546,6 +529,85 @@
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
+  }
+
+  /* ── USERNAME CHECKER ───────────────────────────────────────────── */
+  .username-checker {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .username-input-row {
+    display: flex;
+    align-items: stretch;
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-btn);
+    overflow: hidden;
+    transition: border-color 0.2s;
+    max-width: 380px;
+  }
+  .username-input-row:focus-within {
+    border-color: var(--accent);
+  }
+
+  .username-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 13px 16px 13px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--white);
+    min-width: 0;
+  }
+  .username-input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .username-suffix {
+    display: flex;
+    align-items: center;
+    padding: 0 18px 0 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .username-feedback {
+    min-height: 20px;
+    padding-left: 4px;
+  }
+
+  .status-checking {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.04em;
+  }
+
+  .status-taken {
+    font-size: 0.82rem;
+    color: #e05252;
+    font-weight: 400;
+  }
+
+  .status-available {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .status-available:hover { opacity: 0.8; }
+
+  .status-hint {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.25);
   }
 
   .hero-img {
@@ -832,48 +894,6 @@
     color: rgba(0,0,0,0.25);
   }
 
-  /* ── FOOTER ─────────────────────────────────────────────────────── */
-  footer {
-    background: #0a0a0a;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 48px 0;
-  }
-
-  .footer-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-
-  .footer-logo {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .footer-nav {
-    display: flex;
-    gap: 28px;
-    flex-wrap: wrap;
-  }
-
-  .footer-nav a {
-    font-size: 0.82rem;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .footer-nav a:hover { color: var(--white); }
-
-  .footer-copy {
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.18);
-  }
 
   /* ── RESPONSIVE ─────────────────────────────────────────────────── */
   @media (max-width: 900px) {
