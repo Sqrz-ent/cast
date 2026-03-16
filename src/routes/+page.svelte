@@ -1,994 +1,903 @@
-<script>
-  import { onMount, onDestroy } from 'svelte';
-  import { tweened } from 'svelte/motion';
-  import { cubicInOut, quintOut } from 'svelte/easing';
-
-  // ── SECTION DEFINITIONS ──────────────────────────────────────────
-  const sections = [
-    {
-      id: 'studio',
-      label: 'The Studio',
-      corner: 'tl',
-      scrollAxis: 'x',
-      scrollDir: 1,
-      color: '#1a1f2e',
-      accent: 'rgba(140,180,255,0.15)',
-      canvasMode: 'grid',
-    },
-    {
-      id: 'house',
-      label: 'The Residence',
-      corner: 'tr',
-      scrollAxis: 'y',
-      scrollDir: 1,
-      color: '#1e1a14',
-      accent: 'rgba(200,169,110,0.15)',
-      canvasMode: 'organic',
-    },
-    {
-      id: 'will',
-      label: 'The Producer',
-      corner: 'bl',
-      scrollAxis: 'y',
-      scrollDir: -1,
-      color: '#0f1a0f',
-      accent: 'rgba(100,200,120,0.1)',
-      canvasMode: 'pulse',
-    },
-    {
-      id: 'label',
-      label: 'The Label',
-      corner: 'br',
-      scrollAxis: 'x',
-      scrollDir: -1,
-      color: '#1a0f1a',
-      accent: 'rgba(180,120,220,0.12)',
-      canvasMode: 'lines',
-    },
-  ];
-
-  // ── STATE ─────────────────────────────────────────────────────────
-  let active = 0;             // index of active section
-  let transitioning = false;
-  let canvas;
-  let animFrame;
-  let hoveredCorner = null;
-
-  // Tweened background color
-  const bgColor = tweened(0, { duration: 700, easing: cubicInOut });
-
-  // Panel transform state for wipe animation
-  let wipeFrom = null;        // corner the wipe starts from
-  let wipeProgress = tweened(0, { duration: 600, easing: quintOut });
-  let showWipe = false;
-
-  // ── CORNER → SECTION INDEX ────────────────────────────────────────
-  const cornerIndex = { tl: 0, tr: 1, bl: 2, br: 3 };
-
-  // Corner positions in CSS (for the indicator squares)
-  const cornerPos = {
-    tl: { top: '24px',  left: '24px'  },
-    tr: { top: '24px',  right: '24px' },
-    bl: { bottom: '24px', left: '24px' },
-    br: { bottom: '24px', right: '24px' },
-  };
-
-  // Wipe origin in clip-path terms
-  const wipeOrigin = {
-    tl: '0% 0%',
-    tr: '100% 0%',
-    bl: '0% 100%',
-    br: '100% 100%',
-  };
-
-  // ── NAVIGATE ──────────────────────────────────────────────────────
-  async function navigate(toIndex) {
-     {
-  if (toIndex === active || transitioning) return;
-  transitioning = true;
-  wipeFrom = sections[toIndex].corner;
-  showWipe = true;
-  wipeProgress.set(0, { duration: 0 });
-
-  // Pre-scroll the target panel BEFORE it becomes visible
-  const panel = document.querySelectorAll('.panel')[toIndex];
-  if (panel) {
-    const section = sections[toIndex];
-    if (section.scrollDir === -1) {
-      if (section.scrollAxis === 'y') {
-        panel.scrollTop = panel.scrollHeight;
-      } else {
-        panel.scrollLeft = panel.scrollWidth;
-      }
-    } else {
-      panel.scrollTop = 0;
-      panel.scrollLeft = 0;
-    }
-  }
-
-  await wipeProgress.set(1, { duration: 650, easing: quintOut });
-  active = toIndex;
-  showWipe = false;
-  wipeProgress.set(0, { duration: 0 });
-  transitioning = false;
-}
-
-    // Scroll reversed panels to their end position after transition
-setTimeout(() => {
-  const panel = document.querySelectorAll('.panel')[toIndex];
-  if (!panel) return;
-  const section = sections[toIndex];
-  if (section.scrollDir === -1) {
-    if (section.scrollAxis === 'y') {
-      panel.scrollTop = panel.scrollHeight;
-    } else {
-      panel.scrollLeft = panel.scrollWidth;
-    }
-  } else {
-    // Always reset forward-scrolling panels to the start
-    panel.scrollTop = 0;
-    panel.scrollLeft = 0;
-  }
-}, 50);
-  }
-
-  // ── KEYBOARD NAV ──────────────────────────────────────────────────
-  const keyMap = {
-    ArrowLeft:  { tl: null, tr: 'tl', bl: null, br: 'bl' },
-    ArrowRight: { tl: 'tr', tr: null, bl: 'br', br: null },
-    ArrowUp:    { tl: null, tr: null, bl: 'tl', br: 'tr' },
-    ArrowDown:  { tl: 'bl', tr: 'br', bl: null, br: null },
-  };
-
-  function handleKey(e) {
-    if (!keyMap[e.key]) return;
-    const current = sections[active].corner;
-    const target = keyMap[e.key][current];
-    if (target !== null && target !== undefined) {
-      navigate(cornerIndex[target]);
-    }
-  }
-
-  // ── GENERATIVE CANVAS ─────────────────────────────────────────────
-  let ctx;
-  let W, H;
-  let particles = [];
-  let time = 0;
-
-  function initParticles() {
-    particles = Array.from({ length: 80 }, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      size: Math.random() * 1.5 + 0.3,
-      opacity: Math.random() * 0.4 + 0.1,
-      phase: Math.random() * Math.PI * 2,
-    }));
-  }
-
-  function drawCanvas() {
-    if (!ctx) return;
-    ctx.clearRect(0, 0, W, H);
-    time += 0.008;
-    const mode = sections[active].canvasMode;
-    const accent = sections[active].accent;
-
-    if (mode === 'grid') {
-      // Precise grid lines that shimmer
-      ctx.strokeStyle = 'rgba(140,180,255,0.04)';
-      ctx.lineWidth = 1;
-      const spacing = 60;
-      for (let x = 0; x < W; x += spacing) {
-        ctx.globalAlpha = 0.3 + 0.2 * Math.sin(time + x * 0.01);
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-      }
-      for (let y = 0; y < H; y += spacing) {
-        ctx.globalAlpha = 0.3 + 0.2 * Math.sin(time + y * 0.01);
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
-
-    } else if (mode === 'organic') {
-      // Warm floating orbs
-      for (let i = 0; i < 5; i++) {
-        const x = W * (0.2 + 0.6 * Math.sin(time * 0.3 + i * 1.3));
-        const y = H * (0.2 + 0.6 * Math.cos(time * 0.2 + i * 0.9));
-        const r = 80 + 40 * Math.sin(time + i);
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-        grad.addColorStop(0, `rgba(200,169,110,${0.06 + 0.02 * Math.sin(time + i)})`);
-        grad.addColorStop(1, 'transparent');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-    } else if (mode === 'pulse') {
-      // Rhythmic concentric rings from center
-      const cx = W / 2, cy = H / 2;
-      for (let i = 0; i < 8; i++) {
-        const r = ((time * 60 + i * 80) % (Math.max(W, H))) ;
-        const alpha = Math.max(0, 0.12 - r / (Math.max(W, H) * 1.2));
-        ctx.strokeStyle = `rgba(100,200,120,${alpha})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-
-    } else if (mode === 'lines') {
-      // Diagonal lines moving left
-      ctx.strokeStyle = 'rgba(180,120,220,0.05)';
-      ctx.lineWidth = 1;
-      const offset = (time * 30) % 80;
-      for (let x = -H + offset; x < W + H; x += 80) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x + H, H);
-        ctx.stroke();
-      }
-    }
-
-    // Shared particles
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.x < 0) p.x = W;
-      if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H;
-      if (p.y > H) p.y = 0;
-      const pulse = p.opacity * (0.7 + 0.3 * Math.sin(time * 2 + p.phase));
-      ctx.fillStyle = `rgba(255,255,255,${pulse})`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-    });
-
-    animFrame = requestAnimationFrame(drawCanvas);
-  }
-
-  // ── LIFECYCLE ─────────────────────────────────────────────────────
-  onMount(() => {
-    ctx = canvas.getContext('2d');
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    initParticles();
-    drawCanvas();
-
-    const resize = () => {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      initParticles();
-    };
-    window.addEventListener('resize', resize);
-    window.addEventListener('keydown', handleKey);
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('keydown', handleKey);
-    };
-  });
-
-  onDestroy(() => {
-    if (animFrame) cancelAnimationFrame(animFrame);
-  });
-
-  // ── DERIVED ───────────────────────────────────────────────────────
-  $: current = sections[active];
-</script>
-
 <svelte:head>
+  <title>SQRZ — The LinkInBio That Gets You Booked</title>
+  <meta name="description" content="One professional profile to promote your work, manage bookings, and secure payments with clarity and trust.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:ital@0;1&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
-<!-- ── CANVAS BACKGROUND ─────────────────────────────────────────── -->
-<canvas bind:this={canvas} class="bg-canvas"></canvas>
-
-<!-- ── BACKGROUND COLOR LAYER ────────────────────────────────────── -->
-<div
-  class="bg-color"
-  style="background: {current.color};"
-></div>
-
-<!-- ── WIPE TRANSITION ───────────────────────────────────────────── -->
-{#if showWipe}
-  <div
-    class="wipe"
-    style="
-      background: {sections[cornerIndex[wipeFrom]].color};
-      clip-path: circle({$wipeProgress * 200}% at {wipeOrigin[wipeFrom]});
-    "
-  ></div>
-{/if}
-
-<!-- ── GRAIN OVERLAY ─────────────────────────────────────────────── -->
-<div class="grain"></div>
-
-<!-- ── CORNER NAVIGATION ─────────────────────────────────────────── -->
-{#each sections as section, i}
-  {@const pos = cornerPos[section.corner]}
-  <button
-    class="corner-btn"
-    class:active={active === i}
-    class:hovered={hoveredCorner === section.corner}
-    style="
-      {pos.top    ? `top:${pos.top};`    : ''}
-      {pos.bottom ? `bottom:${pos.bottom};` : ''}
-      {pos.left   ? `left:${pos.left};`  : ''}
-      {pos.right  ? `right:${pos.right};` : ''}
-    "
-    on:click={() => navigate(i)}
-    on:mouseenter={() => hoveredCorner = section.corner}
-    on:mouseleave={() => hoveredCorner = null}
-    aria-label={section.label}
-  >
-    <div class="corner-square"></div>
-    <span class="corner-label">{section.label}</span>
-  </button>
-{/each}
-
-<!-- ── SCROLL AXIS INDICATOR ─────────────────────────────────────── -->
-<div class="axis-indicator">
-  <span class="axis-mono">{current.scrollAxis === 'x' ? (current.scrollDir > 0 ? '→' : '←') : (current.scrollDir > 0 ? '↓' : '↑')}</span>
-</div>
-
-<!-- ── SECTION PANELS ─────────────────────────────────────────────── -->
-{#each sections as section, i}
-  <div
-    class="panel"
-    class:panel-active={active === i}
-    style="overflow-{section.scrollAxis === 'x' ? 'x' : 'y'}: auto;"
-  >
-    <!-- STUDIO -->
-    {#if section.id === 'studio'}
-      <div class="panel-inner horizontal">
-        <div class="panel-block intro-block">
-          <p class="section-eyebrow mono">01 — Studio</p>
-          <h2 class="display">Where the<br><em>work</em> begins.</h2>
-          <p class="body-text">
-            A professional audio, video, and broadcast infrastructure built from years of working on stages and in studios where the standards are unforgiving. This is not a project space. It is a production environment.
-          </p>
-        </div>
-        <div class="panel-block spec-block">
-          <div class="spec-grid">
-            {#each [
-              { cat: 'Audio', items: ['Ableton Live + ClyphX', 'Algorithmic loop system', 'Multi-source mixing', 'DiGiCo-grade signal flow'] },
-              { cat: 'Video', items: ['Multi-camera production', 'Broadcast-quality output', 'Live switching', 'Post-production suite'] },
-              { cat: 'Broadcast', items: ['Full livestream rig', 'Real-time format', 'Multi-platform output', 'Permanent archive'] },
-              { cat: 'Digital', items: ['SQRZ Pages + domain', 'Pixel infrastructure', 'Booking pipeline', 'Audience data'] },
-            ] as spec}
-              <div class="spec-card">
-                <div class="spec-cat mono">{spec.cat}</div>
-                <ul>
-                  {#each spec.items as item}
-                    <li>{item}</li>
-                  {/each}
-                </ul>
-              </div>
-            {/each}
-          </div>
-        </div>
-        <div class="panel-block image-block">
-          <div class="img-placeholder tall">
-            <span class="mono img-label">Main Room · SQRZ Studio</span>
-          </div>
-          <div class="img-placeholder short">
-            <span class="mono img-label">Control Room</span>
-          </div>
-        </div>
-      </div>
-
-    <!-- HOUSE -->
-    {:else if section.id === 'house'}
-      <div class="panel-inner vertical">
-        <div class="panel-block intro-block">
-          <p class="section-eyebrow mono">02 — House</p>
-          <h2 class="display">Villa<br><em>Hasalaha.</em></h2>
-          <p class="body-text">
-            Over two hundred years ago, a farm was built in the Pfalz. Today it is the operational home of SQRZ — a creative residency where artists come to work, live, and make things that last.
-          </p>
-        </div>
-        <div class="panel-block">
-          <p class="body-text">
-            This is not a city studio. It is a deliberate counterpoint to the urban club circuit — space, silence, and time. Cast members are invited to stay. The house is large. The work happens over days, not hours.
-          </p>
-          <p class="body-text" style="margin-top: 20px;">
-            And directly next door: <strong>Plopsa Holiday Park</strong> — a global entertainment venue that stages major live productions year-round. The infrastructure of scale is already in the neighbourhood.
-          </p>
-        </div>
-        <div class="panel-block">
-          <div class="img-placeholder wide" style="height: 300px;">
-            <span class="mono img-label">Villa Hasalaha · Haßloch · Pfalz</span>
-          </div>
-        </div>
-        <div class="detail-list">
-          {#each [
-            ['Location', 'Haßloch, Rheinland-Pfalz'],
-            ['Format', 'Artist Residency · 2–5 days'],
-            ['Accommodation', 'On-site, included'],
-            ['Neighbour', 'Plopsa Holiday Park'],
-            ['History', '200+ years, same family'],
-          ] as [label, value]}
-            <div class="detail-row">
-              <span class="mono detail-label">{label}</span>
-              <span class="detail-value">{value}</span>
-            </div>
-          {/each}
-        </div>
-      </div>
-
-    <!-- WILL -->
-    {:else if section.id === 'will'}
-      <div class="panel-inner vertical-reverse">
-        <div class="panel-block intro-block" style="margin-top: auto;">
-          <p class="section-eyebrow mono">03 — The Producer</p>
-          <h2 class="display">Will<br><em>Villa.</em></h2>
-          <p class="mono producer-sub">Technical Conductor · Producer · Founder</p>
-        </div>
-        <div class="panel-block">
-          <p class="body-text">
-            Born in Medellín, raised in the Pfalz. Over twenty years operating at the intersection of music, engineering, and live production — across forty countries, on stages and in studios where the standards are unforgiving.
-          </p>
-          <p class="body-text" style="margin-top: 16px;">
-            His 2016 single <em>Curura</em>, featuring Latin Grammy Lifetime Achievement recipient <strong>Toto La Momposina</strong> and produced by <strong>Ken Lewis</strong> (Alicia Keys, BTS, Taylor Swift), was broadcast on KEXP, BBC, and Funkhaus Europa. SQRZ Cast is the infrastructure that should have existed then.
-          </p>
-        </div>
-        <div class="career-list">
-          {#each [
-            ['2016–17', 'Curura feat. Toto La Momposina — KEXP · BBC · Funkhaus Europa'],
-            ['Ongoing', 'DiGiCo Console Programmer · AIDA Cruises · 40+ countries'],
-            ['Prior',   'FOH Engineer · Toto La Momposina · European Tours'],
-            ['Prior',   'System Engineer · Ken Lewis Studio · New York'],
-            ['2023',    'Founded SQRZ GmbH · Haßloch'],
-          ] as [year, desc]}
-            <div class="career-row">
-              <span class="mono career-year">{year}</span>
-              <span class="career-desc">{desc}</span>
-            </div>
-          {/each}
-        </div>
-        <div class="panel-block">
-          <div class="img-placeholder" style="height: 280px;">
-            <span class="mono img-label">Will Villa · Haßloch · 2025</span>
-          </div>
-        </div>
-      </div>
-
-    <!-- LABEL -->
-    {:else if section.id === 'label'}
-      <div class="panel-inner horizontal-reverse">
-        <div class="panel-block intro-block">
-          <p class="section-eyebrow mono">04 — The Collaboration</p>
-          <h2 class="display">Not a label.<br><em>Better.</em></h2>
-          <p class="body-text">
-            A traditional label brings money and distribution. What it has never been able to bring is permanent digital infrastructure — the kind that builds audience, captures data, and compounds over time.
-          </p>
-        </div>
-        <div class="panel-block">
-          <div class="three-party">
-            {#each [
-              { who: 'The Artist', brings: 'Talent & presence. You bring the craft — the voice, the instrument, the instinct. The rest gets built.' },
-              { who: 'Will Villa', brings: 'Production & direction. Twenty years of international work brought to bear on your specific project.' },
-              { who: 'SQRZ', brings: 'Infrastructure & momentum. Pages, pixels, booking pipeline, audience data. Built from day one.' },
-            ] as party}
-              <div class="party-card">
-                <div class="mono party-who">{party.who}</div>
-                <p class="party-brings">{party.brings}</p>
-              </div>
-            {/each}
-          </div>
-        </div>
-        <div class="panel-block closing-block">
-          <h3 class="display closing-title">If you're reading<br>this, you already<br>know <em>why.</em></h3>
-          <div class="closing-line"></div>
-          <p class="body-text closing-note">
-            SQRZ Cast is not open for applications. Collaborations begin when there is genuine creative alignment. That is a conversation, not a process.
-          </p>
-          <a href="/cdn-cgi/l/email-protection#abc8cad8dfebd8dad9d185c8c4c6" class="contact-email mono"><span class="__cf_email__" data-cfemail="4c2f2d3f380c3f3d3e36622f2321">[email&#160;protected]</span></a>
-          <p class="mono contact-note">No forms. No pitches. Just a conversation.</p>
-        </div>
-      </div>
-    {/if}
+<!-- ── NAV ──────────────────────────────────────────────────────── -->
+<nav>
+  <a href="/" class="logo">SQRZ</a>
+  <div class="nav-links">
+    <a href="/grow" class="nav-link">Grow</a>
+    <a href="/studio" class="nav-link">Cast</a>
+    <a href="https://jobs.sqrz.com" class="nav-link">Jobs</a>
   </div>
-{/each}
+  <div class="nav-actions">
+    <a href="/login" class="btn-ghost">Log In</a>
+    <a href="/signup" class="btn-primary">Join SQRZ</a>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <p class="eyebrow">Professional identity & booking</p>
+      <h1 class="display-headline">THE LINKINBIO<br>THAT GETS YOU<br><em>BOOKED</em></h1>
+      <p class="hero-sub">
+        One professional profile to promote your work, manage bookings,
+        and secure payments with clarity and trust.
+      </p>
+      <div class="hero-btns">
+        <button class="btn-primary btn-lg">Join SQRZ — It's Free</button>
+        <button class="btn-outline btn-lg">See How It Works</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <!-- Webflow image: hero profile mockup / dashboard screenshot -->
+      <div class="image-placeholder hero-img">
+        <span class="placeholder-label">Hero — Profile mockup</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 1 — Showcase ─────────────────────────────────────── -->
+<section class="feature-section light">
+  <div class="container feature-inner">
+    <div class="feature-visual">
+      <!-- Webflow image: profile page example -->
+      <div class="image-placeholder feature-img">
+        <span class="placeholder-label">Section 1 — Profile page example</span>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="section-number">01</p>
+      <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
+      <p class="body-text">
+        Create a powerful SQRZ profile and showcase your portfolio, services,
+        and availability — all in one beautiful page designed to convert
+        visitors into long-term clients. No website builder, no plugins,
+        no maintenance.
+      </p>
+      <ul class="feature-list">
+        {#each [
+          'Portfolio, services & availability in one place',
+          'Designed to convert visitors into clients',
+          'Live in minutes — no tech skills required',
+          'Your own domain, your own brand',
+        ] as item}
+          <li><span class="check">→</span>{item}</li>
+        {/each}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
+<section class="feature-section dark">
+  <div class="container feature-inner reverse">
+    <div class="feature-text">
+      <p class="section-number accent">02</p>
+      <h2 class="section-headline light-text">You Run Your<br><em>Pipeline</em></h2>
+      <p class="body-text mid-text">
+        Clients don't just message you — they enter a structured flow.
+        Scope, terms, collaboration, and payment move forward in one
+        clear system.
+      </p>
+      <ul class="feature-list dark-list">
+        {#each [
+          'Structured booking requests — no back-and-forth',
+          'Defined scope and terms before any commitment',
+          'Collaboration handled inside one workflow',
+          'Payments move with the project',
+        ] as item}
+          <li><span class="check accent">→</span>{item}</li>
+        {/each}
+      </ul>
+    </div>
+    <div class="feature-visual">
+      <!-- Webflow image: booking pipeline / office view -->
+      <div class="image-placeholder feature-img dark-placeholder">
+        <span class="placeholder-label">Section 2 — Booking pipeline view</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 3 — Get Paid ──────────────────────────────────────── -->
+<section class="feature-section light">
+  <div class="container feature-inner">
+    <div class="feature-visual">
+      <!-- Webflow image: payment / wallet interface -->
+      <div class="image-placeholder feature-img">
+        <span class="placeholder-label">Section 3 — Payment / wallet UI</span>
+      </div>
+    </div>
+    <div class="feature-text">
+      <p class="section-number">03</p>
+      <h2 class="section-headline">SQRZ Gets<br><em>You Paid</em></h2>
+      <p class="body-text">
+        Focus on your work, not your invoices. From first request to
+        secured deposit, budget allocation, and team payments — SQRZ
+        handles the operational flow, so you can focus on delivering
+        great work.
+      </p>
+      <ul class="feature-list">
+        {#each [
+          'Deposits secured before work begins',
+          'Budget allocated across the team',
+          'Payments released on delivery',
+          'No chasing, no awkward conversations',
+        ] as item}
+          <li><span class="check">→</span>{item}</li>
+        {/each}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHO IS SQRZ FOR ───────────────────────────────────────────── -->
+<section class="audience-section dark">
+  <div class="container">
+    <p class="section-tag">Who Is SQRZ For?</p>
+    <h2 class="section-headline light-text centered">Built for people who<br><em>do serious work</em></h2>
+    <div class="audience-grid">
+      {#each [
+        {
+          type: 'Independent Professionals',
+          body: 'Turn your skills into a clear, bookable offer. Receive structured requests and secure payments — without juggling tools.',
+        },
+        {
+          type: 'Growth-Focused Creatives',
+          body: 'Move beyond one-off gigs. Build demand, attract the right clients, and turn attention into structured, repeatable work.',
+        },
+        {
+          type: 'Team Leaders & Decision Makers',
+          body: 'Run projects with clarity and control. Secure deposits, allocate budgets, onboard collaborators, and release payments — all in one workflow.',
+        },
+      ] as card}
+        <div class="audience-card">
+          <div class="card-accent-line"></div>
+          <h3 class="card-title">{card.type}</h3>
+          <p class="card-body">{card.body}</p>
+        </div>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ──────────────────────────────────────────────── -->
+<section class="how-section light">
+  <div class="container">
+    <p class="section-tag dark-tag">How SQRZ Works</p>
+    <h2 class="section-headline centered">Three steps to a<br><em>complete professional</em></h2>
+    <div class="steps-grid">
+      {#each [
+        {
+          num: '01',
+          title: 'Bring Your Portfolio Together',
+          body: 'Not just links — your shows, your projects, your reputation — presented professionally in one place that represents you properly.',
+        },
+        {
+          num: '02',
+          title: 'Your Work Without the Noise',
+          body: 'Requests, deposits, and team payouts handled quietly in the background, so you stay focused on the work that matters.',
+        },
+        {
+          num: '03',
+          title: 'Your Growth on Autopilot',
+          body: 'As your career evolves, SQRZ grows with you. Focus on your craft while SQRZ turns momentum into opportunity.',
+        },
+      ] as step}
+        <div class="step">
+          <div class="step-number">{step.num}</div>
+          <h3 class="step-title">{step.title}</h3>
+          <p class="step-body">{step.body}</p>
+        </div>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ───────────────────────────────────────────────────── -->
+<section class="pricing-section dark">
+  <div class="container">
+    <p class="section-tag">Pricing</p>
+    <h2 class="section-headline light-text centered">Start free.<br><em>Scale when you're ready.</em></h2>
+    <div class="pricing-grid">
+
+      <!-- Freelancer -->
+      <div class="pricing-card">
+        <div class="plan-name">Freelancer</div>
+        <div class="plan-price">
+          <span class="price-amount">Free</span>
+        </div>
+        <p class="plan-tagline">Build Your Professional Base</p>
+        <ul class="plan-features">
+          {#each [
+            'Establish your professional presence',
+            'Bring visitors into your pipeline',
+            'All projects under your control',
+            'Do what you love & get paid for it',
+          ] as f}
+            <li><span class="feat-check">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <button class="btn-primary btn-full">Join SQRZ</button>
+      </div>
+
+      <!-- Creator -->
+      <div class="pricing-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Creator</div>
+        <div class="plan-price">
+          <span class="price-amount">$12</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="plan-tagline">Control Your Booking Pipeline</p>
+        <p class="plan-annual">or $84/year — 2 months free</p>
+        <ul class="plan-features">
+          {#each [
+            'Custom domain — own your identity',
+            'Advanced tracking — see what drives bookings',
+            'Show availability and live dates',
+            'Structured payments through booking wallet',
+          ] as f}
+            <li><span class="feat-check">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <button class="btn-primary btn-full">Join SQRZ</button>
+      </div>
+
+      <!-- Grow -->
+      <div class="pricing-card grow-card">
+        <div class="plan-name accent-text">Grow</div>
+        <div class="plan-price">
+          <span class="price-amount">$99</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="plan-tagline">Activate Your Growth Engine</p>
+        <ul class="plan-features">
+          {#each [
+            'Strategic positioning & campaign guidance',
+            'Build and retarget real audiences',
+            'An intelligence layer behind your growth',
+            'Advanced wallets with team payout control',
+          ] as f}
+            <li><span class="feat-check accent-text">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <p class="plan-note">* Ad budget not included</p>
+        <a href="/grow" class="btn-accent btn-full">Apply to Grow</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────── -->
+<footer>
+  <div class="container footer-inner">
+    <a href="/" class="footer-logo">SQRZ</a>
+    <nav class="footer-nav">
+      <a href="/studio">Cast</a>
+      <a href="/grow">Grow</a>
+      <a href="/blog">Blog</a>
+      <a href="https://jobs.sqrz.com">Jobs</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/cookies">Cookies</a>
+    </nav>
+    <p class="footer-copy">© {new Date().getFullYear()} SQRZ Enterprises Inc.</p>
+  </div>
+</footer>
 
 <style>
   /* ── RESET & BASE ───────────────────────────────────────────────── */
   :global(*, *::before, *::after) { box-sizing: border-box; margin: 0; padding: 0; }
-  :global(html, body) {
-    width: 100%; height: 100%;
-    overflow: hidden;
-    background: #0a0a0a;
+  :global(html) { scroll-behavior: smooth; }
+  :global(body) {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f5f5;
+    color: #111111;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ── VARIABLES ──────────────────────────────────────────────────── */
+  /* ── TOKENS ─────────────────────────────────────────────────────── */
   :global(:root) {
-    --gold: #c8a96e;
-    --gold-dim: rgba(200,169,110,0.3);
-    --gold-faint: rgba(200,169,110,0.08);
-    --bright: rgba(255,255,255,0.92);
-    --mid: rgba(255,255,255,0.55);
-    --muted: rgba(255,255,255,0.28);
-    --border: rgba(255,255,255,0.07);
+    --accent:       #F5A623;
+    --accent-dim:   rgba(245,166,35,0.25);
+    --accent-faint: rgba(245,166,35,0.08);
+    --dark:         #111111;
+    --dark-2:       #1a1a1a;
+    --dark-3:       #242424;
+    --light:        #F5F5F5;
+    --white:        #ffffff;
+    --mid:          rgba(255,255,255,0.55);
+    --muted:        rgba(255,255,255,0.28);
+    --border-dark:  rgba(245,166,35,0.25);
+    --border-light: rgba(0,0,0,0.08);
+    --radius-card:  12px;
+    --radius-btn:   999px;
   }
 
-  /* ── CANVAS ─────────────────────────────────────────────────────── */
-  .bg-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
+  /* ── LAYOUT ─────────────────────────────────────────────────────── */
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 40px;
   }
 
-  /* ── BG COLOR ───────────────────────────────────────────────────── */
-  .bg-color {
+  /* ── NAV ────────────────────────────────────────────────────────── */
+  nav {
     position: fixed;
-    inset: 0;
-    z-index: 1;
-    transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-  }
-
-  /* ── WIPE ───────────────────────────────────────────────────────── */
-  .wipe {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    pointer-events: none;
-    transition: none;
-  }
-
-  /* ── GRAIN ──────────────────────────────────────────────────────── */
-  .grain {
-    position: fixed;
-    inset: 0;
-    z-index: 90;
-    pointer-events: none;
-    opacity: 0.35;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
-  }
-
-  /* ── WORDMARK ───────────────────────────────────────────────────── */
-  .wordmark {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 80;
-    text-align: center;
-    pointer-events: none;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 4px;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(17,17,17,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
   }
 
-  .wordmark-sqrz {
-    font-family: 'Space Mono', monospace;
-    font-size: .7rem;
-    letter-spacing: 0.4em;
-    color: var(--muted);
+  .logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-decoration: none;
   }
 
-  .wordmark-cast {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--gold);
-    letter-spacing: 0.2em;
+  .nav-links {
+    display: flex;
+    gap: 32px;
   }
 
-  /* ── AXIS INDICATOR ─────────────────────────────────────────────── */
-  .axis-indicator {
-    position: fixed;
-    bottom: 50%;
-    right: 24px;
-    transform: translateY(50%);
-    z-index: 80;
-    pointer-events: none;
+  .nav-link {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--mid);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--white); }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
-  .axis-mono {
-    font-family: 'Space Mono', monospace;
-    font-size: 1rem;
-    color: var(--muted);
-    opacity: 0.5;
-  }
-
-  /* ── CORNER BUTTONS ─────────────────────────────────────────────── */
-  .corner-btn {
-    position: fixed;
-    z-index: 100;
-    background: none;
+  /* ── BUTTONS ────────────────────────────────────────────────────── */
+  .btn-primary {
+    background: var(--accent);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
     border: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    cursor: none;
+    border-radius: var(--radius-btn);
+    padding: 10px 22px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+    display: inline-block;
   }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
 
-  /* Corner positioning handled by style attribute */
-
-  /* Flip label direction per corner */
-  .corner-btn:nth-child(2),
-  .corner-btn:nth-child(4) {
-    align-items: flex-end;
+  .btn-ghost {
+    background: transparent;
+    color: var(--mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-btn);
+    padding: 10px 22px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
   }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
 
-  .corner-square {
-    width: 14px;
-    height: 14px;
-    border: 1.5px solid var(--muted);
-    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+  .btn-outline {
+    background: transparent;
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    border: 1.5px solid rgba(0,0,0,0.2);
+    border-radius: var(--radius-btn);
+    padding: 12px 28px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    display: inline-block;
   }
+  .btn-outline:hover { border-color: rgba(0,0,0,0.5); }
 
-  .corner-btn.active .corner-square {
-    background: var(--gold);
-    border-color: var(--gold);
-    transform: rotate(45deg) scale(1.1);
+  .btn-accent {
+    background: transparent;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1.5px solid var(--accent);
+    border-radius: var(--radius-btn);
+    padding: 12px 28px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+    text-align: center;
   }
+  .btn-accent:hover { background: var(--accent); color: var(--dark); }
 
-  .corner-btn.hovered:not(.active) .corner-square {
-    border-color: rgba(255,255,255,0.5);
-    transform: rotate(45deg);
-  }
-
-  .corner-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.55rem;
-    letter-spacing: 0.18em;
-    color: var(--muted);
-    text-transform: uppercase;
-    transition: color 0.3s;
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 0.2s, transform 0.2s, color 0.2s;
-  }
-
-  .corner-btn.active .corner-label,
-  .corner-btn.hovered .corner-label {
-    opacity: 1;
-    transform: scale(1);
-    color: var(--gold);
-  }
-
-  /* ── PANELS ─────────────────────────────────────────────────────── */
-  .panel {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-    scrollbar-width: none;
-  }
-
-  .panel::-webkit-scrollbar { display: none; }
-
-  .panel.panel-active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* ── PANEL INNER LAYOUTS ────────────────────────────────────────── */
-  .panel-inner {
-    padding: 80px 100px;
-    min-height: 100%;
-    display: flex;
-    gap: 80px;
-  }
-
-  /* Studio — horizontal scroll right */
-  .horizontal {
-    flex-direction: row;
-    min-width: max-content;
-    align-items: flex-start;
-    padding-top: 100px;
-  }
-
-  /* House — vertical scroll down */
-  .vertical {
-    flex-direction: column;
-    min-height: max-content;
-    max-width: 800px;
-    margin: 0 auto;
-    padding-top: 120px;
-    padding-bottom: 120px;
-  }
-
-  /* Will — vertical scroll up: normal layout, starts scrolled to bottom */
-  .vertical-reverse {
-    flex-direction: column;
-    min-height: max-content;
-    max-width: 800px;
-    margin: 0 auto;
-    padding-top: 120px;
-    padding-bottom: 120px;
-  }
-
-  /* Label — horizontal scroll left: normal layout, starts scrolled to right */
-  .horizontal-reverse {
-    flex-direction: row;
-    min-width: max-content;
-    align-items: flex-start;
-    padding-top: 100px;
-  }
-
-  /* ── PANEL BLOCKS ───────────────────────────────────────────────── */
-  .panel-block {
-    flex-shrink: 0;
-    width: 400px;
-  }
-
-  .intro-block {
-    width: 380px;
-  }
-
-  .spec-block {
-    width: 600px;
-  }
-
-  .image-block {
-    width: 360px;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .closing-block {
-    width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  .btn-lg { padding: 14px 32px; font-size: 0.92rem; }
+  .btn-full { width: 100%; text-align: center; margin-top: auto; }
 
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
-  .display {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
-    font-size: clamp(48px, 6vw, 80px);
-    line-height: 1.0;
-    color: var(--bright);
+  .display-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(52px, 7vw, 96px);
+    line-height: 0.95;
     letter-spacing: -0.01em;
-  }
-
-  .display em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .mono {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
+    color: var(--white);
     text-transform: uppercase;
   }
-
-  .body-text {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 300;
-    color: var(--mid);
-    line-height: 1.85;
-    margin-top: 20px;
+  .display-headline em {
+    font-style: normal;
+    color: var(--accent);
   }
 
-  .body-text strong {
-    color: var(--bright);
-    font-weight: 400;
+  .section-headline {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--dark);
+    text-transform: uppercase;
+    margin: 8px 0 24px;
   }
+  .section-headline em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .section-headline.light-text { color: var(--white); }
+  .section-headline.centered { text-align: center; }
 
-  .section-eyebrow {
-    color: var(--gold);
+  .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
     display: block;
-    margin-bottom: 24px;
   }
 
-  /* ── SPEC GRID ──────────────────────────────────────────────────── */
-  .spec-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-  }
-
-  .spec-card {
-    background: rgba(255,255,255,0.03);
-    padding: 28px 24px;
-    border: 1px solid var(--border);
-    transition: background 0.3s;
-  }
-
-  .spec-card:hover { background: rgba(255,255,255,0.05); }
-
-  .spec-cat {
-    color: var(--gold);
+  .section-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-align: center;
     display: block;
     margin-bottom: 16px;
   }
+  .section-tag.dark-tag { color: var(--accent); }
 
-  .spec-card ul {
+  .section-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--accent-dim);
+    margin-bottom: -8px;
+  }
+  .section-number.accent { color: rgba(245,166,35,0.2); }
+
+  .body-text {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #444444;
+    margin-bottom: 28px;
+  }
+  .body-text.mid-text { color: var(--mid); }
+
+  /* ── HERO ───────────────────────────────────────────────────────── */
+  .hero {
+    background: var(--dark);
+    padding: 160px 0 100px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--mid);
+    line-height: 1.7;
+    margin: 28px 0 40px;
+    max-width: 480px;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero-img {
+    height: 560px;
+    border-radius: var(--radius-card);
+  }
+
+  /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
+  .feature-section { padding: 100px 0; }
+  .feature-section.light { background: var(--light); }
+  .feature-section.dark  { background: var(--dark-2); }
+
+  .feature-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .feature-inner.reverse { direction: rtl; }
+  .feature-inner.reverse > * { direction: ltr; }
+
+  .feature-img {
+    height: 440px;
+    border-radius: var(--radius-card);
+    width: 100%;
+  }
+
+  .dark-placeholder {
+    background: rgba(255,255,255,0.04) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+  }
+
+  .feature-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
+    margin-top: 8px;
   }
 
-  .spec-card li {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    color: var(--mid);
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
+  .feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: #444444;
+    line-height: 1.5;
   }
 
-  .spec-card li:last-child { border-bottom: none; }
+  .feature-list.dark-list li { color: var(--mid); }
 
-  /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
-  .img-placeholder {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
+  .check {
+    color: var(--accent);
+    font-family: monospace;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .check.accent { color: var(--accent); }
+
+  /* ── AUDIENCE ───────────────────────────────────────────────────── */
+  .audience-section { background: var(--dark); padding: 100px 0; }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .audience-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-card);
+    padding: 40px 32px;
     position: relative;
     overflow: hidden;
+    transition: background 0.3s;
+  }
+  .audience-card:hover { background: var(--dark-3); }
+
+  .card-accent-line {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .card-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--mid);
+    line-height: 1.75;
+  }
+
+  /* ── HOW IT WORKS ───────────────────────────────────────────────── */
+  .how-section { background: var(--light); padding: 100px 0; }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    margin-top: 64px;
+  }
+
+  .step-number {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+
+  .step-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #555;
+    line-height: 1.8;
+  }
+
+  /* ── PRICING ────────────────────────────────────────────────────── */
+  .pricing-section { background: var(--dark); padding: 100px 0 120px; }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 64px;
+    align-items: start;
+  }
+
+  .pricing-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-card);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--accent);
+    background: var(--dark-3);
+    transform: scale(1.02);
+  }
+
+  .pricing-card.grow-card {
+    border-color: rgba(245,166,35,0.4);
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--dark);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .plan-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--white);
+  }
+  .plan-name.accent-text { color: var(--accent); }
+
+  .plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin: 4px 0;
+  }
+
+  .price-amount {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 2.8rem;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .price-period {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .plan-tagline {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--mid);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .plan-annual {
+    font-size: 0.75rem;
+    color: var(--accent);
+    margin-top: -4px;
+  }
+
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 8px 0 16px;
     flex: 1;
   }
 
-  .img-placeholder.tall { flex: 2; }
-  .img-placeholder.short { flex: 1; }
-  .img-placeholder.wide { width: 100%; }
-
-  .img-label {
-    position: absolute;
-    bottom: 16px;
-    left: 16px;
-    color: var(--muted);
-    font-size: 0.55rem;
-  }
-
-  /* ── DETAIL LIST ────────────────────────────────────────────────── */
-  .detail-list {
+  .plan-features li {
     display: flex;
-    flex-direction: column;
-    gap: 1px;
-    margin-top: 40px;
-  }
-
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    transition: background 0.3s;
-  }
-
-  .detail-row:hover { background: rgba(255,255,255,0.05); }
-
-  .detail-label { color: var(--muted); }
-
-  .detail-value {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    color: var(--mid);
-  }
-
-  /* ── CAREER LIST ────────────────────────────────────────────────── */
-  .career-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    margin-top: 32px;
-    margin-bottom: 40px;
-  }
-
-  .career-row {
-    display: grid;
-    grid-template-columns: 72px 1fr;
-    gap: 20px;
-    padding: 14px 20px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    align-items: start;
-    transition: background 0.3s;
-  }
-
-  .career-row:hover { background: rgba(255,255,255,0.05); }
-
-  .career-year {
-    color: var(--gold);
-    font-size: 0.55rem;
-    padding-top: 2px;
-  }
-
-  .career-desc {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
     color: var(--mid);
     line-height: 1.5;
   }
 
-  .producer-sub {
-    color: var(--gold);
-    display: block;
-    margin-top: 12px;
-    margin-bottom: 32px;
+  .feat-check {
+    color: var(--accent);
+    flex-shrink: 0;
   }
+  .feat-check.accent-text { color: var(--accent); }
 
-  /* ── THREE PARTY ────────────────────────────────────────────────── */
-  .three-party {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .party-card {
-    padding: 28px 24px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    transition: background 0.3s;
-    position: relative;
-  }
-
-  .party-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 32px; height: 1.5px;
-    background: var(--gold);
-  }
-
-  .party-card:hover { background: rgba(255,255,255,0.05); }
-
-  .party-who {
-    color: var(--gold);
-    display: block;
-    margin-bottom: 12px;
-  }
-
-  .party-brings {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    color: var(--mid);
-    line-height: 1.7;
-  }
-
-  /* ── CLOSING ────────────────────────────────────────────────────── */
-  .closing-title {
-    font-size: clamp(32px, 4vw, 52px);
-  }
-
-  .closing-line {
-    width: 48px;
-    height: 1px;
-    background: var(--gold-dim);
-  }
-
-  .closing-note {
-    margin-top: 0;
-  }
-
-  .contact-email {
-    color: var(--gold);
-    text-decoration: none;
-    border-bottom: 1px solid var(--gold-dim);
-    padding-bottom: 3px;
-    transition: color 0.3s, border-color 0.3s;
-    font-size: 0.75rem;
-  }
-
-  .contact-email:hover {
-    color: var(--bright);
-    border-color: var(--bright);
-  }
-
-  .contact-note {
+  .plan-note {
+    font-size: 0.72rem;
     color: var(--muted);
     font-style: italic;
-    font-size: 0.6rem;
     margin-top: -8px;
+  }
+
+  .accent-text { color: var(--accent); }
+
+  /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
+  .image-placeholder {
+    background: rgba(0,0,0,0.06);
+    border: 1.5px dashed rgba(0,0,0,0.12);
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+  }
+
+  .placeholder-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.25);
+  }
+
+  /* ── FOOTER ─────────────────────────────────────────────────────── */
+  footer {
+    background: #0a0a0a;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 48px 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .footer-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .footer-nav a {
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-nav a:hover { color: var(--white); }
+
+  .footer-copy {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.18);
+  }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero-inner,
+    .feature-inner,
+    .feature-inner.reverse {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+    .hero-img { height: 320px; }
+    .feature-img { height: 280px; }
+    .audience-grid,
+    .steps-grid,
+    .pricing-grid {
+      grid-template-columns: 1fr;
+    }
+    .pricing-card.featured { transform: none; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .container { padding: 0 24px; }
+    .hero { padding: 120px 0 80px; }
+    .feature-section,
+    .audience-section,
+    .how-section,
+    .pricing-section { padding: 72px 0; }
   }
 </style>
