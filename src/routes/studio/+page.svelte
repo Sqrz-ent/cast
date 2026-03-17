@@ -280,7 +280,7 @@ setTimeout(() => {
 
 <svelte:head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Space+Mono:ital@0;1&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
 <!-- ── CANVAS BACKGROUND ─────────────────────────────────────────── -->
@@ -505,13 +505,15 @@ setTimeout(() => {
 
   /* ── VARIABLES ──────────────────────────────────────────────────── */
   :global(:root) {
-    --gold: #c8a96e;
-    --gold-dim: rgba(200,169,110,0.3);
-    --gold-faint: rgba(200,169,110,0.08);
+    --accent:       #F5A623;
+    --accent-dim:   rgba(245,166,35,0.3);
+    --accent-faint: rgba(245,166,35,0.08);
     --bright: rgba(255,255,255,0.92);
     --mid: rgba(255,255,255,0.55);
     --muted: rgba(255,255,255,0.28);
-    --border: rgba(255,255,255,0.07);
+    --border: rgba(245,166,35,0.2);
+    --border-subtle: rgba(255,255,255,0.07);
+    --radius-card: 8px;
   }
 
   /* ── CANVAS ─────────────────────────────────────────────────────── */
@@ -566,17 +568,20 @@ setTimeout(() => {
   }
 
   .wordmark-sqrz {
-    font-family: 'Space Mono', monospace;
+    font-family: 'DM Sans', sans-serif;
     font-size: .7rem;
+    font-weight: 500;
     letter-spacing: 0.4em;
+    text-transform: uppercase;
     color: var(--muted);
   }
 
   .wordmark-cast {
-    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-family: 'Barlow Condensed', sans-serif;
     font-size: 0.9rem;
-    font-style: italic;
-    color: var(--gold);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--accent);
     letter-spacing: 0.2em;
   }
 
@@ -591,8 +596,9 @@ setTimeout(() => {
   }
 
   .axis-mono {
-    font-family: 'Space Mono', monospace;
+    font-family: 'DM Sans', sans-serif;
     font-size: 1rem;
+    font-weight: 500;
     color: var(--muted);
     opacity: 0.5;
   }
@@ -627,8 +633,8 @@ setTimeout(() => {
   }
 
   .corner-btn.active .corner-square {
-    background: var(--gold);
-    border-color: var(--gold);
+    background: var(--accent);
+    border-color: var(--accent);
     transform: rotate(45deg) scale(1.1);
   }
 
@@ -638,12 +644,12 @@ setTimeout(() => {
   }
 
   .corner-label {
-    font-family: 'Space Mono', monospace;
+    font-family: 'DM Sans', sans-serif;
     font-size: 0.55rem;
+    font-weight: 500;
     letter-spacing: 0.18em;
     color: var(--muted);
     text-transform: uppercase;
-    transition: color 0.3s;
     opacity: 0;
     transform: scale(0.9);
     transition: opacity 0.2s, transform 0.2s, color 0.2s;
@@ -653,7 +659,7 @@ setTimeout(() => {
   .corner-btn.hovered .corner-label {
     opacity: 1;
     transform: scale(1);
-    color: var(--gold);
+    color: var(--accent);
   }
 
   /* ── PANELS ─────────────────────────────────────────────────────── */
@@ -748,22 +754,24 @@ setTimeout(() => {
 
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
   .display {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
     font-size: clamp(48px, 6vw, 80px);
-    line-height: 1.0;
+    line-height: 0.95;
     color: var(--bright);
     letter-spacing: -0.01em;
+    text-transform: uppercase;
   }
 
   .display em {
-    font-style: italic;
-    color: var(--gold);
+    font-style: normal;
+    color: var(--accent);
   }
 
   .mono {
-    font-family: 'Space Mono', monospace;
+    font-family: 'DM Sans', sans-serif;
     font-size: 0.65rem;
+    font-weight: 500;
     letter-spacing: 0.15em;
     text-transform: uppercase;
   }
@@ -783,7 +791,7 @@ setTimeout(() => {
   }
 
   .section-eyebrow {
-    color: var(--gold);
+    color: var(--accent);
     display: block;
     margin-bottom: 24px;
   }
@@ -799,13 +807,14 @@ setTimeout(() => {
     background: rgba(255,255,255,0.03);
     padding: 28px 24px;
     border: 1px solid var(--border);
+    border-radius: var(--radius-card);
     transition: background 0.3s;
   }
 
   .spec-card:hover { background: rgba(255,255,255,0.05); }
 
   .spec-cat {
-    color: var(--gold);
+    color: var(--accent);
     display: block;
     margin-bottom: 16px;
   }
@@ -822,7 +831,7 @@ setTimeout(() => {
     font-size: 0.82rem;
     color: var(--mid);
     padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .spec-card li:last-child { border-bottom: none; }
@@ -831,6 +840,7 @@ setTimeout(() => {
   .img-placeholder {
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
+    border-radius: var(--radius-card);
     position: relative;
     overflow: hidden;
     flex: 1;
@@ -863,6 +873,7 @@ setTimeout(() => {
     padding: 16px 20px;
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
+    border-radius: var(--radius-card);
     transition: background 0.3s;
   }
 
@@ -892,6 +903,7 @@ setTimeout(() => {
     padding: 14px 20px;
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
+    border-radius: var(--radius-card);
     align-items: start;
     transition: background 0.3s;
   }
@@ -899,7 +911,7 @@ setTimeout(() => {
   .career-row:hover { background: rgba(255,255,255,0.05); }
 
   .career-year {
-    color: var(--gold);
+    color: var(--accent);
     font-size: 0.55rem;
     padding-top: 2px;
   }
@@ -912,7 +924,7 @@ setTimeout(() => {
   }
 
   .producer-sub {
-    color: var(--gold);
+    color: var(--accent);
     display: block;
     margin-top: 12px;
     margin-bottom: 32px;
@@ -929,6 +941,7 @@ setTimeout(() => {
     padding: 28px 24px;
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--border);
+    border-radius: var(--radius-card);
     transition: background 0.3s;
     position: relative;
   }
@@ -938,13 +951,13 @@ setTimeout(() => {
     position: absolute;
     top: 0; left: 0;
     width: 32px; height: 1.5px;
-    background: var(--gold);
+    background: var(--accent);
   }
 
   .party-card:hover { background: rgba(255,255,255,0.05); }
 
   .party-who {
-    color: var(--gold);
+    color: var(--accent);
     display: block;
     margin-bottom: 12px;
   }
@@ -964,7 +977,7 @@ setTimeout(() => {
   .closing-line {
     width: 48px;
     height: 1px;
-    background: var(--gold-dim);
+    background: var(--accent-dim);
   }
 
   .closing-note {
@@ -972,9 +985,9 @@ setTimeout(() => {
   }
 
   .contact-email {
-    color: var(--gold);
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px solid var(--gold-dim);
+    border-bottom: 1px solid var(--accent-dim);
     padding-bottom: 3px;
     transition: color 0.3s, border-color 0.3s;
     font-size: 0.75rem;
