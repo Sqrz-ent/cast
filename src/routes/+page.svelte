@@ -54,6 +54,7 @@
             placeholder="yourname"
             value={username}
             oninput={onInput}
+            onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = `https://dashboard.sqrz.com/join?slug=${username}`; }}
             maxlength="30"
             autocomplete="off"
             autocorrect="off"
@@ -68,7 +69,7 @@
           {:else if status === 'taken'}
             <span class="status-taken">Already taken</span>
           {:else if status === 'available'}
-            <a href="https://sqrz.com/dashboard" class="status-available">
+            <a href={`https://dashboard.sqrz.com/join?slug=${username}`} class="status-available">
               {username}.sqrz.com is available! →
             </a>
           {:else if username.length > 0 && username.length < 3}
