@@ -33,7 +33,7 @@
     id="hs-script-loader"
     async
     defer
-    src="//js.hs-scripts.com/8081234.js"
+    src="//js.hs-scripts.com/8081234.js?cookieBannerEnabled=false"
     type="text/plain"
   ></script>
 
