@@ -1,7 +1,10 @@
 <script>
   import favicon from '$lib/assets/favicon.svg';
+  import Analytics from '$lib/Analytics.svelte';
   let { children } = $props();
 </script>
+
+<Analytics />
 
 <svelte:head>
   <link rel="icon" href={favicon} />
