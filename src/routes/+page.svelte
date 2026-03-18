@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
 
@@ -6,7 +7,25 @@
 
   let username = $state('');
   let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
+  let refCode = $state('');
   let debounceTimer;
+
+  // Capture ?ref=CODE from URL and persist in localStorage
+  onMount(() => {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref) {
+      refCode = ref;
+      localStorage.setItem('sqrz_ref', ref);
+    } else {
+      refCode = localStorage.getItem('sqrz_ref') ?? '';
+    }
+  });
+
+  // Build join URL with ref appended when present
+  let joinUrl = $derived(
+    `https://dashboard.sqrz.com/join?slug=${username}${refCode ? `&ref=${refCode}` : ''}`
+  );
 
   function onInput(e) {
     username = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
@@ -54,7 +73,7 @@
             placeholder="yourname"
             value={username}
             oninput={onInput}
-            onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = `https://dashboard.sqrz.com/join?slug=${username}`; }}
+            onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
             maxlength="30"
             autocomplete="off"
             autocorrect="off"
@@ -69,7 +88,7 @@
           {:else if status === 'taken'}
             <span class="status-taken">Already taken</span>
           {:else if status === 'available'}
-            <a href={`https://dashboard.sqrz.com/join?slug=${username}`} class="status-available">
+            <a href={joinUrl} class="status-available">
               {username}.sqrz.com is available! →
             </a>
           {:else if username.length > 0 && username.length < 3}
