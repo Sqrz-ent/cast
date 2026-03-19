@@ -33,11 +33,10 @@
       <div class="footer-col">
         <p class="footer-col-heading">Platform</p>
         <ul class="footer-links">
-          <li><a href="/studio">Cast</a></li>
+          <li><a href="/">SQRZ</a></li>
           <li><a href="/grow">Grow</a></li>
           <li><a href="https://jobs.sqrz.com">Jobs</a></li>
-          <li><a href="/blog">Blog</a></li>
-          <li><a href="https://sqrz.com/dashboard">Dashboard</a></li>
+          <li><a href="/studio">Studio</a></li>
         </ul>
       </div>
 
@@ -48,6 +47,7 @@
           <li><a href="/privacy">Privacy Policy</a></li>
           <li><a href="/terms">Terms &amp; Conditions</a></li>
           <li><a href="/cookies">Cookie Policy</a></li>
+          <li><a href="https://dashboard.sqrz.com">Dashboard</a></li>
         </ul>
       </div>
 
