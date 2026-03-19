@@ -264,6 +264,54 @@
   </div>
 </section>
 
+<!-- ── BOOKING WALLET ─────────────────────────────────────────────── -->
+<section class="wallet-section dark">
+  <div class="container wallet-inner">
+    <div class="wallet-text">
+      <p class="eyebrow-light">New in SQRZ Grow</p>
+      <h2 class="section-headline light-text">Introducing the<br><em>Booking Wallet</em></h2>
+      <p class="wallet-sub">
+        From first request to final payout — every financial movement
+        tied to defined scope, confirmed delivery, and agreed terms.
+      </p>
+      <div class="wallet-steps">
+        {#each [
+          {
+            step: '01',
+            title: 'Request Payment',
+            body: 'Secure deposits directly through your booking page. Each project generates a structured payment request tied to defined scope, terms, and timeline.',
+          },
+          {
+            step: '02',
+            title: 'Manage & Allocate',
+            body: 'Once the deposit is secured, allocate budgets across collaborators, production costs, and agreed expenses.',
+          },
+          {
+            step: '03',
+            title: 'Get Paid After Gig',
+            body: 'Release payments according to confirmed delivery and agreed milestones. No ambiguity. No chasing.',
+          },
+        ] as ws}
+          <div class="wallet-step">
+            <div class="ws-num">{ws.step}</div>
+            <div class="ws-content">
+              <h4 class="ws-title">{ws.title}</h4>
+              <p class="ws-body">{ws.body}</p>
+            </div>
+          </div>
+        {/each}
+      </div>
+    </div>
+    <div class="wallet-visual">
+      <!-- Webflow image: booking wallet / payment flow UI -->
+      <div class="image-placeholder wallet-img">
+        <span class="placeholder-label">Booking Wallet — payment flow UI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark">
   <div class="container">
