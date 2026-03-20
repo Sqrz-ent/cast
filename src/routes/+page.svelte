@@ -366,16 +366,16 @@
       <div class="pricing-card grow-card">
         <div class="plan-name accent-text">Grow</div>
         <div class="plan-price">
-          <span class="price-amount">$99</span>
+          <span class="price-amount">$39</span>
           <span class="price-period">/month</span>
         </div>
-        <p class="plan-tagline">Activate Your Growth Engine</p>
+        <p class="plan-tagline">Activate targeted attention</p>
         <ul class="plan-features">
           {#each [
-            'Strategic positioning & campaign guidance',
-            'Build and retarget real audiences',
-            'An intelligence layer behind your growth',
-            'Advanced wallets with team payout control',
+            'Promote your profile, offer, or event',
+            'Send traffic to your SQRZ page',
+            'Track visits, clicks, and inquiries',
+            'Build your first audience data layer',
           ] as f}
             <li><span class="feat-check accent-text">✓</span>{f}</li>
           {/each}

@@ -144,71 +144,46 @@
         <div class="plan-tier">Starter</div>
         <div class="plan-name">Grow Starter</div>
         <div class="plan-price">
-          <span class="price-amount">$99</span>
-          <span class="price-period">/month</span>
+          <span class="price-amount">$149</span>
+          <span class="price-period">/campaign</span>
         </div>
-        <p class="plan-tagline">Install Your Growth Infrastructure</p>
+        <p class="plan-tagline">Launch a Focused Growth Cycle</p>
         <ul class="plan-features">
           {#each [
-            'Onboarding & strategic alignment session',
-            'Campaign blueprint tailored to your offer',
-            'Assisted Pixel, tracking & analytics setup',
-            'Ad campaigns managed toward your SQRZ page',
+            'Targeted traffic directed to your SQRZ profile',
+            'Tracking and attribution installed (pixel + UTM)',
+            'Basic audience segmentation for initial learning',
+            'Performance visibility across visits, clicks, and inquiries',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <p class="plan-note">* Recommended ad budget $200–$500/month (not included)</p>
+        <p class="plan-note">* Ad budget up to $1,000 (not included)</p>
         <button class="btn-outline-accent btn-full">Join SQRZ</button>
       </div>
 
-      <!-- Grow Pro 3mo -->
+      <!-- Grow Pro -->
       <div class="pricing-card featured">
         <div class="plan-badge">Most Popular</div>
         <div class="plan-tier">Pro</div>
         <div class="plan-name">Grow Pro</div>
         <div class="plan-price">
-          <span class="price-amount">$599</span>
-          <span class="price-period">/month</span>
+          <span class="price-amount">20%</span>
+          <span class="price-period">/campaign managament fee</span>
         </div>
-        <p class="plan-tagline">Scale With Confidence & Clarity</p>
-        <p class="plan-term">3-month engagement</p>
+        <p class="plan-tagline">This is not a single campaign.It’s an ongoing system for building and refining demand.</p>
         <ul class="plan-features">
           {#each [
-            'Fully managed positioning, tracking & campaigns',
+            'Continuous campaign cycles (define → activate → refine)',
             'Active audience building & retargeting',
-            'Ongoing optimization & conversion refinement',
-            'Booking wallet structure & advisory',
+            'Data-driven decision support based on real performance signals',
+            'Conversion-focused refinement of your SQRZ profile',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <p class="plan-note">* Recommended ad budget $400–$750/month (not included)</p>
+        <p class="plan-note">* For budgets above $1,000 (not included)</p>
         <button class="btn-primary btn-full">Apply</button>
-      </div>
-
-      <!-- Grow Pro 12mo -->
-      <div class="pricing-card">
-        <div class="plan-tier">Pro Annual</div>
-        <div class="plan-name">Grow Pro</div>
-        <div class="plan-price">
-          <span class="price-amount">$399</span>
-          <span class="price-period">/month</span>
-        </div>
-        <p class="plan-tagline">Operate at Team Level</p>
-        <p class="plan-term">12-month engagement</p>
-        <ul class="plan-features">
-          {#each [
-            'Continuous audience building & demand refinement',
-            'Long-term optimization & strategic reinvestment',
-            'Dedicated growth partner embedded in your workflow',
-            'Structured booking wallets for deposits, budget & team payouts',
-          ] as f}
-            <li><span class="feat-check">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <p class="plan-note">* Recommended ad budget $400–$750/month (not included)</p>
-        <button class="btn-outline-accent btn-full">Apply</button>
       </div>
 
       <!-- Enterprise -->
@@ -218,13 +193,13 @@
         <div class="plan-price">
           <span class="price-amount enterprise-price">Contact Us</span>
         </div>
-        <p class="plan-tagline">Talent & Financial Infrastructure at Scale</p>
+        <p class="plan-tagline">Growth & Revenue Infrastructure at Scale</p>
         <ul class="plan-features">
           {#each [
-            'Global project-based workforce coordination',
-            'Structured multi-party booking and payout flows',
-            'Advanced wallet architecture for team-based projects',
-            'Built for recurring, seasonal, and international teams',
+            'Multi-campaign and multi-offer coordination',
+            'Support for ticket sales, releases, and product-based campaigns',
+            'Advanced audience segmentation across markets and verticals',
+            '* Structured financial flows across bookings, teams, and revenue streams',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
