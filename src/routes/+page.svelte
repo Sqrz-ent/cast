@@ -359,12 +359,12 @@
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <button class="btn-primary btn-full">Join SQRZ</button>
+        <button class="btn-accent btn-full">Join SQRZ</button>
       </div>
 
       <!-- Grow -->
       <div class="pricing-card grow-card">
-        <div class="plan-name accent-text">Grow</div>
+        <div class="plan-name accent-text">Boost</div>
         <div class="plan-price">
           <span class="price-amount">$39</span>
           <span class="price-period">/month</span>
@@ -381,7 +381,7 @@
           {/each}
         </ul>
         <p class="plan-note">* Ad budget not included</p>
-        <a href="/grow" class="btn-accent btn-full">Apply to Grow</a>
+        <a href="/grow" class="btn-primary btn-full">Apply to Grow</a>
       </div>
 
     </div>
