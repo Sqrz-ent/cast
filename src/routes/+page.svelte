@@ -366,16 +366,16 @@
       <div class="pricing-card grow-card">
         <div class="plan-name accent-text">Boost</div>
         <div class="plan-price">
-          <span class="price-amount">$39</span>
+          <span class="price-amount">$59</span>
           <span class="price-period">/month</span>
         </div>
-        <p class="plan-tagline">Activate targeted attention</p>
+        <p class="plan-tagline">Launch a targeted campaign</p>
         <ul class="plan-features">
           {#each [
-            'Promote your profile, offer, or event',
-            'Send traffic to your SQRZ page',
-            'Track visits, clicks, and inquiries',
-            'Build your first audience data layer',
+            'Promote what matters — your work, your offer, your event',
+            'Drive targeted traffic to a dedicated campaign page',
+            'Track visits, engagement, and real inquiries',
+            'Start building your own audience and demand data',
           ] as f}
             <li><span class="feat-check accent-text">✓</span>{f}</li>
           {/each}
