@@ -362,7 +362,7 @@
         <button class="btn-accent btn-full">Join SQRZ</button>
       </div>
 
-      <!-- Grow -->
+      <!-- Boost -->
       <div class="pricing-card grow-card">
         <div class="plan-name accent-text">Boost</div>
         <div class="plan-price">
