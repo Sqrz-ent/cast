@@ -381,7 +381,7 @@
           {/each}
         </ul>
         <p class="plan-note">* Ad budget not included</p>
-        <a href="/grow" class="btn-primary btn-full">Apply to Grow</a>
+        <button class="btn-primary btn-full">Get Boost</button>
       </div>
 
     </div>
