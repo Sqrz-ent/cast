@@ -78,10 +78,10 @@
     </div>
     <div class="for-grid">
       {#each [
-        { label: 'You deliver', value: 'High-value work' },
-        { label: 'You command', value: 'Serious fees' },
-        { label: 'You want', value: 'Predictable demand' },
-        { label: 'You treat', value: 'Growth as investment' },
+        { label: "You deliver", value: "High-value work" },
+        { label: "You command", value: "Serious fees" },
+        { label: "You want", value: "Predictable demand" },
+        { label: "You treat", value: "Growth as investment" },
       ] as item}
         <div class="for-stat">
           <span class="stat-label">{item.label}</span>
@@ -100,24 +100,24 @@
     <div class="pillars-grid">
       {#each [
         {
-          num: '01',
-          title: 'Audience Positioning',
-          body: 'Define your value clearly. Offer, audience, and advantage aligned — so every touchpoint builds toward the work you want.',
+          num: "01",
+          title: "Audience Positioning",
+          body: "Define your value clearly. Offer, audience, and advantage aligned — so every touchpoint builds toward the work you want.",
         },
         {
-          num: '02',
-          title: 'Demand Engineering',
-          body: 'Build measurable demand. Tracking, segmentation, and audience intelligence installed and reusable — working silently between campaigns.',
+          num: "02",
+          title: "Demand Engineering",
+          body: "Build measurable demand. Tracking, segmentation, and audience intelligence installed and reusable — working silently between campaigns.",
         },
         {
-          num: '03',
-          title: 'Pipeline Intelligence',
-          body: 'Turn interest into confirmed work. Structured flow. Visible conversion. Informed decisions at every stage.',
+          num: "03",
+          title: "Pipeline Intelligence",
+          body: "Turn interest into confirmed work. Structured flow. Visible conversion. Informed decisions at every stage.",
         },
         {
-          num: '04',
-          title: 'Financial Control',
-          body: 'Control how money moves. Deposits secured. Budgets allocated. Teams paid. Everything confirmed before work begins.',
+          num: "04",
+          title: "Financial Control",
+          body: "Control how money moves. Deposits secured. Budgets allocated. Teams paid. Everything confirmed before work begins.",
         },
       ] as pillar}
         <div class="pillar-card">
@@ -150,10 +150,10 @@
         <p class="plan-tagline">Launch a Focused Growth Cycle</p>
         <ul class="plan-features">
           {#each [
-            'Targeted traffic directed to your SQRZ profile',
-            'Tracking and attribution installed (pixel + UTM)',
-            'Basic audience segmentation for initial learning',
-            'Performance visibility across visits, clicks, and inquiries',
+            "Targeted traffic directed to your SQRZ profile",
+            "Tracking and attribution installed (pixel + UTM)",
+            "Basic audience segmentation for initial learning",
+            "Performance visibility across visits, clicks, and inquiries",
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
@@ -174,10 +174,10 @@
         <p class="plan-tagline">This is not a single campaign.It’s an ongoing system for building and refining demand.</p>
         <ul class="plan-features">
           {#each [
-            ‘Continuous campaign cycles (define → activate → refine)’,
-            ‘Active audience building & retargeting’,
-            ‘Data-driven decision support based on real performance signals’,
-            ‘Conversion-focused refinement of your SQRZ profile’,
+            "Continuous campaign cycles (define → activate → refine)",
+            "Active audience building & retargeting",
+            "Data-driven decision support based on real performance signals",
+            "Conversion-focused refinement of your SQRZ profile",
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
@@ -196,10 +196,10 @@
         <p class="plan-tagline">Growth & Revenue Infrastructure at Scale</p>
         <ul class="plan-features">
           {#each [
-            ‘Multi-campaign and multi-offer coordination’,
-            ‘Support for ticket sales, releases, and product-based campaigns’,
-            ‘Advanced audience segmentation across markets and verticals’,
-            ‘* Structured financial flows across bookings, teams, and revenue streams’,
+            "Multi-campaign and multi-offer coordination",
+            "Support for ticket sales, releases, and product-based campaigns",
+            "Advanced audience segmentation across markets and verticals",
+            "* Structured financial flows across bookings, teams, and revenue streams",
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
