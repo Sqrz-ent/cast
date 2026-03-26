@@ -143,7 +143,7 @@
 
 <!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
 <section class="feature-section dark">
-  <div class="container feature-inner reverse">
+  <div class="container feature-inner">
     <div class="feature-text">
       <p class="section-number accent">02</p>
       <h2 class="section-headline light-text">You Run Your<br><em>Pipeline</em></h2>
