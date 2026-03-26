@@ -208,6 +208,16 @@
       </div>
 
     </div>
+
+    <div class="discovery-cta">
+      <p class="discovery-hint">Not sure which plan is right for you?</p>
+      <a
+        href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary"
+      >Book a free discovery call →</a>
+    </div>
   </div>
 </section>
 
@@ -517,7 +527,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-top: 64px;
-    align-items: start;
+    align-items: stretch;
   }
 
   .pricing-card {
@@ -529,6 +539,7 @@
     flex-direction: column;
     gap: 10px;
     position: relative;
+    height: 100%;
   }
 
   .pricing-card.featured {
@@ -636,6 +647,21 @@
     color: var(--muted);
     font-style: italic;
     margin-top: -4px;
+  }
+
+  /* ── DISCOVERY CTA ──────────────────────────────────────────────── */
+  .discovery-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 48px;
+  }
+
+  .discovery-hint {
+    font-size: 0.82rem;
+    color: var(--muted);
+    text-align: center;
   }
 
   /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
