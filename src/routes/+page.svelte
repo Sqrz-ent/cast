@@ -312,6 +312,77 @@
 </section>
 
 
+<!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
+<section class="featured-section dark">
+  <div class="container">
+    <p class="section-tag">Featured Profiles</p>
+    <h2 class="section-headline light-text centered">MEET THE CREATIVES<br><em>ALREADY ON SQRZ</em></h2>
+
+    <div class="featured-grid">
+
+      <!-- Will Villa -->
+      <a href="https://willvilla.sqrz.com" target="_blank" rel="noopener noreferrer" class="profile-card">
+        <div class="profile-avatar">WV</div>
+        <div class="profile-name">Will Villa</div>
+        <div class="profile-skills">
+          <span class="skill-tag">DJ</span>
+          <span class="skill-tag">Music Production</span>
+          <span class="skill-tag">Live Performance</span>
+        </div>
+        <span class="profile-link">View profile →</span>
+      </a>
+
+      <!-- Anna Hilbert -->
+      <a href="https://annahilbert.sqrz.com" target="_blank" rel="noopener noreferrer" class="profile-card">
+        <div class="profile-avatar">AH</div>
+        <div class="profile-name">Anna Hilbert</div>
+        <div class="profile-skills">
+          <span class="skill-tag">Contemporary Dance</span>
+          <span class="skill-tag">Choreography</span>
+          <span class="skill-tag">Performance</span>
+        </div>
+        <span class="profile-link">View profile →</span>
+      </a>
+
+      <!-- DJ Placeholder -->
+      <div class="profile-card profile-card--placeholder">
+        <div class="profile-avatar">DJ</div>
+        <div class="profile-name">DJ Placeholder</div>
+        <div class="profile-skills">
+          <span class="skill-tag">DJing</span>
+          <span class="skill-tag">Music Production</span>
+          <span class="skill-tag">Live Performance</span>
+        </div>
+        <span class="profile-link">Coming soon</span>
+      </div>
+
+      <!-- Sound Engineer Placeholder -->
+      <div class="profile-card profile-card--placeholder">
+        <div class="profile-avatar">SE</div>
+        <div class="profile-name">Sound Engineer</div>
+        <div class="profile-skills">
+          <span class="skill-tag">FOH Engineering</span>
+          <span class="skill-tag">Live Sound</span>
+          <span class="skill-tag">Studio Recording</span>
+        </div>
+        <span class="profile-link">Coming soon</span>
+      </div>
+
+    </div>
+
+    <div class="featured-cta">
+      <p class="featured-cta-hint">Want to be featured?</p>
+      <a
+        href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-accent"
+      >Apply for SQRZ Grow →</a>
+    </div>
+  </div>
+</section>
+
+
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark">
   <div class="container">
@@ -891,6 +962,103 @@
     top: 84px;
   }
 
+  /* ── FEATURED PROFILES ──────────────────────────────────────────── */
+  .featured-section { background: var(--dark); padding: 100px 0; }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 64px;
+    align-items: stretch;
+  }
+
+  .profile-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-card);
+    padding: 28px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .profile-card:hover { border-color: var(--accent); }
+
+  .profile-card--placeholder {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .profile-card--placeholder:hover { border-color: var(--border-dark); }
+
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--dark);
+    font-family: "Barlow Condensed", sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .profile-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    text-align: center;
+  }
+
+  .profile-skills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .skill-tag {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-faint);
+    border: 1px solid var(--accent-dim);
+    border-radius: 999px;
+    padding: 3px 9px;
+  }
+
+  .profile-link {
+    font-size: 0.78rem;
+    color: var(--mid);
+    margin-top: auto;
+  }
+
+  .featured-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 48px;
+  }
+
+  .featured-cta-hint {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
   /* ── PRICING ────────────────────────────────────────────────────── */
   .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
@@ -1070,6 +1238,7 @@
     .pricing-grid {
       grid-template-columns: 1fr;
     }
+    .featured-grid { grid-template-columns: repeat(2, 1fr); }
     .pricing-card.featured { transform: none; }
     nav { padding: 0 20px; }
     .nav-links { display: none; }
@@ -1078,6 +1247,7 @@
     .feature-section,
     .audience-section,
     .how-section,
-    .pricing-section { padding: 72px 0; }
+    .pricing-section,
+    .featured-section { padding: 72px 0; }
   }
 </style>
