@@ -385,6 +385,10 @@
       </div>
 
     </div>
+
+    <p class="grow-cta">
+      We help you set up and manage your campaigns — <a href="/grow" class="grow-cta-link">Learn more about SQRZ Grow →</a>
+    </p>
   </div>
 </section>
 
@@ -890,12 +894,26 @@
   /* ── PRICING ────────────────────────────────────────────────────── */
   .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
+  .grow-cta {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .grow-cta-link {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .grow-cta-link:hover { text-decoration: underline; }
+
   .pricing-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-top: 64px;
-    align-items: start;
+    align-items: stretch;
   }
 
   .pricing-card {
@@ -907,6 +925,11 @@
     flex-direction: column;
     gap: 12px;
     position: relative;
+    height: 100%;
+  }
+
+  .pricing-card > a.btn-full {
+    margin-top: auto;
   }
 
   .pricing-card.featured {
