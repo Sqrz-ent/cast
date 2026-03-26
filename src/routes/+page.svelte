@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
+  import type { PageData } from './$types';
 
   const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+
+  let { data }: { data: PageData } = $props();
 
   let username = $state('');
   let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
@@ -320,52 +323,48 @@
 
     <div class="featured-grid">
 
-      <!-- Will Villa -->
-      <a href="https://willvilla.sqrz.com" target="_blank" rel="noopener noreferrer" class="profile-card">
-        <div class="profile-avatar">WV</div>
-        <div class="profile-name">Will Villa</div>
-        <div class="profile-skills">
-          <span class="skill-tag">DJ</span>
-          <span class="skill-tag">Music Production</span>
-          <span class="skill-tag">Live Performance</span>
-        </div>
-        <span class="profile-link">View profile →</span>
-      </a>
+      {#each data.featuredProfiles as profile}
+        <a
+          href="https://{profile.slug}.sqrz.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="profile-card"
+          style="background-image: url({profile.avatarUrl ?? ''}); background-color: #1a1a1a;"
+        >
+          <div class="profile-card-overlay"></div>
+          <div class="profile-card-content">
+            {#if profile.skills.length > 0}
+              <div class="profile-skills">
+                {#each profile.skills as skill}
+                  <span class="skill-tag">{skill}</span>
+                {/each}
+              </div>
+            {/if}
+            <div class="profile-name">{profile.name}</div>
+            {#if profile.city}
+              <div class="profile-city">{profile.city}</div>
+            {/if}
+            <span class="profile-link">View profile →</span>
+          </div>
+        </a>
+      {/each}
 
-      <!-- Anna Hilbert -->
-      <a href="https://annahilbert.sqrz.com" target="_blank" rel="noopener noreferrer" class="profile-card">
-        <div class="profile-avatar">AH</div>
-        <div class="profile-name">Anna Hilbert</div>
-        <div class="profile-skills">
-          <span class="skill-tag">Contemporary Dance</span>
-          <span class="skill-tag">Choreography</span>
-          <span class="skill-tag">Performance</span>
-        </div>
-        <span class="profile-link">View profile →</span>
-      </a>
-
-      <!-- DJ Placeholder -->
+      <!-- Placeholder 1 -->
       <div class="profile-card profile-card--placeholder">
-        <div class="profile-avatar">DJ</div>
-        <div class="profile-name">DJ Placeholder</div>
-        <div class="profile-skills">
-          <span class="skill-tag">DJing</span>
-          <span class="skill-tag">Music Production</span>
-          <span class="skill-tag">Live Performance</span>
+        <div class="profile-card-overlay"></div>
+        <div class="profile-card-content">
+          <div class="profile-name">Coming Soon</div>
+          <span class="profile-link">Your profile here</span>
         </div>
-        <span class="profile-link">Coming soon</span>
       </div>
 
-      <!-- Sound Engineer Placeholder -->
+      <!-- Placeholder 2 -->
       <div class="profile-card profile-card--placeholder">
-        <div class="profile-avatar">SE</div>
-        <div class="profile-name">Sound Engineer</div>
-        <div class="profile-skills">
-          <span class="skill-tag">FOH Engineering</span>
-          <span class="skill-tag">Live Sound</span>
-          <span class="skill-tag">Studio Recording</span>
+        <div class="profile-card-overlay"></div>
+        <div class="profile-card-content">
+          <div class="profile-name">Coming Soon</div>
+          <span class="profile-link">Your profile here</span>
         </div>
-        <span class="profile-link">Coming soon</span>
       </div>
 
     </div>
@@ -974,75 +973,91 @@
   }
 
   .profile-card {
-    background: var(--dark-2);
-    border: 1px solid var(--border-dark);
+    position: relative;
+    height: 320px;
     border-radius: var(--radius-card);
-    padding: 28px 22px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-color: #1a1a1a;
     text-decoration: none;
-    transition: border-color 0.2s;
+    display: block;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
     cursor: pointer;
   }
-  .profile-card:hover { border-color: var(--accent); }
+  .profile-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  .profile-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.25) 55%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .profile-card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
 
   .profile-card--placeholder {
-    opacity: 0.45;
+    opacity: 0.35;
     cursor: default;
   }
-  .profile-card--placeholder:hover { border-color: var(--border-dark); }
-
-  .profile-avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--dark);
-    font-family: "Barlow Condensed", sans-serif;
-    font-weight: 800;
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    letter-spacing: 0.04em;
-    flex-shrink: 0;
+  .profile-card--placeholder:hover {
+    transform: none;
+    box-shadow: none;
   }
 
   .profile-name {
     font-family: "Barlow Condensed", sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 800;
+    font-size: 1.25rem;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.07em;
     color: var(--white);
-    text-align: center;
+    line-height: 1.1;
+  }
+
+  .profile-city {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
   }
 
   .profile-skills {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px;
+    gap: 5px;
+    margin-bottom: 2px;
   }
 
   .skill-tag {
-    font-size: 0.65rem;
-    font-weight: 500;
+    font-size: 0.6rem;
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--accent);
-    background: var(--accent-faint);
-    border: 1px solid var(--accent-dim);
+    background: rgba(245, 166, 35, 0.15);
+    border: 1px solid rgba(245, 166, 35, 0.3);
     border-radius: 999px;
-    padding: 3px 9px;
+    padding: 2px 8px;
   }
 
   .profile-link {
-    font-size: 0.78rem;
-    color: var(--mid);
-    margin-top: auto;
+    font-size: 0.73rem;
+    color: rgba(255,255,255,0.45);
+    margin-top: 2px;
   }
 
   .featured-cta {
