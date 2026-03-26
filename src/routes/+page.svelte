@@ -645,7 +645,7 @@
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
     background: var(--dark);
-    padding: 100px 0 100px;
+    padding: 164px 0 100px;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -1258,7 +1258,7 @@
     nav { padding: 0 20px; }
     .nav-links { display: none; }
     .container { padding: 0 24px; }
-    .hero { padding: 120px 0 80px; }
+    .hero { padding: 184px 0 80px; }
     .feature-section,
     .audience-section,
     .how-section,

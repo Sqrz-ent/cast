@@ -1,6 +1,7 @@
 <script>
   import favicon from '$lib/assets/favicon.svg';
   import Analytics from '$lib/Analytics.svelte';
+  import Nav from '$lib/components/Nav.svelte';
   let { children } = $props();
 </script>
 
@@ -12,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </svelte:head>
 
+<Nav />
 {@render children()}
 
 <!-- ── FOOTER ────────────────────────────────────────────────────── -->
