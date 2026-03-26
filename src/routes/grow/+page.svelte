@@ -159,7 +159,7 @@
           {/each}
         </ul>
         <p class="plan-note">* Ad budget up to $1,000 (not included)</p>
-        <button class="btn-outline-accent btn-full">Join SQRZ</button>
+        <a href="https://dashboard.sqrz.com/join" class="btn-outline-accent btn-full">Join SQRZ</a>
       </div>
 
       <!-- Grow Pro -->
@@ -174,16 +174,16 @@
         <p class="plan-tagline">This is not a single campaign.It’s an ongoing system for building and refining demand.</p>
         <ul class="plan-features">
           {#each [
-            'Continuous campaign cycles (define → activate → refine)',
-            'Active audience building & retargeting',
-            'Data-driven decision support based on real performance signals',
-            'Conversion-focused refinement of your SQRZ profile',
+            ‘Continuous campaign cycles (define → activate → refine)’,
+            ‘Active audience building & retargeting’,
+            ‘Data-driven decision support based on real performance signals’,
+            ‘Conversion-focused refinement of your SQRZ profile’,
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
         <p class="plan-note">* For budgets above $1,000 (not included)</p>
-        <button class="btn-primary btn-full">Apply</button>
+        <a href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call" target="_blank" rel="noopener noreferrer" class="btn-primary btn-full">Apply</a>
       </div>
 
       <!-- Enterprise -->
@@ -196,15 +196,15 @@
         <p class="plan-tagline">Growth & Revenue Infrastructure at Scale</p>
         <ul class="plan-features">
           {#each [
-            'Multi-campaign and multi-offer coordination',
-            'Support for ticket sales, releases, and product-based campaigns',
-            'Advanced audience segmentation across markets and verticals',
-            '* Structured financial flows across bookings, teams, and revenue streams',
+            ‘Multi-campaign and multi-offer coordination’,
+            ‘Support for ticket sales, releases, and product-based campaigns’,
+            ‘Advanced audience segmentation across markets and verticals’,
+            ‘* Structured financial flows across bookings, teams, and revenue streams’,
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <button class="btn-outline-accent btn-full">Talk to Us</button>
+        <a href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call" target="_blank" rel="noopener noreferrer" class="btn-outline-accent btn-full">Talk to Us</a>
       </div>
 
     </div>
