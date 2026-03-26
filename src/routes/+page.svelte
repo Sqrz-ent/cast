@@ -336,7 +336,7 @@
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <button class="btn-primary btn-full">Join SQRZ</button>
+        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Join SQRZ</a>
       </div>
 
       <!-- Creator -->
@@ -359,7 +359,7 @@
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <button class="btn-accent btn-full">Join SQRZ</button>
+        <a href="https://dashboard.sqrz.com/join" class="btn-accent btn-full">Join SQRZ</a>
       </div>
 
       <!-- Boost -->
@@ -381,7 +381,7 @@
           {/each}
         </ul>
         <p class="plan-note">* Ad budget not included</p>
-        <button class="btn-primary btn-full">Get Boost</button>
+        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Get Boost</a>
       </div>
 
     </div>
