@@ -113,10 +113,7 @@
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <!-- Webflow image: profile page example -->
-      <div class="image-placeholder feature-img">
-        <span class="placeholder-label">Section 1 — Profile page example</span>
-      </div>
+      <img src="/home-showcase.avif" alt="Sound engineer at mixing desk" class="feature-img section-img" />
     </div>
     <div class="feature-text">
       <p class="section-number">01</p>
@@ -164,10 +161,7 @@
       </ul>
     </div>
     <div class="feature-visual">
-      <!-- Webflow image: booking pipeline / office view -->
-      <div class="image-placeholder feature-img dark-placeholder">
-        <span class="placeholder-label">Section 2 — Booking pipeline view</span>
-      </div>
+      <img src="/home-pipeline.avif" alt="Stage and crowd at live show" class="feature-img section-img" />
     </div>
   </div>
 </section>
@@ -176,10 +170,7 @@
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <!-- Webflow image: payment / wallet interface -->
-      <div class="image-placeholder feature-img">
-        <span class="placeholder-label">Section 3 — Payment / wallet UI</span>
-      </div>
+      <img src="/home_getpaid.avif" alt="Cruise ship — get paid to perform" class="feature-img section-img" />
     </div>
     <div class="feature-text">
       <p class="section-number">03</p>
@@ -776,6 +767,14 @@
     height: 440px;
     border-radius: var(--radius-card);
     width: 100%;
+  }
+
+  .section-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-card);
   }
 
   .dark-placeholder {

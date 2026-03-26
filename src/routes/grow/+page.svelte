@@ -11,8 +11,9 @@
 </svelte:head>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero">
-  <div class="container hero-inner">
+<section class="hero hero-bg" style="background-image: url('/grow_hero.avif');">
+  <div class="hero-overlay"></div>
+  <div class="container hero-inner hero-inner--solo">
     <div class="hero-text">
       <p class="eyebrow">SQRZ Grow</p>
       <h1 class="display-headline">TURN ATTENTION<br><em>INTO DEMAND</em></h1>
@@ -23,12 +24,6 @@
       <div class="hero-btns">
         <button class="btn-primary btn-lg">Apply to Grow</button>
         <button class="btn-ghost btn-lg">See Pricing</button>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <!-- Webflow image: dashboard / analytics view -->
-      <div class="image-placeholder hero-img">
-        <span class="placeholder-label">Hero — Growth dashboard / analytics view</span>
       </div>
     </div>
   </div>
@@ -53,10 +48,7 @@
       </p>
     </div>
     <div class="intro-visual">
-      <!-- Webflow image: demand flow diagram or campaign overview -->
-      <div class="image-placeholder intro-img">
-        <span class="placeholder-label">Intro — Demand flow / campaign overview</span>
-      </div>
+      <img src="/grow_whatitis.avif" alt="Dancer silhouette on stage" class="intro-img section-img" />
     </div>
   </div>
 </section>
@@ -88,6 +80,9 @@
           <span class="stat-value">{item.value}</span>
         </div>
       {/each}
+    </div>
+    <div class="for-visual">
+      <img src="/grow_whoisitfor.avif" alt="DJ performing live" class="for-visual-img section-img" />
     </div>
   </div>
 </section>
@@ -384,11 +379,32 @@
     align-items: center;
   }
 
+  .hero-bg {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 0;
+  }
+
   .hero-inner {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: center;
+  }
+
+  .hero-inner--solo {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
   }
 
   .hero-sub {
@@ -422,6 +438,24 @@
     height: 480px;
     border-radius: var(--radius-card);
     width: 100%;
+  }
+
+  .section-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+  }
+
+  .for-visual {
+    margin-top: 48px;
+  }
+
+  .for-visual-img {
+    height: 420px;
+    width: 100%;
+    border-radius: var(--radius-card);
   }
 
   /* ── WHO IS IT FOR ──────────────────────────────────────────────── */
