@@ -53,39 +53,32 @@
   </div>
 </section>
 
-<ComparisonTable />
-
 <!-- ── WHO IS IT FOR ─────────────────────────────────────────────── -->
-<section class="for-section dark">
-  <div class="container">
-    <p class="section-tag">Who Is It For?</p>
-    <h2 class="section-headline light-text centered">For professionals who<br><em>operate at a high level</em></h2>
-    <div class="for-body">
-      <p class="for-text">
-        You already deliver value. You already command serious fees.
-        But demand still depends on timing, referrals, or chance.
-        You're not looking for exposure. You're building leverage.
-        If you treat growth as an investment — you belong here.
-      </p>
-    </div>
-    <div class="for-grid">
-      {#each [
-        { label: "You deliver", value: "High-value work" },
-        { label: "You command", value: "Serious fees" },
-        { label: "You want", value: "Predictable demand" },
-        { label: "You treat", value: "Growth as investment" },
-      ] as item}
-        <div class="for-stat">
-          <span class="stat-label">{item.label}</span>
-          <span class="stat-value">{item.value}</span>
-        </div>
-      {/each}
-    </div>
-    <div class="for-visual">
-      <img src="/grow_whoisitfor.avif" alt="DJ performing live" class="for-visual-img section-img" />
+<section class="editorial-section editorial-dark">
+  <div class="editorial-container">
+    <p class="editorial-eyebrow">Who Is It For?</p>
+    <h2 class="editorial-heading">Built for professionals who<br>operate at a high level</h2>
+    <div class="editorial-body">
+      <p>You already deliver value. You already command serious fees. But demand still depends on timing, referrals, or chance.</p>
+      <p>You're not looking for exposure. You're building leverage.</p>
+      <p>If you treat growth as an investment — you belong here.</p>
     </div>
   </div>
 </section>
+
+<!-- ── GROWTH THAT CARRIES ON ────────────────────────────────────── -->
+<section class="editorial-section editorial-light">
+  <div class="editorial-container">
+    <p class="editorial-eyebrow editorial-eyebrow--dark">The Difference</p>
+    <h2 class="editorial-heading editorial-heading--dark">Growth That Carries On</h2>
+    <div class="editorial-body editorial-body--dark">
+      <p>SQRZ Grow isn't about pushing traffic. It's about building a growth environment around your work. We collaborate with you and your team to create clarity around demand — so momentum doesn't fade after a release, a tour, or a season.</p>
+      <p>Attention becomes leverage. Leverage becomes opportunity. Opportunity becomes sustained growth. That's the difference.</p>
+    </div>
+  </div>
+</section>
+
+<ComparisonTable />
 
 <!-- ── 4 PILLARS ─────────────────────────────────────────────────── -->
 <section class="pillars-section light">
@@ -456,6 +449,73 @@
     height: 420px;
     width: 100%;
     border-radius: var(--radius-card);
+  }
+
+  /* ── EDITORIAL SECTIONS ─────────────────────────────────────────── */
+  .editorial-section {
+    padding: 120px 0;
+  }
+
+  .editorial-dark {
+    background: #0a0a0a;
+  }
+
+  .editorial-light {
+    background: #f5f5f0;
+  }
+
+  .editorial-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 32px;
+    text-align: center;
+  }
+
+  .editorial-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .editorial-eyebrow--dark {
+    color: var(--accent);
+  }
+
+  .editorial-heading {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    color: #ffffff;
+    margin-bottom: 40px;
+  }
+
+  .editorial-heading--dark {
+    color: #111111;
+  }
+
+  .editorial-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .editorial-body p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.62);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .editorial-body--dark p {
+    color: rgba(20, 20, 20, 0.7);
   }
 
   /* ── WHO IS IT FOR ──────────────────────────────────────────────── */
