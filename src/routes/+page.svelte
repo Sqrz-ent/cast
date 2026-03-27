@@ -1439,16 +1439,26 @@
       padding-right: 0;
     }
 
+    /* Zero out the container padding inside the pricing section only */
+    .pricing-section .container {
+      width: 100%;
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+      box-sizing: border-box;
+    }
+
     .pricing-grid {
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
+      width: 100%;
+      max-width: 100vw;
       padding: 0;
       margin: 48px 0 0;
       gap: 12px;
-      align-items: stretch;
     }
     .pricing-grid::-webkit-scrollbar { display: none; }
 
@@ -1456,17 +1466,8 @@
       scroll-snap-align: center;
       min-width: 78vw;
       max-width: 78vw;
-      width: 78vw;
-      box-sizing: border-box;
       flex-shrink: 0;
-      height: auto;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-    }
-    .pricing-card * {
-      white-space: normal;
-      word-break: break-word;
-      max-width: 100%;
+      box-sizing: border-box;
     }
     .pricing-card.featured { transform: none; }
 
