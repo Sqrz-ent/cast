@@ -78,20 +78,6 @@
   </div>
 </section>
 
-<!-- ── BUILT TO WORK WITH YOUR TEAM ─────────────────────────────── -->
-<section class="editorial-section editorial-light">
-  <div class="editorial-container">
-    <p class="editorial-eyebrow editorial-eyebrow--dark">Why Choose SQRZ Grow</p>
-    <h2 class="editorial-heading editorial-heading--dark">Built To Work With Your Team</h2>
-    <div class="editorial-body editorial-body--dark">
-      <p>SQRZ Grow doesn't replace your management. It doesn't compete with your agency. It connects the pieces.</p>
-      <p>We work alongside your existing structure — management, assistants, labels, collaborators — and provide the growth infrastructure that often sits between strategy and execution.</p>
-      <p>Creative teams focus on content. Managers focus on deals. Agencies focus on exposure.</p>
-      <p>We focus on connecting it all — so momentum builds instead of scattering.</p>
-    </div>
-  </div>
-</section>
-
 <!-- ── 4 PILLARS ─────────────────────────────────────────────────── -->
 <section class="pillars-section light">
   <div class="container">
@@ -126,6 +112,20 @@
           <p class="pillar-body">{pillar.body}</p>
         </div>
       {/each}
+    </div>
+  </div>
+</section>
+
+<!-- ── BUILT TO WORK WITH YOUR TEAM ─────────────────────────────── -->
+<section class="editorial-section editorial-light">
+  <div class="editorial-container">
+    <p class="editorial-eyebrow editorial-eyebrow--dark">Why Choose SQRZ Grow</p>
+    <h2 class="editorial-heading editorial-heading--dark">Built To Work With Your Team</h2>
+    <div class="editorial-body editorial-body--dark">
+      <p>SQRZ Grow doesn't replace your management. It doesn't compete with your agency. It connects the pieces.</p>
+      <p>We work alongside your existing structure — management, assistants, labels, collaborators — and provide the growth infrastructure that often sits between strategy and execution.</p>
+      <p>Creative teams focus on content. Managers focus on deals. Agencies focus on exposure.</p>
+      <p>We focus on connecting it all — so momentum builds instead of scattering.</p>
     </div>
   </div>
 </section>
