@@ -1438,6 +1438,8 @@
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
       scroll-padding-left: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
       gap: 12px;
       align-items: stretch;
       margin-top: 48px;
@@ -1450,7 +1452,7 @@
       flex-shrink: 0;
       height: auto;
     }
-    .pricing-card:first-child { margin-left: 1rem; }
+    .pricing-card:first-child { margin-left: 0; }
     .pricing-card.featured { transform: none; }
 
     .pricing-dots {

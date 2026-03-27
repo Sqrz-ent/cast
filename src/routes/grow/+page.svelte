@@ -1,6 +1,27 @@
 <script>
+  import { onMount } from 'svelte';
   import ComparisonTable from '$lib/components/ComparisonTable.svelte';
   import FAQ from '$lib/components/FAQ.svelte';
+
+  let pricingGrid;
+  let activeDot = $state(0);
+
+  onMount(() => {
+    if (!pricingGrid) return;
+    const cards = Array.from(pricingGrid.querySelectorAll('.pricing-card'));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            activeDot = cards.indexOf(entry.target);
+          }
+        });
+      },
+      { root: pricingGrid, threshold: 0.5 }
+    );
+    cards.forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  });
 </script>
 
 <svelte:head>
@@ -139,7 +160,7 @@
   <div class="container">
     <p class="section-tag">Pricing</p>
     <h2 class="section-headline light-text centered">Choose your<br><em>level of investment</em></h2>
-    <div class="pricing-grid">
+    <div class="pricing-grid" bind:this={pricingGrid}>
 
       <!-- Grow Starter -->
       <div class="pricing-card">
@@ -209,6 +230,13 @@
         <a href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call" target="_blank" rel="noopener noreferrer" class="btn-outline-accent btn-full">Talk to Us</a>
       </div>
 
+    </div>
+
+    <!-- Dot indicator (mobile only) -->
+    <div class="pricing-dots">
+      {#each [0, 1, 2] as i}
+        <span class="pricing-dot" class:active={activeDot === i}></span>
+      {/each}
     </div>
 
     <div class="discovery-cta">
@@ -630,6 +658,8 @@
   /* ── PRICING ────────────────────────────────────────────────────── */
   .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
+  .pricing-dots { display: none; }
+
   .pricing-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -805,11 +835,55 @@
     .intro-img { height: 300px; }
     .wallet-img { height: 280px; position: static; }
     .pillars-grid { grid-template-columns: 1fr; }
-    .pricing-grid,
     .for-grid { grid-template-columns: 1fr; }
     nav { padding: 0 20px; }
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
+  }
+
+  @media (max-width: 768px) {
+    .pricing-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      scroll-padding-left: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 48px;
+    }
+    .pricing-grid::-webkit-scrollbar { display: none; }
+
+    .pricing-card {
+      scroll-snap-align: start;
+      min-width: 85vw;
+      flex-shrink: 0;
+      height: auto;
+    }
+    .pricing-card:first-child { margin-left: 0; }
+    .pricing-card.featured { transform: none; }
+
+    .pricing-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .pricing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .pricing-dot.active {
+      background: #F3B130;
+      border-color: #F3B130;
+    }
   }
 </style>
