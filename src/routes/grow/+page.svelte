@@ -849,9 +849,7 @@
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      scroll-padding-left: 1rem;
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding: 0;
       gap: 12px;
       align-items: stretch;
       margin-top: 48px;
@@ -859,12 +857,12 @@
     .pricing-grid::-webkit-scrollbar { display: none; }
 
     .pricing-card {
-      scroll-snap-align: start;
-      min-width: 85vw;
+      scroll-snap-align: center;
+      min-width: 78vw;
+      max-width: 78vw;
       flex-shrink: 0;
       height: auto;
     }
-    .pricing-card:first-child { margin-left: 0; }
     .pricing-card.featured { transform: none; }
 
     .pricing-dots {
