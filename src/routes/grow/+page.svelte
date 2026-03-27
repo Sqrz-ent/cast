@@ -92,8 +92,6 @@
   </div>
 </section>
 
-<ComparisonTable />
-
 <!-- ── 4 PILLARS ─────────────────────────────────────────────────── -->
 <section class="pillars-section light">
   <div class="container">
@@ -131,6 +129,8 @@
     </div>
   </div>
 </section>
+
+<ComparisonTable />
 
 <FAQ />
 
