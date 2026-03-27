@@ -2,7 +2,11 @@
   import favicon from '$lib/assets/favicon.svg';
   import Analytics from '$lib/Analytics.svelte';
   import Nav from '$lib/components/Nav.svelte';
+  import { page } from '$app/state';
   let { children } = $props();
+
+  const standaloneRoutes = ['/studio'];
+  $: isStandalone = standaloneRoutes.some(r => page.url.pathname === r || page.url.pathname.startsWith(r + '/'));
 </script>
 
 <Analytics />
@@ -13,10 +17,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </svelte:head>
 
-<Nav />
+{#if !isStandalone}<Nav />{/if}
 {@render children()}
 
 <!-- ── FOOTER ────────────────────────────────────────────────────── -->
+{#if !isStandalone}
 <footer>
   <div class="footer-top">
     <div class="footer-container">
@@ -59,6 +64,7 @@
     <p>© 2025 SQRZ Enterprises, Inc. All rights reserved.</p>
   </div>
 </footer>
+{/if}
 
 <style>
   :global(*, *::before, *::after) { box-sizing: border-box; margin: 0; padding: 0; }

@@ -100,6 +100,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <title>SQRZ Studio</title>
+  <!-- Belt-and-suspenders: hide any globally injected nav/footer -->
+  {@html `<style>nav.site-nav, footer { display: none !important; }</style>`}
 </svelte:head>
 
 <!-- ── CORNER NAVIGATION ──────────────────────────────────────────────────── -->
