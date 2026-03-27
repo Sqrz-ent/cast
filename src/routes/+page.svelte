@@ -693,10 +693,11 @@
     outline: none;
     padding: 13px 16px 13px 20px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
+    font-size: 16px;
     font-weight: 400;
     color: var(--white);
     min-width: 0;
+    touch-action: manipulation;
   }
   .username-input::placeholder { color: rgba(255,255,255,0.3); }
 
