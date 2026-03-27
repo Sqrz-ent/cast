@@ -846,7 +846,9 @@
     .pricing-section {
       width: 100%;
       max-width: 100%;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: visible;
+      padding-top: 32px;
       padding-left: 0;
       padding-right: 0;
     }
@@ -866,20 +868,21 @@
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      width: 100%;
-      max-width: 100vw;
-      padding: 0;
+      padding: 0 5vw;
       margin: 48px 0 0;
       gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
     }
     .pricing-grid::-webkit-scrollbar { display: none; }
 
     .pricing-card {
       scroll-snap-align: center;
-      min-width: 78vw;
-      max-width: 78vw;
+      min-width: 75vw;
+      max-width: 75vw;
       flex-shrink: 0;
       box-sizing: border-box;
+      overflow: visible;
     }
     .pricing-card.featured { transform: none; }
 
