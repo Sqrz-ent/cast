@@ -1263,5 +1263,15 @@
     .how-section,
     .pricing-section,
     .featured-section { padding: 72px 0; }
+
+    .wallet-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .wallet-img {
+      height: 300px;
+      position: static;
+    }
+    .wallet-section { padding: 72px 0; }
   }
 </style>
