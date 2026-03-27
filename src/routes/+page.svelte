@@ -12,6 +12,8 @@
   let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
   let refCode = $state('');
   let debounceTimer;
+  let pricingGrid: HTMLElement | undefined;
+  let activeDot = $state(0);
 
   // Capture ?ref=CODE from URL and persist in localStorage
   onMount(() => {
@@ -38,6 +40,23 @@
     status = 'checking';
     debounceTimer = setTimeout(checkUsername, 500);
   }
+
+  onMount(() => {
+    if (!pricingGrid) return;
+    const cards = Array.from(pricingGrid.querySelectorAll<HTMLElement>('.pricing-card'));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            activeDot = cards.indexOf(entry.target as HTMLElement);
+          }
+        });
+      },
+      { root: pricingGrid, threshold: 0.5 }
+    );
+    cards.forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  });
 
   async function checkUsername() {
     const { data, error } = await supabase
@@ -406,7 +425,7 @@
   <div class="container">
     <p class="section-tag">Pricing</p>
     <h2 class="section-headline light-text centered">Start free.<br><em>Scale when you're ready.</em></h2>
-    <div class="pricing-grid">
+    <div class="pricing-grid" bind:this={pricingGrid}>
 
       <!-- Freelancer -->
       <div class="pricing-card">
@@ -473,6 +492,13 @@
         <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Get Boost</a>
       </div>
 
+    </div>
+
+    <!-- Dot indicator (mobile only) -->
+    <div class="pricing-dots">
+      {#each [0, 1, 2] as i}
+        <span class="pricing-dot" class:active={activeDot === i}></span>
+      {/each}
     </div>
 
     <p class="grow-cta">
@@ -1190,6 +1216,10 @@
   /* ── PRICING ────────────────────────────────────────────────────── */
   .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
+  .pricing-dots {
+    display: none;
+  }
+
   .grow-cta {
     text-align: center;
     margin-top: 32px;
@@ -1375,12 +1405,10 @@
     .fc-skill  { font-size: 0.68rem; }
     .feature-img { height: 280px; }
     .audience-grid,
-    .steps-grid,
-    .pricing-grid {
+    .steps-grid {
       grid-template-columns: 1fr;
     }
     .featured-grid { grid-template-columns: repeat(2, 1fr); }
-    .pricing-card.featured { transform: none; }
     nav { padding: 0 20px; }
     .nav-links { display: none; }
     .container { padding: 0 24px; }
@@ -1400,6 +1428,49 @@
       position: static;
     }
     .wallet-section { padding: 72px 0; }
+  }
+
+  @media (max-width: 768px) {
+    .pricing-grid {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      scroll-padding-left: 1rem;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 48px;
+    }
+    .pricing-grid::-webkit-scrollbar { display: none; }
+
+    .pricing-card {
+      scroll-snap-align: start;
+      min-width: 85vw;
+      flex-shrink: 0;
+      height: auto;
+    }
+    .pricing-card:first-child { margin-left: 1rem; }
+    .pricing-card.featured { transform: none; }
+
+    .pricing-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .pricing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .pricing-dot.active {
+      background: #F3B130;
+      border-color: #F3B130;
+    }
   }
 
   @media (max-width: 480px) {
