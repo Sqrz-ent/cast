@@ -79,10 +79,10 @@
 </section>
 
 <!-- ── 4 PILLARS ─────────────────────────────────────────────────── -->
-<section class="pillars-section light">
+<section class="pillars-section dark">
   <div class="container">
-    <p class="section-tag dark-tag">The System</p>
-    <h2 class="section-headline centered">Four pillars.<br><em>One infrastructure.</em></h2>
+    <p class="section-tag">The System</p>
+    <h2 class="section-headline light-text centered">Four pillars.<br><em>One infrastructure.</em></h2>
     <div class="pillars-grid">
       {#each [
         {
@@ -582,7 +582,7 @@
   }
 
   /* ── PILLARS ─────────────────────────────────────────────────────── */
-  .pillars-section { background: var(--light); padding: 100px 0; }
+  .pillars-section { background: #0a0a0a; padding: 100px 0; }
 
   .pillars-grid {
     display: grid;
@@ -592,14 +592,14 @@
   }
 
   .pillar-card {
-    background: var(--white);
-    border: 1px solid rgba(0,0,0,0.06);
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.06);
     border-radius: var(--radius-card);
     padding: 40px 36px;
     border-left: 3px solid var(--accent);
     transition: box-shadow 0.3s;
   }
-  .pillar-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+  .pillar-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 
   .pillar-num {
     font-family: 'Barlow Condensed', sans-serif;
@@ -616,14 +616,14 @@
     font-size: 1.3rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
-    color: var(--dark);
+    color: #ffffff;
     margin-bottom: 14px;
   }
 
   .pillar-body {
     font-size: 0.9rem;
     font-weight: 300;
-    color: #555;
+    color: rgba(255,255,255,0.52);
     line-height: 1.8;
   }
 
