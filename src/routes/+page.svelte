@@ -59,13 +59,15 @@
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
 <section class="hero">
+  <div class="hero-overlay"></div>
   <div class="container hero-inner">
+
+    <!-- Left: hero text -->
     <div class="hero-text">
-      <p class="eyebrow">Professional identity & booking</p>
+      <p class="eyebrow">Professional identity &amp; booking</p>
       <h1 class="display-headline">THE LINKINBIO<br>THAT GETS YOU<br><em>BOOKED</em></h1>
       <p class="hero-sub">
-        One professional profile to promote your work, manage bookings,
-        and secure payments with clarity and trust.
+        One profile to promote your work, manage bookings, and get paid — with clarity and trust.
       </p>
       <!-- Username availability checker -->
       <div class="username-checker">
@@ -100,12 +102,38 @@
         </div>
       </div>
     </div>
-    <div class="hero-visual">
-      <!-- Webflow image: hero profile mockup / dashboard screenshot -->
-      <div class="image-placeholder hero-img">
-        <span class="placeholder-label">Hero — Profile mockup</span>
+
+    <!-- Right: floating profile cards -->
+    <div class="hero-cards">
+      <!-- Card 1: Will Villa -->
+      <div class="float-card float-card--a">
+        <div class="fc-avatar" style="background: rgba(243,177,48,0.2); color: #F3B130;">WV</div>
+        <div class="fc-info">
+          <div class="fc-name">Will Villa</div>
+          <div class="fc-skill">DJ · Sound Engineer</div>
+        </div>
+        <span class="fc-badge fc-badge--amber">Available</span>
+      </div>
+      <!-- Card 2: Anna Hilbert -->
+      <div class="float-card float-card--b">
+        <div class="fc-avatar" style="background: rgba(168,85,247,0.2); color: #A855F7;">AH</div>
+        <div class="fc-info">
+          <div class="fc-name">Anna Hilbert</div>
+          <div class="fc-skill">Singer · Performer</div>
+        </div>
+        <span class="fc-badge fc-badge--purple">Booked</span>
+      </div>
+      <!-- Card 3: Jake S. -->
+      <div class="float-card float-card--c">
+        <div class="fc-avatar" style="background: rgba(56,189,248,0.2); color: #38BDF8;">JS</div>
+        <div class="fc-info">
+          <div class="fc-name">Jake S.</div>
+          <div class="fc-skill">FOH Engineer</div>
+        </div>
+        <span class="fc-badge fc-badge--blue">Available</span>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -635,14 +663,27 @@
 
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
-    background: var(--dark);
+    position: relative;
+    background: #0a0a0a;
+    /* TODO: add background-image: url('/images/home-hero.jpg') here */
+    background-size: cover;
+    background-position: center;
     padding: 164px 0 100px;
     min-height: 100vh;
     display: flex;
     align-items: center;
   }
 
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+  }
+
   .hero-inner {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 80px;
@@ -658,11 +699,88 @@
     max-width: 480px;
   }
 
-  .hero-btns {
+  /* ── FLOATING PROFILE CARDS ─────────────────────────────────────── */
+  .hero-cards {
     display: flex;
+    flex-direction: column;
     gap: 16px;
-    flex-wrap: wrap;
+    align-items: center;
   }
+
+  @keyframes floatA {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes floatB {
+    0%, 100% { transform: translateY(-4px); }
+    50%       { transform: translateY(4px); }
+  }
+
+  .float-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px;
+    width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .float-card--a { animation: floatA 4s ease-in-out infinite; }
+  .float-card--b { animation: floatB 4s ease-in-out infinite 0.8s; }
+  .float-card--c { animation: floatA 4s ease-in-out infinite 1.6s; }
+
+  .fc-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .fc-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fc-name {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fc-skill {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+  }
+
+  .fc-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .fc-badge--amber  { background: rgba(243,177,48,0.2);  color: #F3B130; }
+  .fc-badge--purple { background: rgba(168,85,247,0.2);  color: #A855F7; }
+  .fc-badge--blue   { background: rgba(56,189,248,0.2);  color: #38BDF8; }
 
   /* ── USERNAME CHECKER ───────────────────────────────────────────── */
   .username-checker {
@@ -742,11 +860,6 @@
   .status-hint {
     font-size: 0.78rem;
     color: rgba(255,255,255,0.25);
-  }
-
-  .hero-img {
-    height: 560px;
-    border-radius: var(--radius-card);
   }
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
@@ -1246,7 +1359,20 @@
       grid-template-columns: 1fr;
       direction: ltr;
     }
-    .hero-img { height: 320px; }
+    .hero-cards {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .float-card {
+      width: 160px;
+      padding: 12px;
+      gap: 10px;
+    }
+    .fc-avatar { width: 36px; height: 36px; font-size: 0.78rem; }
+    .fc-name   { font-size: 0.8rem; }
+    .fc-skill  { font-size: 0.68rem; }
     .feature-img { height: 280px; }
     .audience-grid,
     .steps-grid,
@@ -1274,5 +1400,9 @@
       position: static;
     }
     .wallet-section { padding: 72px 0; }
+  }
+
+  @media (max-width: 480px) {
+    .float-card--c { display: none; }
   }
 </style>
