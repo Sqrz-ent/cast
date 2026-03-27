@@ -1432,9 +1432,9 @@
 
   @media (max-width: 768px) {
     .pricing-section {
-      padding-left: 1rem;
-      padding-right: 1rem;
       overflow: visible;
+      padding-left: 0;
+      padding-right: 0;
     }
 
     .pricing-grid {
@@ -1444,9 +1444,10 @@
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
       padding: 0;
+      margin: 48px 0 0;
       gap: 12px;
       align-items: stretch;
-      margin-top: 48px;
+      overflow: visible;
     }
     .pricing-grid::-webkit-scrollbar { display: none; }
 
@@ -1454,8 +1455,18 @@
       scroll-snap-align: center;
       min-width: 78vw;
       max-width: 78vw;
+      width: 78vw;
+      box-sizing: border-box;
+      overflow: visible;
       flex-shrink: 0;
       height: auto;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .pricing-card * {
+      white-space: normal;
+      word-break: break-word;
+      max-width: 100%;
     }
     .pricing-card.featured { transform: none; }
 
