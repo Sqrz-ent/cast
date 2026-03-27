@@ -119,124 +119,149 @@
 
 <!-- ── SECTION PANELS ────────────────────────────────────────────────────── -->
 {#each sections as section, i}
-  <div class="panel" class:panel-active={active === i}>
 
-    <div class="ghost-number">{section.number}</div>
+  <!-- ── STUDIO — two-column layout ──────────────────────────────────────── -->
+  {#if section.id === 'studio'}
+    <div class="panel" class:panel-active={active === i}>
+      <div class="ghost-number">{section.number}</div>
+      <div class="studio-layout">
 
-    <div class="panel-inner">
-      <!-- Eyebrow -->
-      {#if section.id === 'studio'}
-        <p class="eyebrow">01 — THE STUDIO</p>
-      {:else if section.id === 'house'}
+        <!-- Left: text -->
+        <div class="panel-inner studio-text">
+          <p class="eyebrow">01 — THE STUDIO</p>
+          <h2 class="headline">
+            {#if active === i}
+              <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+            {:else}
+              <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
+            {/if}
+          </h2>
+          <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
+            <p class="body">A studio without talent is just a room full of equipment. This is not that.</p>
+            <p class="body">This is a system you enter.</p>
+            <p class="body">There is no separation here. No writing phase. No recording phase. No "we'll fix it later."<br>The moment is the process.</p>
+            <p class="body">Sound, image, and presence are shaped at the same time — captured as they happen, or not at all.</p>
+            <p class="body">Nothing is built in isolation.<br>Every signal is connected. Every decision is visible. Every action leaves a trace.<br>The work does not pass through stages. It emerges in one continuous movement.</p>
+            <p class="body-subhead">YOU DON'T COME HERE TO TRY IDEAS</p>
+            <p class="body">You come here to commit.<br>To decisions. To timing. To each other.<br>Because once it happens, it exists. And once it exists, it moves.</p>
+            <div class="spec-grid">
+              {#each [
+                { cat: 'AUDIO',     val: 'Not recording. Composition in motion.'         },
+                { cat: 'VIDEO',     val: 'Not documentation. Presence made visible.'      },
+                { cat: 'BROADCAST', val: 'Not promotion. Immediate transmission.'         },
+                { cat: 'DIGITAL',   val: 'Not an afterthought. The work continues there.' },
+              ] as spec}
+                <div class="spec-item">
+                  <span class="spec-cat">{spec.cat}</span>
+                  <span class="spec-val">{spec.val}</span>
+                </div>
+              {/each}
+            </div>
+            <div class="panel-footer">
+              <p class="body-subhead">WHAT LEAVES THIS SPACE</p>
+              <p class="body">Not drafts. Not versions. Not content.<br>Moments — complete, documented, and already in the world.</p>
+            </div>
+          </div><!-- /body-wrap -->
+        </div><!-- /studio-text -->
+
+        <!-- Right: image -->
+        <div class="studio-img-col">
+          <img src="/images/studio/studio.jpg" alt="SQRZ Studio" class="studio-img" />
+        </div>
+
+      </div><!-- /studio-layout -->
+    </div><!-- /panel -->
+
+  <!-- ── HOUSE ───────────────────────────────────────────────────────────── -->
+  {:else if section.id === 'house'}
+    <div class="panel" class:panel-active={active === i}>
+      <div class="ghost-number">{section.number}</div>
+      <div class="panel-inner">
         <p class="eyebrow">02 — THE RESIDENCE</p>
-      {:else if section.id === 'will'}
-        <p class="eyebrow">03 — THE PRODUCER</p>
-      {:else if section.id === 'collab'}
-        <p class="eyebrow">04 — THE FIRM</p>
-      {/if}
-
-      <!-- Headline with typewriter -->
-      <h2 class="headline">
-        {#if active === i}
-          <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
-        {:else}
-          <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
-        {/if}
-      </h2>
-
-      <!-- Scrollable body -->
-      <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
-
-        <!-- ── STUDIO ──────────────────────────────────────────────────────── -->
-        {#if section.id === 'studio'}
-          <p class="body">A studio without talent is just a room full of equipment. This is not that.</p>
-          <p class="body">This is a system you enter.</p>
-          <p class="body">There is no separation here. No writing phase. No recording phase. No "we'll fix it later."<br>The moment is the process.</p>
-          <p class="body">Sound, image, and presence are shaped at the same time — captured as they happen, or not at all.</p>
-          <p class="body">Nothing is built in isolation.<br>Every signal is connected. Every decision is visible. Every action leaves a trace.<br>The work does not pass through stages. It emerges in one continuous movement.</p>
-
-          <p class="body-subhead">YOU DON'T COME HERE TO TRY IDEAS</p>
-          <p class="body">You come here to commit.<br>To decisions. To timing. To each other.<br>Because once it happens, it exists. And once it exists, it moves.</p>
-
-          <!-- TODO: replace with actual image -->
-          <div class="image-placeholder" style="width:100%; aspect-ratio:16/9; background:rgba(255,255,255,0.03); border-radius:8px;"></div>
-
-          <!-- Spec grid -->
-          <div class="spec-grid">
-            {#each [
-              { cat: 'AUDIO',     val: 'Not recording. Composition in motion.'    },
-              { cat: 'VIDEO',     val: 'Not documentation. Presence made visible.' },
-              { cat: 'BROADCAST', val: 'Not promotion. Immediate transmission.'    },
-              { cat: 'DIGITAL',   val: 'Not an afterthought. The work continues there.' },
-            ] as spec}
-              <div class="spec-item">
-                <span class="spec-cat">{spec.cat}</span>
-                <span class="spec-val">{spec.val}</span>
-              </div>
-            {/each}
-          </div>
-
-          <div class="panel-footer">
-            <p class="body-subhead">WHAT LEAVES THIS SPACE</p>
-            <p class="body">Not drafts. Not versions. Not content.<br>Moments — complete, documented, and already in the world.</p>
-          </div>
-
-        <!-- ── HOUSE ────────────────────────────────────────────────────────── -->
-        {:else if section.id === 'house'}
+        <h2 class="headline">
+          {#if active === i}
+            <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+          {:else}
+            <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
+          {/if}
+        </h2>
+        <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
           <p class="body">Not because time changes — but because everything else stops.</p>
           <p class="body">There is no schedule here. No hourly rate. No pressure to arrive at a result before the clock runs out.<br>You don't come for a session. You stay.</p>
           <p class="body">The house is over two hundred years old. A former farm in the Pfalz — timber, walls that have seen generations, mornings that arrive slowly.<br>It is quiet in a way most people have forgotten.<br>No traffic. No background noise. No urgency leaking in from the outside.</p>
-
           <!-- TODO: replace with actual image -->
           <div class="image-placeholder" style="width:100%; aspect-ratio:16/9; background:rgba(255,255,255,0.03); border-radius:8px;"></div>
-
           <p class="body-subhead">A DIFFERENT KIND OF TIME</p>
           <p class="body">In the city, everything is measured. Hours. Budgets. Output.<br>Here, time expands.<br>You can arrive without a finished idea. You can take space to rehearse. To fail. To try something again without watching the clock.<br>Vulnerability is not a risk here. It is part of the process.</p>
           <p class="body">Work and life are not separated.<br>You wake up here. You eat here. You continue where you left off.<br>Conversations don't end because a session ends. They turn into the work.</p>
-
           <p class="body-subhead">THE CONTRAST IS DELIBERATE</p>
           <p class="body">This is not Berlin. Not Hamburg. Not a studio block between traffic and deadlines.<br>This is Haßloch.<br>And right next door: scale. Plopsa Holiday Park — a global production environment, operating year-round.<br>The world of large stages is close. But here, it is quiet.</p>
+        </div>
+      </div>
+    </div>
 
-        <!-- ── THE PRODUCER ──────────────────────────────────────────────────── -->
-        {:else if section.id === 'will'}
+  <!-- ── THE PRODUCER — full-bleed background image ──────────────────────── -->
+  {:else if section.id === 'will'}
+    <div
+      class="panel panel-will"
+      class:panel-active={active === i}
+      style="background-image: url('/images/studio/willStage.jpg'); background-size: cover; background-position: center top;"
+    >
+      <div class="will-overlay"></div>
+      <div class="ghost-number">{section.number}</div>
+      <div class="panel-inner will-inner">
+        <p class="eyebrow">03 — THE PRODUCER</p>
+        <h2 class="headline">
+          {#if active === i}
+            <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+          {:else}
+            <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
+          {/if}
+        </h2>
+        <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
           <p class="body">This doesn't come from one place.</p>
           <p class="body">Born in Medellín. Raised in the Pfalz.<br>But that was only the beginning.</p>
           <p class="body">New York. Ibiza. Berlin. Months here, years there. Stages, studios, temporary homes.<br>Different languages. Different rhythms. Different ways of working.<br>Not something to adapt to — something to move through.</p>
           <p class="body">Over time, you stop thinking in scenes.<br>You start seeing systems.</p>
           <p class="body">Touring productions where nothing can fail. Theater environments where sound, light, and image are one structure. Broadcast setups where everything happens in real time.<br>No separation. No safety net.</p>
           <p class="body">That is where this comes from.<br>Not from the idea of a studio — but from the reality of performance.</p>
-
-          <!-- TODO: replace with actual image -->
-          <div class="image-placeholder" style="width:100%; aspect-ratio:16/9; background:rgba(255,255,255,0.03); border-radius:8px;"></div>
-
           <p class="body-subhead">AND THAT CHANGES THE ROLE</p>
           <p class="body">This is not production in the traditional sense.<br>No sending files. No waiting for feedback. No endless versions.<br>The work exists when it happens.<br>Or it doesn't.</p>
+        </div>
+      </div>
+    </div>
 
-        <!-- ── THE COLLABORATION ─────────────────────────────────────────────── -->
-        {:else if section.id === 'collab'}
+  <!-- ── THE COLLABORATION ─────────────────────────────────────────────────── -->
+  {:else if section.id === 'collab'}
+    <div class="panel" class:panel-active={active === i}>
+      <div class="ghost-number">{section.number}</div>
+      <div class="panel-inner">
+        <p class="eyebrow">04 — THE FIRM</p>
+        <h2 class="headline">
+          {#if active === i}
+            <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+          {:else}
+            <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
+          {/if}
+        </h2>
+        <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
           <p class="body">A label takes ownership. An agency takes commission.<br>This does neither.</p>
           <p class="body">If we work together, I invest.<br>Not in the traditional sense — but in building the structure around you.</p>
           <p class="body">The studio. The system. The digital presence that continues after the work is done.</p>
           <p class="body">You don't leave with just material.<br>You leave with infrastructure.</p>
-
-          <!-- TODO: replace with actual image -->
-          <div class="image-placeholder" style="width:100%; aspect-ratio:16/9; background:rgba(255,255,255,0.03); border-radius:8px;"></div>
-
           <p class="body-subhead">WHAT THAT MEANS</p>
           <p class="body">A SQRZ Page — not a placeholder, but a living space. Your own domain. A system designed to convert attention into opportunity.<br>Audience tracking. Lead generation. A booking pipeline that doesn't depend on constant outreach.</p>
           <p class="body">No exclusivity.<br>No contract locking you in.<br>No taking control of what you create or where you go.</p>
-
           <p class="body-subhead">THIS IS NOT FOR EVERYONE</p>
           <p class="body">It requires something most structures avoid:<br>Clarity. Consistency. A willingness to be visible.</p>
-
           <p class="body-subhead">IF YOU'RE HERE, YOU ALREADY KNOW</p>
           <p class="body">This is not something you apply for.<br>There is no open call.<br>No funnel.</p>
           <p class="body">If this makes sense to you, we're probably already in conversation.</p>
-        {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
 
-      </div><!-- /body-wrap -->
-    </div><!-- /panel-inner -->
-  </div><!-- /panel -->
 {/each}
 
 <style>
@@ -471,6 +496,56 @@
     border-top: 1px solid rgba(255,255,255,0.06);
   }
 
+  /* ── STUDIO TWO-COLUMN LAYOUT ────────────────────────────────────────── */
+  .studio-layout {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 2rem;
+    max-height: 100%;
+    align-items: stretch;
+  }
+
+  .studio-text {
+    /* override panel-inner padding since layout handles it */
+    padding: 0;
+  }
+
+  .studio-img-col {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .studio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    min-height: 300px;
+  }
+
+  /* ── PRODUCER FULL-BLEED BACKGROUND ──────────────────────────────────── */
+  .will-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .will-inner {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ghost-number also needs to be above overlay */
+  .panel-will .ghost-number {
+    z-index: 2;
+  }
+
   /* ── MOBILE ───────────────────────────────────────────────────────────── */
   @media (max-width: 600px) {
     .corner-tl { top: 1.2rem;    left: 1.2rem;  }
@@ -488,5 +563,14 @@
     .spec-grid { grid-template-columns: 1fr; }
     .spec-item:nth-child(odd)  { padding-right: 0; border-right: none; }
     .spec-item:nth-child(even) { padding-left: 0; }
+
+    /* Studio: stack image below text on mobile */
+    .studio-layout {
+      grid-template-columns: 1fr;
+      overflow-y: auto;
+      padding: 0 1.2rem;
+    }
+    .studio-img-col { margin-top: 1.2rem; }
+    .studio-img { min-height: 0; aspect-ratio: 16/9; height: auto; }
   }
 </style>
