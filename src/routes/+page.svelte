@@ -957,7 +957,7 @@
   .audience-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
+    gap: 1.5rem;
     margin-top: 60px;
   }
 
@@ -1054,7 +1054,7 @@
   .wallet-steps {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1rem;
   }
 
   .wallet-step {
