@@ -19,18 +19,22 @@
     $page.url.pathname;
     menuOpen = false;
   });
+
+  function closeMenu() {
+    menuOpen = false;
+  }
 </script>
 
-<nav class="site-nav" class:scrolled>
+<nav class="site-nav" class:scrolled class:menu-open={menuOpen}>
   <div class="nav-inner">
 
     <!-- Left: Logo -->
-    <a href="/" class="nav-logo">
+    <a href="/" class="nav-logo" onclick={closeMenu}>
       <!-- TODO: replace with SVG logo -->
       SQRZ
     </a>
 
-    <!-- Center: Links -->
+    <!-- Center: Links (desktop only) -->
     <div class="nav-links">
       <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>Home</a>
       <a href="/grow" class="nav-link" class:active={$page.url.pathname === '/grow'}>Grow</a>
@@ -38,29 +42,39 @@
 
     <!-- Right: Auth + Hamburger -->
     <div class="nav-right">
-      <a href="https://dashboard.sqrz.com/login" class="nav-login">Login</a>
-      <a href="https://dashboard.sqrz.com/join" class="nav-signup">Sign Up</a>
+      <!-- Auth links: desktop only -->
+      <a href="https://dashboard.sqrz.com/login" class="nav-login nav-desktop-only">Login</a>
+      <a href="https://dashboard.sqrz.com/join" class="nav-signup nav-desktop-only">Sign Up</a>
 
-      <!-- Hamburger (mobile only) -->
+      <!-- Hamburger / Close (mobile only) -->
       <button
         class="nav-hamburger"
-        aria-label="Toggle menu"
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
         aria-expanded={menuOpen}
         onclick={() => menuOpen = !menuOpen}
       >
-        <span></span>
-        <span></span>
-        <span></span>
+        {#if menuOpen}
+          <span class="hamburger-close">✕</span>
+        {:else}
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        {/if}
       </button>
     </div>
 
   </div>
 
-  <!-- Mobile dropdown -->
+  <!-- Mobile panel -->
   {#if menuOpen}
-    <div class="nav-dropdown">
-      <a href="/" class="nav-dropdown-link" class:active={$page.url.pathname === '/'}>Home</a>
-      <a href="/grow" class="nav-dropdown-link" class:active={$page.url.pathname === '/grow'}>Grow</a>
+    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+    <div class="nav-backdrop" onclick={closeMenu}></div>
+    <div class="nav-panel">
+      <a href="/" class="nav-panel-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>Home</a>
+      <a href="/grow" class="nav-panel-link" class:active={$page.url.pathname === '/grow'} onclick={closeMenu}>Grow</a>
+      <div class="nav-panel-divider"></div>
+      <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
+      <a href="https://dashboard.sqrz.com/join" class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
     </div>
   {/if}
 </nav>
@@ -80,8 +94,9 @@
     font-family: 'DM Sans', ui-sans-serif, sans-serif;
   }
 
-  .site-nav.scrolled {
-    background: rgba(0, 0, 0, 0.85);
+  .site-nav.scrolled,
+  .site-nav.menu-open {
+    background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
@@ -106,7 +121,7 @@
     flex-shrink: 0;
   }
 
-  /* Center links */
+  /* Center links (desktop) */
   .nav-links {
     display: flex;
     align-items: center;
@@ -126,9 +141,7 @@
     transition: color 0.15s;
   }
 
-  .nav-link:hover {
-    color: rgba(255, 255, 255, 0.95);
-  }
+  .nav-link:hover { color: rgba(255, 255, 255, 0.95); }
 
   .nav-link.active {
     color: #F3B130;
@@ -151,10 +164,7 @@
     text-decoration: none;
     transition: color 0.15s;
   }
-
-  .nav-login:hover {
-    color: rgba(255, 255, 255, 0.95);
-  }
+  .nav-login:hover { color: rgba(255, 255, 255, 0.95); }
 
   .nav-signup {
     font-size: 0.88rem;
@@ -167,74 +177,115 @@
     transition: opacity 0.15s;
     white-space: nowrap;
   }
+  .nav-signup:hover { opacity: 0.88; }
 
-  .nav-signup:hover {
-    opacity: 0.88;
-  }
-
-  /* Hamburger */
+  /* Hamburger (mobile only) */
   .nav-hamburger {
     display: none;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    flex-direction: column;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 4px;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
+    color: rgba(255, 255, 255, 0.9);
   }
 
-  .nav-hamburger span {
+  .hamburger-line {
     display: block;
     width: 22px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 2px;
-    transition: background 0.15s;
   }
 
-  .nav-hamburger:hover span {
-    background: #ffffff;
+  .hamburger-close {
+    font-size: 1.1rem;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.85);
   }
 
-  /* Mobile dropdown */
-  .nav-dropdown {
+  /* Mobile panel */
+  .nav-backdrop {
+    position: fixed;
+    inset: 64px 0 0 0;
+    z-index: 98;
+  }
+
+  .nav-panel {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    background: #0a0a0a;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 8px 0;
+    align-items: center;
+    padding: 2rem 2rem 2.5rem;
+    gap: 0;
   }
 
-  .nav-dropdown-link {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.7);
+  .nav-panel-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
-    padding: 12px 2rem;
+    padding: 14px 0;
+    width: 100%;
+    text-align: center;
     transition: color 0.15s;
   }
+  .nav-panel-link:hover { color: #ffffff; }
+  .nav-panel-link.active { color: #F3B130; }
 
-  .nav-dropdown-link:hover {
-    color: #ffffff;
+  .nav-panel-divider {
+    width: 40px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 8px 0;
   }
 
-  .nav-dropdown-link.active {
-    color: #F3B130;
+  .nav-panel-login {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: none;
+    letter-spacing: 0;
+    color: rgba(255, 255, 255, 0.5);
   }
+  .nav-panel-login:hover { color: rgba(255, 255, 255, 0.8); }
 
-  /* Mobile */
+  .nav-panel-signup {
+    display: block;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    background: #F3B130;
+    color: #111111;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 12px;
+    transition: opacity 0.15s;
+    touch-action: manipulation;
+  }
+  .nav-panel-signup:hover { opacity: 0.88; }
+
+  /* Mobile breakpoint */
   @media (max-width: 768px) {
-    .nav-links {
-      display: none;
-    }
-
-    .nav-hamburger {
-      display: flex;
-    }
+    .nav-links { display: none; }
+    .nav-desktop-only { display: none; }
+    .nav-hamburger { display: flex; }
   }
 </style>
