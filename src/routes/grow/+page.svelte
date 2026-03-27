@@ -43,8 +43,7 @@
         predictable leverage — not random exposure.
       </p>
       <div class="hero-btns">
-        <button class="btn-primary btn-lg">Apply to Grow</button>
-        <button class="btn-ghost btn-lg">See Pricing</button>
+        <a href="#pricing" class="btn-ghost btn-lg">See Pricing</a>
       </div>
     </div>
   </div>

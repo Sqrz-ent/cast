@@ -190,7 +190,7 @@
   <div class="container feature-inner">
     <div class="feature-text">
       <p class="section-number accent">02</p>
-      <h2 class="section-headline light-text">You Run Your<br><em>Pipeline</em></h2>
+      <h2 class="section-headline light-text">Run Your<br><em>Booking Pipeline</em></h2>
       <p class="body-text mid-text">
         Clients don't just message you — they enter a structured flow.
         Scope, terms, collaboration, and payment move forward in one
