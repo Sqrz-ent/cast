@@ -844,7 +844,9 @@
 
   @media (max-width: 768px) {
     .pricing-section {
-      overflow: visible;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
       padding-left: 0;
       padding-right: 0;
     }
@@ -859,7 +861,6 @@
       margin: 48px 0 0;
       gap: 12px;
       align-items: stretch;
-      overflow: visible;
     }
     .pricing-grid::-webkit-scrollbar { display: none; }
 
@@ -869,7 +870,6 @@
       max-width: 78vw;
       width: 78vw;
       box-sizing: border-box;
-      overflow: visible;
       flex-shrink: 0;
       height: auto;
       word-wrap: break-word;
