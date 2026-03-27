@@ -425,6 +425,7 @@
   <div class="container">
     <p class="section-tag">Pricing</p>
     <h2 class="section-headline light-text centered">Start free.<br><em>Scale when you're ready.</em></h2>
+    <div class="pricing-carousel-wrapper">
     <div class="pricing-grid" bind:this={pricingGrid}>
 
       <!-- Freelancer -->
@@ -492,6 +493,7 @@
         <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Get Boost</a>
       </div>
 
+    </div>
     </div>
 
     <!-- Dot indicator (mobile only) -->
@@ -1434,9 +1436,6 @@
     .pricing-section {
       width: 100%;
       max-width: 100%;
-      overflow-x: hidden;
-      overflow-y: visible;
-      padding-top: 32px;
       padding-left: 0;
       padding-right: 0;
     }
@@ -1450,14 +1449,20 @@
       box-sizing: border-box;
     }
 
+    /* Wrapper clips horizontal overflow without clipping the badge above */
+    .pricing-carousel-wrapper {
+      overflow: hidden;
+    }
+
     .pricing-grid {
       display: flex;
       overflow-x: auto;
+      overflow-y: visible;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
-      padding: 0 5vw;
-      margin: 48px 0 0;
+      padding: 40px 5vw 16px;
+      margin: 8px 0 0;
       gap: 12px;
       width: 100%;
       box-sizing: border-box;
