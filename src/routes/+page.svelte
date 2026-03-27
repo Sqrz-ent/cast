@@ -1431,6 +1431,12 @@
   }
 
   @media (max-width: 768px) {
+    .pricing-section {
+      padding-left: 1rem;
+      padding-right: 1rem;
+      overflow: visible;
+    }
+
     .pricing-grid {
       display: flex;
       overflow-x: auto;
@@ -1441,10 +1447,6 @@
       gap: 12px;
       align-items: stretch;
       margin-top: 48px;
-      /* break out of .container padding so scroll reaches viewport edges */
-      margin-left: -24px;
-      margin-right: -24px;
-      width: calc(100% + 48px);
     }
     .pricing-grid::-webkit-scrollbar { display: none; }
 
