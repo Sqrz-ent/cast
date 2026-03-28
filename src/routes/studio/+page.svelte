@@ -12,12 +12,16 @@
   const cornerIndex = { tl: 0, tr: 1, bl: 2, br: 3 };
 
   // ── STATE ─────────────────────────────────────────────────────────────────
-  let active       = $state(0);
+  let active        = $state(0);
   let transitioning = $state(false);
-  let typedText    = $state('');
-  let typingDone   = $state(false);
-  let bodyVisible  = $state(false);
-  let typeInterval = null;
+  let typedText     = $state('');
+  let typingDone    = $state(false);
+  let bodyVisible   = $state(false);
+  let typeInterval  = null;
+
+  // Element bindings for parallax
+  let willPanelEl   = null;
+  let producerImgEl = null;
 
   // ── HEADLINES ─────────────────────────────────────────────────────────────
   const headlines = [
@@ -86,11 +90,27 @@
     return { plain: h.plain, accent: typedText.slice(h.plain.length) };
   }
 
+  // ── PARALLAX ─────────────────────────────────────────────────────────────
+  function handleParallax() {
+    if (!producerImgEl || !willPanelEl) return;
+    const offset = willPanelEl.scrollTop * 0.15;
+    producerImgEl.style.transform = `translateY(${offset}px)`;
+  }
+
   // ── LIFECYCLE ─────────────────────────────────────────────────────────────
   onMount(() => {
     window.addEventListener('keydown', handleKey);
     startTypewriter(0);
-    return () => window.removeEventListener('keydown', handleKey);
+
+    // Attach parallax listener after bind:this resolves
+    setTimeout(() => {
+      willPanelEl?.addEventListener('scroll', handleParallax, { passive: true });
+    }, 100);
+
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      willPanelEl?.removeEventListener('scroll', handleParallax);
+    };
   });
 
   onDestroy(() => { clearInterval(typeInterval); });
@@ -100,11 +120,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <title>SQRZ Studio</title>
-  <!-- Belt-and-suspenders: hide any globally injected nav/footer -->
   {@html `<style>nav.site-nav, footer { display: none !important; }</style>`}
 </svelte:head>
 
-<!-- ── CORNER NAVIGATION ──────────────────────────────────────────────────── -->
+<!-- ── CORNER NAVIGATION (always fixed) ──────────────────────────────────── -->
 {#each sections as section, i}
   <button
     class="corner-btn corner-{section.corner}"
@@ -118,151 +137,144 @@
 {/each}
 
 <!-- ── SECTION PANELS ────────────────────────────────────────────────────── -->
-{#each sections as section, i}
 
-  <!-- ── STUDIO — two-column layout ──────────────────────────────────────── -->
-  {#if section.id === 'studio'}
-    <div class="panel" class:panel-active={active === i}>
-      <div class="ghost-number">{section.number}</div>
-      <div class="studio-layout">
+<!-- ── STUDIO ──────────────────────────────────────────────────────────────── -->
+<div class="panel" class:panel-active={active === 0}>
+  <div class="ghost-number">01</div>
+  <div class="panel-inner">
+    <p class="eyebrow">01 — THE STUDIO</p>
+    <h2 class="headline">
+      {#if active === 0}
+        <span class="typed-plain">{splitTyped(0).plain}</span><span class="typed-accent">{splitTyped(0).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+      {:else}
+        <span class="typed-plain">{headlines[0].plain}</span><span class="typed-accent">{headlines[0].accent}</span>
+      {/if}
+    </h2>
+    <div class="body-wrap" class:body-visible={active === 0 ? bodyVisible : true}>
+      <p class="body">A studio without talent is just a room full of equipment. This is not that.</p>
+      <p class="body">This is a system you enter.</p>
+      <p class="body">There is no separation here. No writing phase. No recording phase. No "we'll fix it later."<br>The moment is the process.</p>
+      <p class="body">Sound, image, and presence are shaped at the same time — captured as they happen, or not at all.</p>
+      <p class="body">Nothing is built in isolation.<br>Every signal is connected. Every decision is visible. Every action leaves a trace.<br>The work does not pass through stages. It emerges in one continuous movement.</p>
+      <p class="body-subhead">YOU DON'T COME HERE TO TRY IDEAS</p>
+      <p class="body">You come here to commit.<br>To decisions. To timing. To each other.<br>Because once it happens, it exists. And once it exists, it moves.</p>
 
-        <!-- Left: text -->
-        <div class="panel-inner studio-text">
-          <p class="eyebrow">01 — THE STUDIO</p>
-          <h2 class="headline">
-            {#if active === i}
-              <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
-            {:else}
-              <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
-            {/if}
-          </h2>
-          <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
-            <p class="body">A studio without talent is just a room full of equipment. This is not that.</p>
-            <p class="body">This is a system you enter.</p>
-            <p class="body">There is no separation here. No writing phase. No recording phase. No "we'll fix it later."<br>The moment is the process.</p>
-            <p class="body">Sound, image, and presence are shaped at the same time — captured as they happen, or not at all.</p>
-            <p class="body">Nothing is built in isolation.<br>Every signal is connected. Every decision is visible. Every action leaves a trace.<br>The work does not pass through stages. It emerges in one continuous movement.</p>
-            <p class="body-subhead">YOU DON'T COME HERE TO TRY IDEAS</p>
-            <p class="body">You come here to commit.<br>To decisions. To timing. To each other.<br>Because once it happens, it exists. And once it exists, it moves.</p>
-            <div class="spec-grid">
-              {#each [
-                { cat: 'AUDIO',     val: 'Not recording. Composition in motion.'         },
-                { cat: 'VIDEO',     val: 'Not documentation. Presence made visible.'      },
-                { cat: 'BROADCAST', val: 'Not promotion. Immediate transmission.'         },
-                { cat: 'DIGITAL',   val: 'Not an afterthought. The work continues there.' },
-              ] as spec}
-                <div class="spec-item">
-                  <span class="spec-cat">{spec.cat}</span>
-                  <span class="spec-val">{spec.val}</span>
-                </div>
-              {/each}
-            </div>
-            <div class="panel-footer">
-              <p class="body-subhead">WHAT LEAVES THIS SPACE</p>
-              <p class="body">Not drafts. Not versions. Not content.<br>Moments — complete, documented, and already in the world.</p>
-            </div>
-          </div><!-- /body-wrap -->
-        </div><!-- /studio-text -->
+      <!-- Studio image — full width, natural ratio -->
+      <img src="/images/studio/studio.jpg" alt="SQRZ Studio" class="studio-img" />
 
-        <!-- Right: image -->
-        <div class="studio-img-col">
-          <img src="/images/studio/studio.jpg" alt="SQRZ Studio" class="studio-img" />
-        </div>
-
-      </div><!-- /studio-layout -->
-    </div><!-- /panel -->
-
-  <!-- ── HOUSE ───────────────────────────────────────────────────────────── -->
-  {:else if section.id === 'house'}
-    <div class="panel" class:panel-active={active === i}>
-      <div class="ghost-number">{section.number}</div>
-      <div class="panel-inner">
-        <p class="eyebrow">02 — THE RESIDENCE</p>
-        <h2 class="headline">
-          {#if active === i}
-            <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
-          {:else}
-            <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
-          {/if}
-        </h2>
-        <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
-          <p class="body">Not because time changes — but because everything else stops.</p>
-          <p class="body">There is no schedule here. No hourly rate. No pressure to arrive at a result before the clock runs out.<br>You don't come for a session. You stay.</p>
-          <p class="body">The house is over two hundred years old. A former farm in the Pfalz — timber, walls that have seen generations, mornings that arrive slowly.<br>It is quiet in a way most people have forgotten.<br>No traffic. No background noise. No urgency leaking in from the outside.</p>
-          <!-- TODO: replace with actual image -->
-          <div class="image-placeholder" style="width:100%; aspect-ratio:16/9; background:rgba(255,255,255,0.03); border-radius:8px;"></div>
-          <p class="body-subhead">A DIFFERENT KIND OF TIME</p>
-          <p class="body">In the city, everything is measured. Hours. Budgets. Output.<br>Here, time expands.<br>You can arrive without a finished idea. You can take space to rehearse. To fail. To try something again without watching the clock.<br>Vulnerability is not a risk here. It is part of the process.</p>
-          <p class="body">Work and life are not separated.<br>You wake up here. You eat here. You continue where you left off.<br>Conversations don't end because a session ends. They turn into the work.</p>
-          <p class="body-subhead">THE CONTRAST IS DELIBERATE</p>
-          <p class="body">This is not Berlin. Not Hamburg. Not a studio block between traffic and deadlines.<br>This is Haßloch.<br>And right next door: scale. Plopsa Holiday Park — a global production environment, operating year-round.<br>The world of large stages is close. But here, it is quiet.</p>
-        </div>
+      <div class="spec-grid">
+        {#each [
+          { cat: 'AUDIO',     val: 'Not recording. Composition in motion.'         },
+          { cat: 'VIDEO',     val: 'Not documentation. Presence made visible.'      },
+          { cat: 'BROADCAST', val: 'Not promotion. Immediate transmission.'         },
+          { cat: 'DIGITAL',   val: 'Not an afterthought. The work continues there.' },
+        ] as spec}
+          <div class="spec-item">
+            <span class="spec-cat">{spec.cat}</span>
+            <span class="spec-val">{spec.val}</span>
+          </div>
+        {/each}
+      </div>
+      <div class="panel-footer">
+        <p class="body-subhead">WHAT LEAVES THIS SPACE</p>
+        <p class="body">Not drafts. Not versions. Not content.<br>Moments — complete, documented, and already in the world.</p>
       </div>
     </div>
+  </div>
+</div>
 
-  <!-- ── THE PRODUCER — full-bleed background image ──────────────────────── -->
-  {:else if section.id === 'will'}
-    <div
-      class="panel panel-will"
-      class:panel-active={active === i}
-      style="background-image: url('/images/studio/willStage.jpg'); background-size: cover; background-position: center top;"
-    >
-      <div class="will-overlay"></div>
-      <div class="ghost-number">{section.number}</div>
-      <div class="panel-inner will-inner">
-        <p class="eyebrow">03 — THE PRODUCER</p>
-        <h2 class="headline">
-          {#if active === i}
-            <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
-          {:else}
-            <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
-          {/if}
-        </h2>
-        <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
-          <p class="body">This doesn't come from one place.</p>
-          <p class="body">Born in Medellín. Raised in the Pfalz.<br>But that was only the beginning.</p>
-          <p class="body">New York. Ibiza. Berlin. Months here, years there. Stages, studios, temporary homes.<br>Different languages. Different rhythms. Different ways of working.<br>Not something to adapt to — something to move through.</p>
-          <p class="body">Over time, you stop thinking in scenes.<br>You start seeing systems.</p>
-          <p class="body">Touring productions where nothing can fail. Theater environments where sound, light, and image are one structure. Broadcast setups where everything happens in real time.<br>No separation. No safety net.</p>
-          <p class="body">That is where this comes from.<br>Not from the idea of a studio — but from the reality of performance.</p>
-          <p class="body-subhead">AND THAT CHANGES THE ROLE</p>
-          <p class="body">This is not production in the traditional sense.<br>No sending files. No waiting for feedback. No endless versions.<br>The work exists when it happens.<br>Or it doesn't.</p>
-        </div>
-      </div>
+<!-- ── HOUSE ───────────────────────────────────────────────────────────────── -->
+<div class="panel" class:panel-active={active === 1}>
+  <div class="ghost-number">02</div>
+  <div class="panel-inner">
+    <p class="eyebrow">02 — THE RESIDENCE</p>
+    <h2 class="headline">
+      {#if active === 1}
+        <span class="typed-plain">{splitTyped(1).plain}</span><span class="typed-accent">{splitTyped(1).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+      {:else}
+        <span class="typed-plain">{headlines[1].plain}</span><span class="typed-accent">{headlines[1].accent}</span>
+      {/if}
+    </h2>
+    <div class="body-wrap" class:body-visible={active === 1 ? bodyVisible : true}>
+      <p class="body">Not because time changes — but because everything else stops.</p>
+      <p class="body">There is no schedule here. No hourly rate. No pressure to arrive at a result before the clock runs out.<br>You don't come for a session. You stay.</p>
+      <p class="body">The house is over two hundred years old. A former farm in the Pfalz — timber, walls that have seen generations, mornings that arrive slowly.<br>It is quiet in a way most people have forgotten.<br>No traffic. No background noise. No urgency leaking in from the outside.</p>
+      <!-- TODO: replace with actual image -->
+      <div class="image-placeholder"></div>
+      <p class="body-subhead">A DIFFERENT KIND OF TIME</p>
+      <p class="body">In the city, everything is measured. Hours. Budgets. Output.<br>Here, time expands.<br>You can arrive without a finished idea. You can take space to rehearse. To fail. To try something again without watching the clock.<br>Vulnerability is not a risk here. It is part of the process.</p>
+      <p class="body">Work and life are not separated.<br>You wake up here. You eat here. You continue where you left off.<br>Conversations don't end because a session ends. They turn into the work.</p>
+      <p class="body-subhead">THE CONTRAST IS DELIBERATE</p>
+      <p class="body">This is not Berlin. Not Hamburg. Not a studio block between traffic and deadlines.<br>This is Haßloch.<br>And right next door: scale. Plopsa Holiday Park — a global production environment, operating year-round.<br>The world of large stages is close. But here, it is quiet.</p>
     </div>
+  </div>
+</div>
 
-  <!-- ── THE COLLABORATION ─────────────────────────────────────────────────── -->
-  {:else if section.id === 'collab'}
-    <div class="panel" class:panel-active={active === i}>
-      <div class="ghost-number">{section.number}</div>
-      <div class="panel-inner">
-        <p class="eyebrow">04 — THE FIRM</p>
-        <h2 class="headline">
-          {#if active === i}
-            <span class="typed-plain">{splitTyped(i).plain}</span><span class="typed-accent">{splitTyped(i).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
-          {:else}
-            <span class="typed-plain">{headlines[i].plain}</span><span class="typed-accent">{headlines[i].accent}</span>
-          {/if}
-        </h2>
-        <div class="body-wrap" class:body-visible={active === i ? bodyVisible : true}>
-          <p class="body">A label takes ownership. An agency takes commission.<br>This does neither.</p>
-          <p class="body">If we work together, I invest.<br>Not in the traditional sense — but in building the structure around you.</p>
-          <p class="body">The studio. The system. The digital presence that continues after the work is done.</p>
-          <p class="body">You don't leave with just material.<br>You leave with infrastructure.</p>
-          <p class="body-subhead">WHAT THAT MEANS</p>
-          <p class="body">A SQRZ Page — not a placeholder, but a living space. Your own domain. A system designed to convert attention into opportunity.<br>Audience tracking. Lead generation. A booking pipeline that doesn't depend on constant outreach.</p>
-          <p class="body">No exclusivity.<br>No contract locking you in.<br>No taking control of what you create or where you go.</p>
-          <p class="body-subhead">THIS IS NOT FOR EVERYONE</p>
-          <p class="body">It requires something most structures avoid:<br>Clarity. Consistency. A willingness to be visible.</p>
-          <p class="body-subhead">IF YOU'RE HERE, YOU ALREADY KNOW</p>
-          <p class="body">This is not something you apply for.<br>There is no open call.<br>No funnel.</p>
-          <p class="body">If this makes sense to you, we're probably already in conversation.</p>
-        </div>
-      </div>
+<!-- ── THE PRODUCER — full-bleed img + parallax ────────────────────────────── -->
+<div class="panel panel-will" class:panel-active={active === 2} bind:this={willPanelEl}>
+  <!-- Full-bleed background image with parallax -->
+  <div class="will-hero">
+    <img
+      bind:this={producerImgEl}
+      src="/images/studio/willStage.jpg"
+      alt="Will Villa"
+      class="producer-image"
+    />
+    <div class="will-overlay"></div>
+  </div>
+
+  <div class="ghost-number">03</div>
+
+  <div class="panel-inner will-inner">
+    <p class="eyebrow">03 — THE PRODUCER</p>
+    <h2 class="headline">
+      {#if active === 2}
+        <span class="typed-plain">{splitTyped(2).plain}</span><span class="typed-accent">{splitTyped(2).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+      {:else}
+        <span class="typed-plain">{headlines[2].plain}</span><span class="typed-accent">{headlines[2].accent}</span>
+      {/if}
+    </h2>
+    <div class="body-wrap" class:body-visible={active === 2 ? bodyVisible : true}>
+      <p class="body">This doesn't come from one place.</p>
+      <p class="body">Born in Medellín. Raised in the Pfalz.<br>But that was only the beginning.</p>
+      <p class="body">New York. Ibiza. Berlin. Months here, years there. Stages, studios, temporary homes.<br>Different languages. Different rhythms. Different ways of working.<br>Not something to adapt to — something to move through.</p>
+      <p class="body">Over time, you stop thinking in scenes.<br>You start seeing systems.</p>
+      <p class="body">Touring productions where nothing can fail. Theater environments where sound, light, and image are one structure. Broadcast setups where everything happens in real time.<br>No separation. No safety net.</p>
+      <p class="body">That is where this comes from.<br>Not from the idea of a studio — but from the reality of performance.</p>
+      <p class="body-subhead">AND THAT CHANGES THE ROLE</p>
+      <p class="body">This is not production in the traditional sense.<br>No sending files. No waiting for feedback. No endless versions.<br>The work exists when it happens.<br>Or it doesn't.</p>
     </div>
-  {/if}
+  </div>
+</div>
 
-{/each}
+<!-- ── THE COLLABORATION ──────────────────────────────────────────────────── -->
+<div class="panel" class:panel-active={active === 3}>
+  <div class="ghost-number">04</div>
+  <div class="panel-inner">
+    <p class="eyebrow">04 — THE FIRM</p>
+    <h2 class="headline">
+      {#if active === 3}
+        <span class="typed-plain">{splitTyped(3).plain}</span><span class="typed-accent">{splitTyped(3).accent}</span>{#if !typingDone}<span class="cursor">|</span>{/if}
+      {:else}
+        <span class="typed-plain">{headlines[3].plain}</span><span class="typed-accent">{headlines[3].accent}</span>
+      {/if}
+    </h2>
+    <div class="body-wrap" class:body-visible={active === 3 ? bodyVisible : true}>
+      <p class="body">A label takes ownership. An agency takes commission.<br>This does neither.</p>
+      <p class="body">If we work together, I invest.<br>Not in the traditional sense — but in building the structure around you.</p>
+      <p class="body">The studio. The system. The digital presence that continues after the work is done.</p>
+      <p class="body">You don't leave with just material.<br>You leave with infrastructure.</p>
+      <p class="body-subhead">WHAT THAT MEANS</p>
+      <p class="body">A SQRZ Page — not a placeholder, but a living space. Your own domain. A system designed to convert attention into opportunity.<br>Audience tracking. Lead generation. A booking pipeline that doesn't depend on constant outreach.</p>
+      <p class="body">No exclusivity.<br>No contract locking you in.<br>No taking control of what you create or where you go.</p>
+      <p class="body-subhead">THIS IS NOT FOR EVERYONE</p>
+      <p class="body">It requires something most structures avoid:<br>Clarity. Consistency. A willingness to be visible.</p>
+      <p class="body-subhead">IF YOU'RE HERE, YOU ALREADY KNOW</p>
+      <p class="body">This is not something you apply for.<br>There is no open call.<br>No funnel.</p>
+      <p class="body">If this makes sense to you, we're probably already in conversation.</p>
+    </div>
+  </div>
+</div>
 
 <style>
   /* ── RESET ────────────────────────────────────────────────────────────── */
@@ -275,10 +287,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── CORNER BUTTONS ───────────────────────────────────────────────────── */
+  /* ── CORNER BUTTONS (always fixed) ───────────────────────────────────── */
   .corner-btn {
     position: fixed;
-    z-index: 100;
+    z-index: 200;
     background: none;
     border: none;
     padding: 0;
@@ -319,43 +331,39 @@
   .corner-btn.is-active .corner-label { color: #F3B130; }
   .corner-btn:hover     .corner-label { color: rgba(255,255,255,0.6); }
 
-  /* ── PANELS ───────────────────────────────────────────────────────────── */
+  /* ── PANELS — scrollable containers ──────────────────────────────────── */
   .panel {
     position: fixed;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* scrollable — no overflow: hidden */
+    overflow-y: auto;
+    overflow-x: hidden;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s ease;
-    /* padding keeps content away from corner buttons */
-    padding: 5rem 0;
-    overflow: hidden;
+    /* pad away from corner buttons */
+    padding: 5rem 2rem 6rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* subtle scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
   }
+  .panel::-webkit-scrollbar { width: 3px; }
+  .panel::-webkit-scrollbar-track { background: transparent; }
+  .panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
 
   .panel.panel-active {
     opacity: 1;
     pointer-events: auto;
   }
 
-  /* ── PANEL INNER ──────────────────────────────────────────────────────── */
-  .panel-inner {
-    position: relative;
-    max-width: 680px;
-    width: 100%;
-    padding: 0 2rem;
-    /* column layout so body-wrap takes remaining height */
-    display: flex;
-    flex-direction: column;
-    max-height: 100%;
-  }
-
-  /* ── GHOST NUMBER ─────────────────────────────────────────────────────── */
+  /* ── GHOST NUMBER — fixed so it doesn't scroll ────────────────────────── */
   .ghost-number {
-    position: absolute;
-    bottom: 0;
-    right: 1rem;
+    position: fixed;
+    bottom: 2rem;
+    right: 3rem;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 160px;
     font-weight: 900;
@@ -366,16 +374,22 @@
     z-index: 0;
   }
 
+  /* ── PANEL INNER ──────────────────────────────────────────────────────── */
+  .panel-inner {
+    position: relative;
+    max-width: 680px;
+    width: 100%;
+    z-index: 1;
+  }
+
   /* ── EYEBROW ──────────────────────────────────────────────────────────── */
   .eyebrow {
-    font-family: 'DM Sans', sans-serif;
     font-size: 0.62rem;
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.3);
     margin-bottom: 1.2rem;
-    flex-shrink: 0;
   }
 
   /* ── HEADLINE ─────────────────────────────────────────────────────────── */
@@ -387,8 +401,6 @@
     line-height: 1.05;
     letter-spacing: 0.02em;
     margin-bottom: 1.6rem;
-    flex-shrink: 0;
-    /* reserve two lines so layout doesn't jump during typewriter */
     min-height: 2.2em;
   }
 
@@ -405,27 +417,12 @@
     50%       { opacity: 0; }
   }
 
-  /* ── BODY WRAP (scrollable) ───────────────────────────────────────────── */
+  /* ── BODY WRAP — just opacity, panel handles scrolling ───────────────── */
   .body-wrap {
     opacity: 0;
     transition: opacity 0.5s ease;
-    overflow-y: auto;
-    flex: 1;
-    min-height: 0;
-    /* subtle scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.1) transparent;
-    padding-right: 6px;
-    /* fade bottom edge to hint more content */
-    -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
   }
-
   .body-wrap.body-visible { opacity: 1; }
-
-  .body-wrap::-webkit-scrollbar { width: 3px; }
-  .body-wrap::-webkit-scrollbar-track { background: transparent; }
-  .body-wrap::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 
   /* ── BODY TEXT ────────────────────────────────────────────────────────── */
   .body {
@@ -440,7 +437,6 @@
   .body em     { color: rgba(255,255,255,0.65); font-style: italic; }
 
   .body-subhead {
-    font-family: 'DM Sans', sans-serif;
     font-size: 0.6rem;
     font-weight: 600;
     letter-spacing: 0.2em;
@@ -450,10 +446,22 @@
     margin-bottom: 0.7rem;
   }
 
+  /* ── STUDIO IMAGE — full width, natural ratio ─────────────────────────── */
+  .studio-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.8rem 0;
+  }
+
   /* ── IMAGE PLACEHOLDER ────────────────────────────────────────────────── */
   .image-placeholder {
-    margin-bottom: 1.6rem;
-    margin-top: 0.4rem;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    margin: 1.6rem 0;
   }
 
   /* ── SPEC GRID ────────────────────────────────────────────────────────── */
@@ -489,61 +497,51 @@
     line-height: 1.5;
   }
 
-  /* ── PANEL FOOTER (panel 1 closing text) ──────────────────────────────── */
+  /* ── PANEL FOOTER ─────────────────────────────────────────────────────── */
   .panel-footer {
     margin-top: 1.6rem;
     padding-top: 1.2rem;
     border-top: 1px solid rgba(255,255,255,0.06);
   }
 
-  /* ── STUDIO TWO-COLUMN LAYOUT ────────────────────────────────────────── */
-  .studio-layout {
-    display: grid;
-    grid-template-columns: 60fr 40fr;
-    gap: 3rem;
-    width: 100%;
-    max-width: 1100px;
-    padding: 0 2rem;
-    max-height: 100%;
-    align-items: stretch;
-  }
-
-  .studio-text {
-    /* override panel-inner padding since layout handles it */
+  /* ── PRODUCER — full-bleed image with parallax ────────────────────────── */
+  .panel-will {
     padding: 0;
-  }
-
-  .studio-img-col {
-    display: flex;
     align-items: stretch;
   }
 
-  .studio-img {
+  .will-hero {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .producer-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-    display: block;
-    min-height: 300px;
+    object-position: center top;
+    will-change: transform;
+    transition: transform 0.1s linear;
   }
 
-  /* ── PRODUCER FULL-BLEED BACKGROUND ──────────────────────────────────── */
   .will-overlay {
     position: absolute;
     inset: 0;
     background: rgba(0,0,0,0.65);
-    z-index: 1;
-    pointer-events: none;
   }
 
   .will-inner {
     position: relative;
     z-index: 2;
-  }
-
-  /* ghost-number also needs to be above overlay */
-  .panel-will .ghost-number {
-    z-index: 2;
+    padding: 5rem 0 6rem;
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+    /* horizontal padding for mobile */
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   /* ── MOBILE ───────────────────────────────────────────────────────────── */
@@ -556,21 +554,14 @@
     .corner-label { display: none; }
     .corner-square { width: 12px; height: 12px; }
 
-    .panel { padding: 4rem 0; }
+    .panel { padding: 4rem 1.2rem 5rem; }
     .headline { font-size: clamp(1.9rem, 7.5vw, 2.6rem); min-height: 2em; }
-    .ghost-number { font-size: 90px; }
+    .ghost-number { font-size: 90px; right: 1rem; }
 
     .spec-grid { grid-template-columns: 1fr; }
     .spec-item:nth-child(odd)  { padding-right: 0; border-right: none; }
     .spec-item:nth-child(even) { padding-left: 0; }
 
-    /* Studio: stack image below text on mobile */
-    .studio-layout {
-      grid-template-columns: 1fr;
-      overflow-y: auto;
-      padding: 0 1.2rem;
-    }
-    .studio-img-col { margin-top: 1.2rem; }
-    .studio-img { min-height: 0; aspect-ratio: 16/9; height: auto; }
+    .will-inner { padding: 4rem 1.2rem 5rem; }
   }
 </style>
