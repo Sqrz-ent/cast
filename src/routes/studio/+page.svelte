@@ -19,9 +19,6 @@
   let bodyVisible   = $state(false);
   let typeInterval  = null;
 
-  // Element bindings for parallax
-  let willPanelEl   = null;
-  let producerImgEl = null;
 
   // ── HEADLINES ─────────────────────────────────────────────────────────────
   const headlines = [
@@ -90,27 +87,11 @@
     return { plain: h.plain, accent: typedText.slice(h.plain.length) };
   }
 
-  // ── PARALLAX ─────────────────────────────────────────────────────────────
-  function handleParallax() {
-    if (!producerImgEl || !willPanelEl) return;
-    const offset = willPanelEl.scrollTop * 0.15;
-    producerImgEl.style.transform = `translateY(${offset}px)`;
-  }
-
   // ── LIFECYCLE ─────────────────────────────────────────────────────────────
   onMount(() => {
     window.addEventListener('keydown', handleKey);
     startTypewriter(0);
-
-    // Attach parallax listener after bind:this resolves
-    setTimeout(() => {
-      willPanelEl?.addEventListener('scroll', handleParallax, { passive: true });
-    }, 100);
-
-    return () => {
-      window.removeEventListener('keydown', handleKey);
-      willPanelEl?.removeEventListener('scroll', handleParallax);
-    };
+    return () => window.removeEventListener('keydown', handleKey);
   });
 
   onDestroy(() => { clearInterval(typeInterval); });
@@ -153,14 +134,15 @@
     <div class="body-wrap" class:body-visible={active === 0 ? bodyVisible : true}>
       <p class="body">A studio without talent is just a room full of equipment. This is not that.</p>
       <p class="body">This is a system you enter.</p>
+
+      <!-- Studio image — full width, natural ratio, mid-flow -->
+      <img src="/images/studio/studio.jpg" alt="SQRZ Studio — Haßloch" class="panel-image" />
+
       <p class="body">There is no separation here. No writing phase. No recording phase. No "we'll fix it later."<br>The moment is the process.</p>
       <p class="body">Sound, image, and presence are shaped at the same time — captured as they happen, or not at all.</p>
       <p class="body">Nothing is built in isolation.<br>Every signal is connected. Every decision is visible. Every action leaves a trace.<br>The work does not pass through stages. It emerges in one continuous movement.</p>
       <p class="body-subhead">YOU DON'T COME HERE TO TRY IDEAS</p>
       <p class="body">You come here to commit.<br>To decisions. To timing. To each other.<br>Because once it happens, it exists. And once it exists, it moves.</p>
-
-      <!-- Studio image — full width, natural ratio -->
-      <img src="/images/studio/studio.jpg" alt="SQRZ Studio" class="studio-img" />
 
       <div class="spec-grid">
         {#each [
@@ -198,9 +180,11 @@
     <div class="body-wrap" class:body-visible={active === 1 ? bodyVisible : true}>
       <p class="body">Not because time changes — but because everything else stops.</p>
       <p class="body">There is no schedule here. No hourly rate. No pressure to arrive at a result before the clock runs out.<br>You don't come for a session. You stay.</p>
+
+      <!-- TODO: place house.jpg in static/images/studio/ when ready -->
+      <img src="/images/studio/house.jpg" alt="Villa Hasalaha — Haßloch, Pfalz" class="panel-image" />
+
       <p class="body">The house is over two hundred years old. A former farm in the Pfalz — timber, walls that have seen generations, mornings that arrive slowly.<br>It is quiet in a way most people have forgotten.<br>No traffic. No background noise. No urgency leaking in from the outside.</p>
-      <!-- TODO: replace with actual image -->
-      <div class="image-placeholder"></div>
       <p class="body-subhead">A DIFFERENT KIND OF TIME</p>
       <p class="body">In the city, everything is measured. Hours. Budgets. Output.<br>Here, time expands.<br>You can arrive without a finished idea. You can take space to rehearse. To fail. To try something again without watching the clock.<br>Vulnerability is not a risk here. It is part of the process.</p>
       <p class="body">Work and life are not separated.<br>You wake up here. You eat here. You continue where you left off.<br>Conversations don't end because a session ends. They turn into the work.</p>
@@ -210,22 +194,10 @@
   </div>
 </div>
 
-<!-- ── THE PRODUCER — full-bleed img + parallax ────────────────────────────── -->
-<div class="panel panel-will" class:panel-active={active === 2} bind:this={willPanelEl}>
-  <!-- Full-bleed background image with parallax -->
-  <div class="will-hero">
-    <img
-      bind:this={producerImgEl}
-      src="/images/studio/willStage.jpg"
-      alt="Will Villa"
-      class="producer-image"
-    />
-    <div class="will-overlay"></div>
-  </div>
-
+<!-- ── THE PRODUCER ──────────────────────────────────────────────────────── -->
+<div class="panel" class:panel-active={active === 2}>
   <div class="ghost-number">03</div>
-
-  <div class="panel-inner will-inner">
+  <div class="panel-inner">
     <p class="eyebrow">03 — THE PRODUCER</p>
     <h2 class="headline">
       {#if active === 2}
@@ -237,6 +209,10 @@
     <div class="body-wrap" class:body-visible={active === 2 ? bodyVisible : true}>
       <p class="body">This doesn't come from one place.</p>
       <p class="body">Born in Medellín. Raised in the Pfalz.<br>But that was only the beginning.</p>
+
+      <!-- Stage image — full width, natural ratio, mid-flow -->
+      <img src="/images/studio/willStage.jpg" alt="Will Villa — Live Performance" class="panel-image" />
+
       <p class="body">New York. Ibiza. Berlin. Months here, years there. Stages, studios, temporary homes.<br>Different languages. Different rhythms. Different ways of working.<br>Not something to adapt to — something to move through.</p>
       <p class="body">Over time, you stop thinking in scenes.<br>You start seeing systems.</p>
       <p class="body">Touring productions where nothing can fail. Theater environments where sound, light, and image are one structure. Broadcast setups where everything happens in real time.<br>No separation. No safety net.</p>
@@ -446,13 +422,13 @@
     margin-bottom: 0.7rem;
   }
 
-  /* ── STUDIO IMAGE — full width, natural ratio ─────────────────────────── */
-  .studio-img {
+  /* ── PANEL IMAGE — full width, natural ratio, mid-flow ─────────────────── */
+  .panel-image {
     display: block;
     width: 100%;
     height: auto;
     border-radius: 8px;
-    margin: 1.8rem 0;
+    margin: 2rem 0;
   }
 
   /* ── IMAGE PLACEHOLDER ────────────────────────────────────────────────── */
@@ -504,46 +480,6 @@
     border-top: 1px solid rgba(255,255,255,0.06);
   }
 
-  /* ── PRODUCER — full-bleed image with parallax ────────────────────────── */
-  .panel-will {
-    padding: 0;
-    align-items: stretch;
-  }
-
-  .will-hero {
-    position: fixed;
-    inset: 0;
-    overflow: hidden;
-    z-index: 0;
-  }
-
-  .producer-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    will-change: transform;
-    transition: transform 0.1s linear;
-  }
-
-  .will-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.65);
-  }
-
-  .will-inner {
-    position: relative;
-    z-index: 2;
-    padding: 5rem 0 6rem;
-    max-width: 680px;
-    width: 100%;
-    margin: 0 auto;
-    /* horizontal padding for mobile */
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-
   /* ── MOBILE ───────────────────────────────────────────────────────────── */
   @media (max-width: 600px) {
     .corner-tl { top: 1.2rem;    left: 1.2rem;  }
@@ -561,7 +497,5 @@
     .spec-grid { grid-template-columns: 1fr; }
     .spec-item:nth-child(odd)  { padding-right: 0; border-right: none; }
     .spec-item:nth-child(even) { padding-left: 0; }
-
-    .will-inner { padding: 4rem 1.2rem 5rem; }
   }
 </style>
