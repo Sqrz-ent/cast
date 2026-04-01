@@ -36,7 +36,7 @@
         </p>
       </div>
 
-      <!-- Middle — Platform -->
+      <!-- Platform -->
       <div class="footer-col">
         <p class="footer-col-heading">Platform</p>
         <ul class="footer-links">
@@ -44,11 +44,10 @@
           <li><a href="/grow">Grow</a></li>
           <li><a href="https://jobs.sqrz.com">Jobs</a></li>
           <li><a href="/studio">Studio</a></li>
-          <li><a href="/compare">Compare</a></li>
         </ul>
       </div>
 
-      <!-- Right — Legal -->
+      <!-- Legal -->
       <div class="footer-col">
         <p class="footer-col-heading">Legal</p>
         <ul class="footer-links">
@@ -56,6 +55,28 @@
           <li><a href="/terms">Terms &amp; Conditions</a></li>
           <li><a href="/cookies">Cookie Policy</a></li>
           <li><a href="https://dashboard.sqrz.com">Dashboard</a></li>
+        </ul>
+      </div>
+
+      <!-- Compare — col 1 -->
+      <div class="footer-col">
+        <p class="footer-col-heading">Compare</p>
+        <ul class="footer-links">
+          <li><a href="/compare/sqrz-vs-linktree">SQRZ vs Linktree</a></li>
+          <li><a href="/compare/sqrz-vs-komi">SQRZ vs Komi</a></li>
+          <li><a href="/compare/sqrz-vs-website">SQRZ vs Your Website</a></li>
+          <li><a href="/compare/sqrz-vs-agency">SQRZ vs Agency</a></li>
+        </ul>
+      </div>
+
+      <!-- Compare — col 2 -->
+      <div class="footer-col">
+        <p class="footer-col-heading footer-col-heading-spacer" aria-hidden="true">&nbsp;</p>
+        <ul class="footer-links">
+          <li><a href="/compare/sqrz-vs-fiverr-upwork">SQRZ vs Fiverr &amp; Upwork</a></li>
+          <li><a href="/compare/sqrz-vs-onlyfans">SQRZ vs OnlyFans</a></li>
+          <li><a href="/compare/sqrz-vs-beacons">SQRZ vs Beacons</a></li>
+          <li><a href="/compare">More comparisons →</a></li>
         </ul>
       </div>
 
@@ -86,8 +107,8 @@
     margin: 0 auto;
     padding: 0 40px;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 80px;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 48px;
   }
 
   /* Brand column */
@@ -155,15 +176,29 @@
     color: rgba(255,255,255,0.18);
   }
 
+  .footer-col-heading-spacer {
+    visibility: hidden;
+  }
+
   /* Responsive */
+  @media (max-width: 1024px) {
+    .footer-container {
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+    }
+  }
+
   @media (max-width: 860px) {
     .footer-container {
       grid-template-columns: 1fr 1fr;
-      gap: 48px;
+      gap: 40px;
       padding: 0 24px;
     }
     .footer-brand {
       grid-column: 1 / -1;
+    }
+    .footer-col-heading-spacer {
+      display: none;
     }
     .footer-top { padding: 60px 0 48px; }
     .footer-bottom { padding: 20px 24px; }
