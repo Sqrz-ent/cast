@@ -300,7 +300,6 @@
     font-size: 0.875rem;
   }
   :global(.cmp-table thead tr) {
-    background: rgba(255,255,255,0.04);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
   :global(.cmp-table th) {
@@ -320,16 +319,9 @@
   }
   :global(.cmp-table tbody tr) {
     border-bottom: 1px solid rgba(255,255,255,0.05);
-    transition: background 0.15s;
   }
   :global(.cmp-table tbody tr:last-child) {
     border-bottom: none;
-  }
-  :global(.cmp-table tbody tr:nth-child(even)) {
-    background: rgba(255,255,255,0.02);
-  }
-  :global(.cmp-table tbody tr:hover) {
-    background: rgba(255,255,255,0.04);
   }
   :global(.cmp-table td) {
     padding: 13px 20px;
@@ -342,7 +334,6 @@
     text-align: center;
     border-left: 1px solid rgba(245,166,35,0.15);
     border-right: 1px solid rgba(245,166,35,0.15);
-    background: rgba(245,166,35,0.03);
     font-size: 1rem;
   }
   :global(.cmp-table td.cmp-td-competitor) {
