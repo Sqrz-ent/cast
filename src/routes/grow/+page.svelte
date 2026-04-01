@@ -1,27 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
   import ComparisonTable from '$lib/components/ComparisonTable.svelte';
   import FAQ from '$lib/components/FAQ.svelte';
-
-  let pricingGrid;
-  let activeDot = $state(0);
-
-  onMount(() => {
-    if (!pricingGrid) return;
-    const cards = Array.from(pricingGrid.querySelectorAll('.pricing-card'));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            activeDot = cards.indexOf(entry.target);
-          }
-        });
-      },
-      { root: pricingGrid, threshold: 0.5 }
-    );
-    cards.forEach(card => observer.observe(card));
-    return () => observer.disconnect();
-  });
 </script>
 
 <svelte:head>
@@ -158,43 +137,16 @@
 <section class="pricing-section dark" id="pricing">
   <div class="container">
     <p class="section-tag">Pricing</p>
-    <h2 class="section-headline light-text centered">Choose your<br><em>level of investment</em></h2>
-    <div class="pricing-carousel-wrapper">
-    <div class="pricing-grid" bind:this={pricingGrid}>
+    <h2 class="section-headline light-text centered">Simple,<br><em>performance-based</em></h2>
 
-      <!-- Grow Starter -->
-      <div class="pricing-card">
-        <div class="plan-tier">Starter</div>
-        <div class="plan-name">Grow Starter</div>
-        <div class="plan-price">
-          <span class="price-amount">$149</span>
-          <span class="price-period">/campaign</span>
-        </div>
-        <p class="plan-tagline">Launch a Focused Growth Cycle</p>
-        <ul class="plan-features">
-          {#each [
-            "Targeted traffic directed to your SQRZ profile",
-            "Tracking and attribution installed (pixel + UTM)",
-            "Basic audience segmentation for initial learning",
-            "Performance visibility across visits, clicks, and inquiries",
-          ] as f}
-            <li><span class="feat-check">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <p class="plan-note">* Ad budget up to $1,000 (not included)</p>
-        <a href="https://dashboard.sqrz.com/join" class="btn-outline-accent btn-full">Join SQRZ</a>
-      </div>
-
-      <!-- Grow Pro -->
+    <div class="pricing-single">
       <div class="pricing-card featured">
-        <div class="plan-badge">Most Popular</div>
-        <div class="plan-tier">Pro</div>
-        <div class="plan-name">Grow Pro</div>
+        <div class="plan-tier">GROW</div>
         <div class="plan-price">
           <span class="price-amount">20%</span>
-          <span class="price-period">/campaign managament fee</span>
+          <span class="price-period">/campaign management fee</span>
         </div>
-        <p class="plan-tagline">This is not a single campaign.It’s an ongoing system for building and refining demand.</p>
+        <p class="plan-subtext">Starting at $1,000 ad budget</p>
         <ul class="plan-features">
           {#each [
             "Continuous campaign cycles (define → activate → refine)",
@@ -205,50 +157,13 @@
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <p class="plan-note">* For budgets above $1,000 (not included)</p>
-        <a href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call" target="_blank" rel="noopener noreferrer" class="btn-primary btn-full">Apply</a>
+        <a href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call" target="_blank" rel="noopener noreferrer" class="btn-primary btn-full">Apply to Grow →</a>
       </div>
-
-      <!-- Enterprise -->
-      <div class="pricing-card enterprise-card">
-        <div class="plan-tier">Enterprise</div>
-        <div class="plan-name">Custom</div>
-        <div class="plan-price">
-          <span class="price-amount enterprise-price">Contact Us</span>
-        </div>
-        <p class="plan-tagline">Growth & Revenue Infrastructure at Scale</p>
-        <ul class="plan-features">
-          {#each [
-            "Multi-campaign and multi-offer coordination",
-            "Support for ticket sales, releases, and product-based campaigns",
-            "Advanced audience segmentation across markets and verticals",
-            "* Structured financial flows across bookings, teams, and revenue streams",
-          ] as f}
-            <li><span class="feat-check">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <a href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call" target="_blank" rel="noopener noreferrer" class="btn-outline-accent btn-full">Talk to Us</a>
-      </div>
-
-    </div>
     </div>
 
-    <!-- Dot indicator (mobile only) -->
-    <div class="pricing-dots">
-      {#each [0, 1, 2] as i}
-        <span class="pricing-dot" class:active={activeDot === i}></span>
-      {/each}
-    </div>
-
-    <div class="discovery-cta">
-      <p class="discovery-hint">Not sure which plan is right for you?</p>
-      <a
-        href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-primary"
-      >Book a free discovery call →</a>
-    </div>
+    <p class="boost-nudge">
+      Smaller budget? <a href="https://sqrz.com/signup" class="boost-nudge-link">Start with Boost →</a>
+    </p>
   </div>
 </section>
 
@@ -659,26 +574,23 @@
   /* ── PRICING ────────────────────────────────────────────────────── */
   .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
-  .pricing-dots { display: none; }
-
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+  .pricing-single {
+    display: flex;
+    justify-content: center;
     margin-top: 64px;
-    align-items: stretch;
   }
 
   .pricing-card {
     background: var(--dark-2);
     border: 1px solid var(--border-dark);
     border-radius: var(--radius-card);
-    padding: 32px 28px;
+    padding: 36px 32px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     position: relative;
-    height: 100%;
+    width: 100%;
+    max-width: 480px;
   }
 
   .pricing-card.featured {
@@ -686,66 +598,36 @@
     background: var(--dark-3);
   }
 
-  .pricing-card.enterprise-card {
-    border-color: rgba(245,166,35,0.2);
-  }
-
-  .plan-badge {
-    position: absolute;
-    top: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent);
-    color: var(--dark);
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 4px 14px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-
   .plan-tier {
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--accent);
-  }
-
-  .plan-name {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 700;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--white);
   }
 
   .plan-price {
     display: flex;
     align-items: baseline;
-    gap: 4px;
-    margin: 4px 0;
+    gap: 6px;
+    margin: 4px 0 0;
   }
 
   .price-amount {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 2.4rem;
+    font-size: 2.8rem;
     color: var(--white);
     line-height: 1;
   }
-
-  .enterprise-price { font-size: 1.4rem; }
 
   .price-period {
     font-size: 0.82rem;
     color: var(--muted);
   }
 
-  .plan-tagline {
+  .plan-subtext {
     font-size: 0.8rem;
     color: var(--mid);
     border-top: 1px solid rgba(255,255,255,0.06);
@@ -753,20 +635,12 @@
     margin-top: 4px;
   }
 
-  .plan-term {
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-top: -4px;
-  }
-
   .plan-features {
     list-style: none;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin: 6px 0 12px;
+    margin: 6px 0 16px;
     flex: 1;
   }
 
@@ -774,34 +648,26 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     color: var(--mid);
     line-height: 1.5;
   }
 
   .feat-check { color: var(--accent); flex-shrink: 0; }
 
-  .plan-note {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-style: italic;
-    margin-top: -4px;
-  }
-
-  /* ── DISCOVERY CTA ──────────────────────────────────────────────── */
-  .discovery-cta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    margin-top: 48px;
-  }
-
-  .discovery-hint {
-    font-size: 0.82rem;
-    color: var(--muted);
+  .boost-nudge {
     text-align: center;
+    margin-top: 24px;
+    font-size: 0.8rem;
+    color: var(--muted);
   }
+
+  .boost-nudge-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .boost-nudge-link:hover { text-decoration: underline; }
 
   /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
   .image-placeholder {
@@ -824,7 +690,6 @@
 
   /* ── RESPONSIVE ─────────────────────────────────────────────────── */
   @media (max-width: 1100px) {
-    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
     .for-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
@@ -844,69 +709,6 @@
   }
 
   @media (max-width: 768px) {
-    .pricing-section {
-      width: 100%;
-      max-width: 100%;
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    /* Zero out the container padding inside the pricing section only */
-    .pricing-section .container {
-      width: 100%;
-      max-width: 100%;
-      padding-left: 0;
-      padding-right: 0;
-      box-sizing: border-box;
-    }
-
-    /* Wrapper clips horizontal overflow without clipping the badge above */
-    .pricing-carousel-wrapper {
-      overflow: hidden;
-    }
-
-    .pricing-grid {
-      display: flex;
-      overflow-x: auto;
-      overflow-y: visible;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      padding: 40px 5vw 16px;
-      margin: 8px 0 0;
-      gap: 12px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .pricing-grid::-webkit-scrollbar { display: none; }
-
-    .pricing-card {
-      scroll-snap-align: center;
-      min-width: 75vw;
-      max-width: 75vw;
-      flex-shrink: 0;
-      box-sizing: border-box;
-      overflow: visible;
-    }
-    .pricing-card.featured { transform: none; }
-
-    .pricing-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 20px;
-    }
-    .pricing-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      background: transparent;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .pricing-dot.active {
-      background: #F3B130;
-      border-color: #F3B130;
-    }
+    .pricing-card { max-width: 100%; }
   }
 </style>
