@@ -44,6 +44,7 @@
           <li><a href="/grow">Grow</a></li>
           <li><a href="https://jobs.sqrz.com">Jobs</a></li>
           <li><a href="/studio">Studio</a></li>
+          <li><a href="/compare">Compare</a></li>
         </ul>
       </div>
 
