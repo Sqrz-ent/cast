@@ -475,7 +475,7 @@
       <div class="pricing-card grow-card">
         <div class="plan-name accent-text">Boost</div>
         <div class="plan-price">
-          <span class="price-amount">$59</span>
+          <span class="price-amount">$39</span>
           <span class="price-period">/month</span>
         </div>
         <p class="plan-tagline">Launch a targeted campaign</p>
