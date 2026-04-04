@@ -69,7 +69,7 @@
 <style>
   /* ── PAGE SHELL ─────────────────────────────────────────────────── */
   .compare-page {
-    background: #111111;
+    background: #0a0a0a;
     color: #f5f5f5;
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
