@@ -66,9 +66,21 @@
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
-          <span class="card-competitor">Fiverr &amp; Upwork</span>
+          <span class="card-competitor">Upwork</span>
         </div>
         <p class="card-desc">Marketplaces help you find gigs. SQRZ helps you build a professional career.</p>
+        <span class="card-cta">Read comparison →</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/compare/sqrz-vs-casting-platforms" class="compare-card">
+        <div class="card-lockup">
+          <span class="card-sqrz">SQRZ</span>
+          <span class="card-vs">vs</span>
+          <span class="card-competitor">Casting Platforms</span>
+        </div>
+        <p class="card-desc">Casting platforms help you find opportunities. SQRZ helps you turn them into structured, paid work.</p>
         <span class="card-cta">Read comparison →</span>
       </a>
     </li>

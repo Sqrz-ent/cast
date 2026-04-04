@@ -73,8 +73,8 @@
       <div class="footer-col">
         <p class="footer-col-heading footer-col-heading-spacer" aria-hidden="true">&nbsp;</p>
         <ul class="footer-links">
-          <li><a href="/compare/sqrz-vs-fiverr-upwork">SQRZ vs Fiverr &amp; Upwork</a></li>
-          <li><a href="/compare/sqrz-vs-onlyfans">SQRZ vs OnlyFans</a></li>
+          <li><a href="/compare/sqrz-vs-fiverr-upwork">SQRZ vs Upwork</a></li>
+          <li><a href="/compare/sqrz-vs-casting-platforms">SQRZ vs Casting Platforms</a></li>
           <li><a href="/compare/sqrz-vs-beacons">SQRZ vs Beacons</a></li>
           <li><a href="/compare">More comparisons →</a></li>
         </ul>
