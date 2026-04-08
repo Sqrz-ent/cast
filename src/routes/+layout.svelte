@@ -42,8 +42,8 @@
         <ul class="footer-links">
           <li><a href="/">SQRZ</a></li>
           <li><a href="/grow">Grow</a></li>
-          <li><a href="https://jobs.sqrz.com">Jobs</a></li>
-          <li><a href="/studio">Studio</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="https://studio.sqrz.com">Studio</a></li>
         </ul>
       </div>
 
