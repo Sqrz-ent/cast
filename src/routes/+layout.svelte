@@ -43,7 +43,7 @@
           <li><a href="/">SQRZ</a></li>
           <li><a href="/grow">Grow</a></li>
           <li><a href="/blog">Blog</a></li>
-          <li><a href="https://studio.sqrz.com">Studio</a></li>
+          <li><a href="/studio">Studio</a></li>
         </ul>
       </div>
 
