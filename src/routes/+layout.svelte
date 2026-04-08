@@ -43,7 +43,7 @@
           <li><a href="/">SQRZ</a></li>
           <li><a href="/grow">Grow</a></li>
           <li><a href="/blog">Blog</a></li>
-          <li><a href="/studio">Studio</a></li>
+          <li><a href="/studio" data-sveltekit-preload-data="off">Studio</a></li>
         </ul>
       </div>
 
