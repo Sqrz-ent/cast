@@ -6,7 +6,7 @@
   let { children } = $props();
 
   const standaloneRoutes = ['/studio'];
-  const isStandalone = $derived(standaloneRoutes.some(r => page.url.pathname === r || page.url.pathname.startsWith(r + '/')));
+  const isStandalone = $derived(standaloneRoutes.some(r => page.route.id === r || (page.route.id?.startsWith(r + '/') ?? false)));
 </script>
 
 <Analytics />
