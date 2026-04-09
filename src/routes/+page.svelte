@@ -353,6 +353,7 @@
   </div>
 </section>
 
+<FAQ />
 
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
@@ -509,8 +510,6 @@
     </p>
   </div>
 </section>
-
-<FAQ />
 
 <style>
   /* ── RESET & BASE ───────────────────────────────────────────────── */
