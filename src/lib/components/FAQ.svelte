@@ -31,8 +31,8 @@
       a: 'Each booking runs through its own structured wallet, with deposits processed via Stripe and assigned to that project. Funds can be allocated and released according to agreed terms, including team payments.',
     },
     {
-      q: 'Who holds the funds?',
-      a: 'All payments are processed securely through Stripe under its regulatory framework. SQRZ provides the booking structure — not custody of funds.',
+      q: 'Is my profile legally compliant in the EU?',
+      a: 'Yes — SQRZ is built with European freelancers in mind. Every profile automatically includes a legal footer with your business details and a GDPR-compliant privacy page at [yourname].sqrz.com/privacy. If you add your own tracking pixels as a paid user, SQRZ will prompt you to complete your Impressum and automatically disclose the active tools in your privacy page. No lawyer needed.',
     },
   ];
 
