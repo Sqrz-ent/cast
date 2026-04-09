@@ -130,8 +130,6 @@
 
 <ComparisonTable />
 
-<FAQ />
-
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark" id="pricing">
   <div class="container">
