@@ -52,6 +52,7 @@
         <p class="footer-col-heading">Legal</p>
         <ul class="footer-links">
           <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/impressum">Impressum</a></li>
           <li><a href="/terms">Terms &amp; Conditions</a></li>
           <li><a href="/cookies">Cookie Policy</a></li>
           <li><a href="https://dashboard.sqrz.com">Dashboard</a></li>
