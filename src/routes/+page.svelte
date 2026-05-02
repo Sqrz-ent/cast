@@ -473,12 +473,34 @@
         <a href="https://dashboard.sqrz.com/join" class="btn-accent btn-full">Join SQRZ</a>
       </div>
 
+      <!-- Boost -->
+      <div class="pricing-card grow-card">
+        <div class="plan-name accent-text">Boost</div>
+        <div class="plan-price">
+          <span class="price-amount">$25</span>
+          <span class="price-period"> per campaign</span>
+        </div>
+        <p class="plan-tagline">Launch a targeted campaign</p>
+        <ul class="plan-features">
+          {#each [
+            'Promote what matters — your work, your offer, your event',
+            'Drive targeted traffic to a dedicated campaign page',
+            'Track visits, engagement, and real inquiries',
+            'Start building your own audience and demand data',
+          ] as f}
+            <li><span class="feat-check accent-text">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <p class="plan-note">* Ad budget not included</p>
+        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Get Boost</a>
+      </div>
+
     </div>
     </div>
 
     <!-- Dot indicator (mobile only) -->
     <div class="pricing-dots">
-      {#each [0, 1] as i}
+      {#each [0, 1, 2] as i}
         <span class="pricing-dot" class:active={activeDot === i}></span>
       {/each}
     </div>
