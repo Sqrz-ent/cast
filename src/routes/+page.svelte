@@ -430,18 +430,18 @@
     <div class="pricing-carousel-wrapper">
     <div class="pricing-grid" bind:this={pricingGrid}>
 
-      <!-- Freelancer -->
+      <!-- Free -->
       <div class="pricing-card">
-        <div class="plan-name">Freelancer</div>
+        <div class="plan-name">Free</div>
         <div class="plan-price">
           <span class="price-amount">Free</span>
         </div>
         <p class="plan-tagline">Build Your Professional Base</p>
         <ul class="plan-features">
           {#each [
-            'Establish your professional presence',
-            'Bring visitors into your pipeline',
-            'All projects under your control',
+            'Professional profile & services',
+            'Booking pipeline & dashboard',
+            'Boost campaigns — $25 per activation',
             'Do what you love & get paid for it',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
@@ -455,17 +455,17 @@
         <div class="plan-badge">Most Popular</div>
         <div class="plan-name">Creator</div>
         <div class="plan-price">
-          <span class="price-amount">$12</span>
+          <span class="price-amount">$15</span>
           <span class="price-period">/month</span>
         </div>
-        <p class="plan-tagline">Control Your Booking Pipeline</p>
-        <p class="plan-annual">or $84/year — 2 months free</p>
+        <p class="plan-tagline">Everything — domain, links, pixels, campaigns</p>
+        <p class="plan-annual">or $99/year — save 45%</p>
         <ul class="plan-features">
           {#each [
             'Custom domain — own your identity',
             'Advanced tracking — see what drives bookings',
-            'Show availability and live dates',
-            'Structured payments through booking wallet',
+            'Private links, lead capture & pixel tracking',
+            'Boost campaigns — $25 activation, $5 reactivation',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
@@ -473,34 +473,12 @@
         <a href="https://dashboard.sqrz.com/join" class="btn-accent btn-full">Join SQRZ</a>
       </div>
 
-      <!-- Boost -->
-      <div class="pricing-card grow-card">
-        <div class="plan-name accent-text">Boost</div>
-        <div class="plan-price">
-          <span class="price-amount">$39</span>
-          <span class="price-period">/month</span>
-        </div>
-        <p class="plan-tagline">Launch a targeted campaign</p>
-        <ul class="plan-features">
-          {#each [
-            'Promote what matters — your work, your offer, your event',
-            'Drive targeted traffic to a dedicated campaign page',
-            'Track visits, engagement, and real inquiries',
-            'Start building your own audience and demand data',
-          ] as f}
-            <li><span class="feat-check accent-text">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <p class="plan-note">* Ad budget not included</p>
-        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Get Boost</a>
-      </div>
-
     </div>
     </div>
 
     <!-- Dot indicator (mobile only) -->
     <div class="pricing-dots">
-      {#each [0, 1, 2] as i}
+      {#each [0, 1] as i}
         <span class="pricing-dot" class:active={activeDot === i}></span>
       {/each}
     </div>
