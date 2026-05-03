@@ -455,11 +455,11 @@
         <div class="plan-badge">Most Popular</div>
         <div class="plan-name">Creator</div>
         <div class="plan-price">
-          <span class="price-amount">$15</span>
+          <span class="price-amount">$12</span>
           <span class="price-period">/month</span>
         </div>
         <p class="plan-tagline">Everything — domain, links, pixels, campaigns</p>
-        <p class="plan-annual">or $99/year — save 45%</p>
+        <p class="plan-annual">or $84/year — save 30%</p>
         <ul class="plan-features">
           {#each [
             'Custom domain — own your identity',
