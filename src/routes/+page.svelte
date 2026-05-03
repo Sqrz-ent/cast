@@ -492,7 +492,7 @@
           {/each}
         </ul>
         <p class="plan-note">* Ad budget not included</p>
-        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Get Boost</a>
+        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Join SQRZ</a>
       </div>
 
     </div>
