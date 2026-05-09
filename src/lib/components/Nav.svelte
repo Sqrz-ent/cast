@@ -41,8 +41,9 @@
 
     <!-- Center: Links (desktop only) -->
     <div class="nav-links">
-      <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>Home</a>
+      <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>SQRZ</a>
       <a href="/grow" class="nav-link" class:active={$page.url.pathname === '/grow'}>Grow</a>
+      <a href="/blog" class="nav-link" class:active={$page.url.pathname.startsWith('/blog')}>Blog</a>
     </div>
 
     <!-- Right: Auth + Hamburger -->
@@ -75,8 +76,9 @@
     <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
     <div class="nav-backdrop" onclick={closeMenu}></div>
     <div class="nav-panel">
-      <a href="/" class="nav-panel-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>Home</a>
+      <a href="/" class="nav-panel-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>SQRZ</a>
       <a href="/grow" class="nav-panel-link" class:active={$page.url.pathname === '/grow'} onclick={closeMenu}>Grow</a>
+      <a href="/blog" class="nav-panel-link" class:active={$page.url.pathname.startsWith('/blog')} onclick={closeMenu}>Blog</a>
       <div class="nav-panel-divider"></div>
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
       <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
