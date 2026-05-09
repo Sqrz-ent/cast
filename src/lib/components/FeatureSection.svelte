@@ -83,16 +83,17 @@
       {/each}
     </div>
 
-    <!-- Cards -->
+    <!-- Tab layout: text panels + image wrapper -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
-      class="tab-cards"
+      class="tab-layout"
       ontouchstart={onTouchStart}
       ontouchend={onTouchEnd}
     >
-      {#each tabs as tab, i}
-        <div class="tab-card" class:active={activeTab === i} aria-hidden={activeTab !== i}>
-          <div class="tab-card-text">
+      <!-- Left: stacked text panels, active one fades in -->
+      <div class="tab-text-panels">
+        {#each tabs as tab, i}
+          <div class="tab-text-panel" class:active={activeTab === i} aria-hidden={activeTab !== i}>
             <p class="tab-label">{tab.label}</p>
             <h3 class="tab-headline">{tab.headline}</h3>
             <ul class="tab-bullets">
@@ -101,11 +102,21 @@
               {/each}
             </ul>
           </div>
-          <div class="tab-card-visual">
-            <img src={tab.img} alt={tab.imgAlt} class="tab-img" loading="lazy" />
-          </div>
-        </div>
-      {/each}
+        {/each}
+      </div>
+
+      <!-- Right: fixed-ratio image wrapper, all images stacked, opacity crossfade -->
+      <div class="image-wrapper">
+        {#each tabs as tab, i}
+          <img
+            src={tab.img}
+            alt={tab.imgAlt}
+            class="tab-img"
+            class:active={activeTab === i}
+            loading="lazy"
+          />
+        {/each}
+      </div>
     </div>
 
     <!-- Dot indicators (mobile) -->
@@ -196,22 +207,48 @@
     font-weight: 600;
   }
 
-  /* Cards */
-  .tab-cards {
-    position: relative;
-  }
-
-  .tab-card {
-    display: none;
+  /* Tab layout */
+  .tab-layout {
+    display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 64px;
     align-items: start;
-    background: transparent;
-    border-radius: 20px;
     padding: 48px 56px;
   }
-  .tab-card.active {
+
+  /* Left: stacked text panels */
+  .tab-text-panels {
     display: grid;
+    grid-template-areas: "panel";
+  }
+  .tab-text-panel {
+    grid-area: panel;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .tab-text-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Right: fixed-ratio image wrapper */
+  .image-wrapper {
+    position: relative;
+    aspect-ratio: 3/2;
+    width: 100%;
+  }
+  .tab-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .tab-img.active {
+    opacity: 1;
   }
 
   /* Left: text */
@@ -256,17 +293,6 @@
     margin-top: 1px;
   }
 
-  /* Right: image */
-  .tab-card-visual {
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .tab-img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-  }
 
   /* Dots (mobile only) */
   .dot-row {
@@ -309,14 +335,10 @@
       font-size: 0.8rem;
       padding: 7px 14px;
     }
-    .tab-card {
-      display: none;
+    .tab-layout {
       grid-template-columns: 1fr;
       padding: 28px 24px;
       gap: 28px;
-    }
-    .tab-card.active {
-      display: grid;
     }
     .tab-headline {
       font-size: 1.6rem;
