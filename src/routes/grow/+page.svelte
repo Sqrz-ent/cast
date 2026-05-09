@@ -10,28 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
-<!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero">
-  <div class="container hero-inner hero-inner--solo">
-    <div class="hero-text">
-      <p class="eyebrow">SQRZ Grow</p>
-      <h1 class="display-headline">TURN ATTENTION<br><em>INTO DEMAND</em></h1>
-      <p class="hero-sub">
-        A growth infrastructure for independent professionals who want
-        predictable leverage — not random exposure.
-      </p>
-    </div>
-  </div>
-</section>
-
-
-
-<ComparisonTable />
-
-
-
 <!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
-<section class="intro-section light">
+<section class="intro-section light intro-section--top">
   <div class="container intro-inner--centered">
     <p class="section-tag">What Is SQRZ Grow?</p>
     <h2 class="section-headline centered">Not marketing.<br><em>Your demand intelligence layer.</em></h2>
@@ -48,6 +28,8 @@
     </p>
   </div>
 </section>
+
+<ComparisonTable />
 
 <FAQ />
 
@@ -289,6 +271,7 @@
 
   /* ── INTRO ──────────────────────────────────────────────────────── */
   .intro-section { padding: 100px 0; }
+  .intro-section--top { padding-top: 160px; }
   .intro-section.light { background: var(--light); }
 
   .intro-inner {
