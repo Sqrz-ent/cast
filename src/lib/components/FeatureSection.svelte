@@ -4,7 +4,7 @@
   const tabs = [
     {
       label: 'Dashboard',
-      img: '/screens/sqrz_live-dashboard.png',
+      img: '/screens/sqrz_live-dashboard.png?v=2',
       imgAlt: 'SQRZ live dashboard',
       headline: 'Your Professional\nCommand Center',
       bullets: [
@@ -14,8 +14,19 @@
       ],
     },
     {
+      label: 'Office',
+      img: '/screens/sqrz_office.png?v=2',
+      imgAlt: 'SQRZ office',
+      headline: 'Run a Structured\nBooking Pipeline',
+      bullets: [
+        'Structured requests — no back-and-forth',
+        'Defined scope and terms before any commitment',
+        'Every project tracked from request to delivery',
+      ],
+    },
+    {
       label: 'Promotion',
-      img: '/screens/sqrz_splashscreen.png',
+      img: '/screens/sqrz_boost.png?v=2',
       imgAlt: 'SQRZ promotion',
       headline: 'Promote Your Work\nIntelligently',
       bullets: [
@@ -25,19 +36,8 @@
       ],
     },
     {
-      label: 'Pipeline',
-      img: '/screens/sqrz_office.png',
-      imgAlt: 'SQRZ booking pipeline',
-      headline: 'Run a Structured\nBooking Pipeline',
-      bullets: [
-        'Structured requests — no back-and-forth',
-        'Defined scope and terms before any commitment',
-        'Every project tracked from request to delivery',
-      ],
-    },
-    {
       label: 'Booking Wallet',
-      img: '/screens/sqrz-wallet.png',
+      img: '/screens/sqrz-wallet.png?v=2',
       imgAlt: 'SQRZ booking wallet',
       headline: 'Payments Tied\nto Delivery',
       bullets: [
