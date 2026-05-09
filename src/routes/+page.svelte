@@ -90,7 +90,7 @@
 
     <div class="hero-text">
       <p class="eyebrow">Professional identity &amp; booking</p>
-      <h1 class="display-headline">THE LINKINBIO<br>THAT GETS YOU<br><em>BOOKED</em></h1>
+      <h1 class="display-headline">THE <em>LINKINBIO</em><br>THAT GETS YOU<br><em>BOOKED</em></h1>
       <p class="hero-sub">
         One profile to promote your work, manage bookings, and get paid — with clarity and trust.
       </p>
