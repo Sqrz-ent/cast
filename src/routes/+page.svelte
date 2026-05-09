@@ -575,8 +575,6 @@
     background: #0a0a0a;
     padding: 164px 0 100px;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
   }
 
   .hero-bg {
