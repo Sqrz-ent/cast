@@ -196,7 +196,7 @@
     </div>
     <div class="feature-text">
       <p class="section-number">03</p>
-      <h2 class="section-headline">SQRZ Gets<br><em>You Paid</em></h2>
+      <h2 class="section-headline">Get Paid<br><em>Through SQRZ</em></h2>
       <p class="body-text">
         Focus on your work, not your invoices. From first request to
         secured deposit, budget allocation, and team payments — SQRZ
@@ -605,6 +605,15 @@
   @media (max-width: 768px) {
     .hero-bg {
       background-image: url('/screens/sqrz_live-dashboard_mobile6.png');
+    }
+
+    /* Feature sections: text above, image below on mobile */
+    .feature-inner {
+      display: flex;
+      flex-direction: column;
+    }
+    .feature-visual {
+      order: 1;
     }
   }
 
