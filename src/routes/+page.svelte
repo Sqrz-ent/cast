@@ -604,7 +604,7 @@
 
   @media (max-width: 768px) {
     .hero-bg {
-      background-image: url('/screens/sqrz_live-dashboard_mobile.png');
+      background-image: url('/screens/sqrz_live-dashboard_mobile2.png');
     }
   }
 
