@@ -32,7 +32,6 @@
 
 <ComparisonTable />
 
-<FAQ />
 
 
 <!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
@@ -54,8 +53,11 @@
   </div>
 </section>
 
+<FAQ />
+
+
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
-<section class="pricing-section dark" id="pricing">
+<section class="pricing-section light" id="pricing">
   <div class="container">
     <p class="section-tag">Pricing</p>
     <h2 class="section-headline light-text centered">Simple,<br><em>performance-based</em></h2>
