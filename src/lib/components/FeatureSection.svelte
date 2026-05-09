@@ -37,7 +37,7 @@
     },
     {
       label: 'Booking Wallet',
-      img: '/screens/sqrz-wallet.png?v=2',
+      img: '/screens/sqrz_wallet.png?v=2',
       imgAlt: 'SQRZ booking wallet',
       headline: 'Payments Tied\nto Delivery',
       bullets: [
