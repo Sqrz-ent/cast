@@ -132,6 +132,7 @@
     height: 36px;
     width: auto;
     display: block;
+    filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.5));
   }
 
   /* Left-aligned links (desktop) */
@@ -144,14 +145,15 @@
   .nav-link {
     font-size: 0.88rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     padding: 6px 12px;
     border-radius: 6px;
     transition: color 0.15s;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
 
-  .nav-link:hover { color: rgba(255, 255, 255, 0.95); }
+  .nav-link:hover { color: #ffffff; }
 
   .nav-link.active {
     color: #F3B130;
@@ -169,11 +171,12 @@
   .nav-login {
     font-size: 0.88rem;
     font-weight: 500;
-    color: rgba(255, 255, 255, 0.65);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     transition: color 0.15s;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   }
-  .nav-login:hover { color: rgba(255, 255, 255, 0.95); }
+  .nav-login:hover { color: #ffffff; }
 
   .nav-signup {
     font-size: 0.88rem;
