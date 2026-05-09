@@ -1346,6 +1346,7 @@
 
     .pricing-grid {
       display: flex;
+      align-items: stretch;
       overflow-x: auto;
       overflow-y: visible;
       scroll-snap-type: x mandatory;
@@ -1366,6 +1367,7 @@
       flex-shrink: 0;
       box-sizing: border-box;
       overflow: visible;
+      height: auto;
     }
     .pricing-card.featured { transform: none; }
 
