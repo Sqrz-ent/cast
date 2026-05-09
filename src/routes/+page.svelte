@@ -217,36 +217,6 @@
   </div>
 </section>
 
-<!-- ── WHO IS SQRZ FOR ───────────────────────────────────────────── -->
-<section class="audience-section dark">
-  <div class="container">
-    <p class="section-tag">Who Is SQRZ For?</p>
-    <h2 class="section-headline light-text centered">Built for people who<br><em>do serious work</em></h2>
-    <div class="audience-grid">
-      {#each [
-        {
-          type: 'Independent Professionals',
-          body: 'Turn your skills into a clear, bookable offer. Receive structured requests and secure payments — without juggling tools.',
-        },
-        {
-          type: 'Growth-Focused Creatives',
-          body: 'Move beyond one-off gigs. Build demand, attract the right clients, and turn attention into structured, repeatable work.',
-        },
-        {
-          type: 'Team Leaders & Decision Makers',
-          body: 'Run projects with clarity and control. Secure deposits, allocate budgets, onboard collaborators, and release payments — all in one workflow.',
-        },
-      ] as card}
-        <div class="audience-card">
-          <div class="card-accent-line"></div>
-          <h3 class="card-title">{card.type}</h3>
-          <p class="card-body">{card.body}</p>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
 <!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
 <FeatureSection />
 
