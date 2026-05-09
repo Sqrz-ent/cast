@@ -128,6 +128,12 @@
       </div>
     </div>
 
+    <img
+      src="/screens/sqrz_live-dashboard_mobile.png"
+      alt="SQRZ dashboard"
+      class="hero-mobile-img"
+    />
+
   </div>
 </section>
 
@@ -599,6 +605,19 @@
 
   .hero-text {
     max-width: 600px;
+  }
+
+  .hero-mobile-img {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .hero-mobile-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-top: 32px;
+    }
   }
 
   .hero-sub {
