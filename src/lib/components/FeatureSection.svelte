@@ -206,10 +206,9 @@
     grid-template-columns: 1fr 1fr;
     gap: 64px;
     align-items: start;
-    background: #ffffff;
+    background: transparent;
     border-radius: 20px;
     padding: 48px 56px;
-    box-shadow: 0 4px 40px rgba(0, 0, 0, 0.07);
   }
   .tab-card.active {
     display: grid;
@@ -261,7 +260,6 @@
   .tab-card-visual {
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   }
   .tab-img {
     width: 100%;

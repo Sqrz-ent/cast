@@ -36,8 +36,7 @@
 
     <!-- Left: Logo -->
     <a href="/" class="nav-logo" onclick={closeMenu}>
-      <!-- TODO: replace with SVG logo -->
-      SQRZ
+      <img src="/sqrz-logo.png" alt="SQRZ" class="nav-logo-img" />
     </a>
 
     <!-- Center: Links (desktop only) -->
@@ -125,6 +124,12 @@
     color: #F3B130;
     text-decoration: none;
     flex-shrink: 0;
+  }
+
+  .nav-logo-img {
+    height: 32px;
+    width: auto;
+    display: block;
   }
 
   /* Center links (desktop) */
