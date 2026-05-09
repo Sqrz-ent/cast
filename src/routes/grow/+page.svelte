@@ -47,47 +47,14 @@
   </div>
 </section>
 
-<!-- ── 4 PILLARS ─────────────────────────────────────────────────── -->
-<section class="pillars-section dark">
-  <div class="container">
-    <p class="section-tag">The System</p>
-    <h2 class="section-headline light-text centered">Four pillars.<br><em>One infrastructure.</em></h2>
-    <div class="pillars-grid">
-      {#each [
-        {
-          num: "01",
-          title: "Audience Positioning",
-          body: "Define your value clearly. Offer, audience, and advantage aligned — so every touchpoint builds toward the work you want.",
-        },
-        {
-          num: "02",
-          title: "Demand Engineering",
-          body: "Build measurable demand. Tracking, segmentation, and audience intelligence installed and reusable — working silently between campaigns.",
-        },
-        {
-          num: "03",
-          title: "Pipeline Intelligence",
-          body: "Turn interest into confirmed work. Structured flow. Visible conversion. Informed decisions at every stage.",
-        },
-        {
-          num: "04",
-          title: "Financial Control",
-          body: "Control how money moves. Deposits secured. Budgets allocated. Teams paid. Everything confirmed before work begins.",
-        },
-      ] as pillar}
-        <div class="pillar-card">
-          <div class="pillar-num">{pillar.num}</div>
-          <h3 class="pillar-title">{pillar.title}</h3>
-          <p class="pillar-body">{pillar.body}</p>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
+
+
+
+<ComparisonTable />
 
 <FAQ />
 
-<ComparisonTable />
+
 
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark" id="pricing">
