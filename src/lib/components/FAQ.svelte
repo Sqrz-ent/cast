@@ -110,9 +110,14 @@
   .section-headline em { font-style: normal; color: #F5A623; }
 
   .faq-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 2px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .faq-list { grid-template-columns: 1fr; }
   }
 
   .faq-item {

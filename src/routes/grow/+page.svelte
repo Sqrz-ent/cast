@@ -11,8 +11,7 @@
 </svelte:head>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero hero-bg" style="background-image: url('/grow_hero.avif');">
-  <div class="hero-overlay"></div>
+<section class="hero">
   <div class="container hero-inner hero-inner--solo">
     <div class="hero-text">
       <p class="eyebrow">SQRZ Grow</p>
@@ -21,9 +20,6 @@
         A growth infrastructure for independent professionals who want
         predictable leverage — not random exposure.
       </p>
-      <div class="hero-btns">
-        <a href="#pricing" class="btn-ghost btn-lg">See Pricing</a>
-      </div>
     </div>
   </div>
 </section>
