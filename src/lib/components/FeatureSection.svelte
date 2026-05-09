@@ -199,15 +199,13 @@
   /* Cards */
   .tab-cards {
     position: relative;
-    min-height: 500px;
   }
 
   .tab-card {
     display: none;
     grid-template-columns: 1fr 1fr;
     gap: 64px;
-    align-items: center;
-    height: 500px;
+    align-items: start;
     background: #ffffff;
     border-radius: 20px;
     padding: 48px 56px;
@@ -261,16 +259,14 @@
 
   /* Right: image */
   .tab-card-visual {
-    height: 100%;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   }
   .tab-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top left;
+    height: auto;
+    object-fit: contain;
     display: block;
   }
 
@@ -315,21 +311,14 @@
       font-size: 0.8rem;
       padding: 7px 14px;
     }
-    .tab-cards {
-      min-height: unset;
-    }
     .tab-card {
       display: none;
       grid-template-columns: 1fr;
-      height: auto;
       padding: 28px 24px;
       gap: 28px;
     }
     .tab-card.active {
       display: grid;
-    }
-    .tab-card-visual {
-      height: 260px;
     }
     .tab-headline {
       font-size: 1.6rem;
