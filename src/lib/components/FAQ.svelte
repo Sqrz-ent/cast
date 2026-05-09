@@ -1,7 +1,7 @@
 <script>
   import { slide } from 'svelte/transition';
 
-  const faqs = [
+  const allFaqs = [
     {
       q: 'Is SQRZ Grow a subscription?',
       a: 'No. SQRZ Grow is a time-limited growth program. Pro plans run 3–6 months. Starter plans can be cancelled monthly.',
@@ -36,8 +36,16 @@
     },
   ];
 
-  const col1 = faqs.slice(0, 4);
-  const col2 = faqs.slice(4);
+  let { half = null } = $props();
+
+  const faqs = $derived(
+    half === 'first' ? allFaqs.slice(0, 4) :
+    half === 'last'  ? allFaqs.slice(4) :
+    allFaqs
+  );
+
+  const col1 = $derived(faqs.slice(0, Math.ceil(faqs.length / 2)));
+  const col2 = $derived(faqs.slice(Math.ceil(faqs.length / 2)));
 
   let openIndex = $state(null);
 
@@ -54,7 +62,7 @@
       {#each [col1, col2] as col, colIdx}
         <div class="faq-list">
           {#each col as faq, rowIdx}
-            {@const i = colIdx * 4 + rowIdx}
+            {@const i = (colIdx === 0 ? 0 : col1.length) + rowIdx}
             <div class="faq-item" class:open={openIndex === i}>
               <button class="faq-question" onclick={() => toggle(i)} aria-expanded={openIndex === i}>
                 <span class="q-text">{faq.q}</span>

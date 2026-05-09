@@ -1,5 +1,6 @@
 <script>
   import ComparisonTable from '$lib/components/ComparisonTable.svelte';
+  import FAQ from '$lib/components/FAQ.svelte';
 </script>
 
 <svelte:head>
@@ -162,6 +163,7 @@
   </div>
 </section>
 
+<FAQ half="last" />
 
 <style>
   /* ── RESET & BASE ───────────────────────────────────────────────── */

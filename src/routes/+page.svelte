@@ -250,7 +250,7 @@
 <!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
 <FeatureSection />
 
-<FAQ />
+<FAQ half="first" />
 
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
