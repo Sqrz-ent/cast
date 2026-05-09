@@ -89,11 +89,8 @@
   <div class="container hero-inner">
 
     <div class="hero-text">
-      <p class="eyebrow">Professional identity &amp; booking</p>
+      <p class="eyebrow">Promote.  Book.  Get Paid!</p>
       <h1 class="display-headline">THE <em>LINKINBIO</em><br>THAT GETS YOU<br><em>BOOKED</em></h1>
-      <p class="hero-sub">
-        One profile to promote your work, manage bookings, and get paid — with clarity and trust.
-      </p>
       <!-- Username availability checker -->
       <div class="username-checker">
         <div class="username-input-row">
