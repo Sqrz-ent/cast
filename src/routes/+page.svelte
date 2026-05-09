@@ -33,6 +33,11 @@
     `https://dashboard.sqrz.com/join?slug=${username}${refCode ? `&ref=${refCode}` : ''}`
   );
 
+  // Plain join URL (no slug) — used by static CTAs like pricing buttons
+  let baseJoinUrl = $derived(
+    refCode ? `https://dashboard.sqrz.com/join?ref=${refCode}` : 'https://dashboard.sqrz.com/join'
+  );
+
   function onInput(e) {
     username = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
     status = 'idle';
@@ -447,7 +452,7 @@
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Join SQRZ</a>
+        <a href={baseJoinUrl} class="btn-primary btn-full">Join SQRZ</a>
       </div>
 
       <!-- Creator -->
@@ -470,7 +475,7 @@
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
         </ul>
-        <a href="https://dashboard.sqrz.com/join" class="btn-accent btn-full">Join SQRZ</a>
+        <a href={baseJoinUrl} class="btn-accent btn-full">Join SQRZ</a>
       </div>
 
       <!-- Boost -->
@@ -492,7 +497,7 @@
           {/each}
         </ul>
         <p class="plan-note">* Ad budget not included</p>
-        <a href="https://dashboard.sqrz.com/join" class="btn-primary btn-full">Join SQRZ</a>
+        <a href={baseJoinUrl} class="btn-primary btn-full">Join SQRZ</a>
       </div>
 
     </div>

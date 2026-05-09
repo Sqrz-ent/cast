@@ -4,6 +4,7 @@
 
   let scrolled = $state(false);
   let menuOpen = $state(false);
+  let joinUrl = $state('https://dashboard.sqrz.com/join');
 
   onMount(() => {
     function onScroll() {
@@ -12,6 +13,11 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
+  });
+
+  onMount(() => {
+    const ref = localStorage.getItem('sqrz_ref');
+    if (ref) joinUrl = `https://dashboard.sqrz.com/join?ref=${ref}`;
   });
 
   $effect(() => {
@@ -44,7 +50,7 @@
     <div class="nav-right">
       <!-- Auth links: desktop only -->
       <a href="https://dashboard.sqrz.com/login" class="nav-login nav-desktop-only">Login</a>
-      <a href="https://dashboard.sqrz.com/join" class="nav-signup nav-desktop-only">Sign Up</a>
+      <a href={joinUrl} class="nav-signup nav-desktop-only">Sign Up</a>
 
       <!-- Hamburger / Close (mobile only) -->
       <button
@@ -74,7 +80,7 @@
       <a href="/grow" class="nav-panel-link" class:active={$page.url.pathname === '/grow'} onclick={closeMenu}>Grow</a>
       <div class="nav-panel-divider"></div>
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
-      <a href="https://dashboard.sqrz.com/join" class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
+      <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
     </div>
   {/if}
 </nav>
