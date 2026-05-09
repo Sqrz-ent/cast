@@ -84,7 +84,7 @@
 </svelte:head>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero hero-bg" style="background-image: url('/screens/Home_background.png');">
+<section class="hero hero-bg">
   <div class="hero-overlay"></div>
   <div class="container hero-inner">
 
@@ -127,12 +127,6 @@
         </div>
       </div>
     </div>
-
-    <img
-      src="/screens/sqrz_live-dashboard_mobile.png"
-      alt="SQRZ dashboard"
-      class="hero-mobile-img"
-    />
 
   </div>
 </section>
@@ -585,6 +579,7 @@
 
   .hero-bg {
     position: relative;
+    background-image: url('/screens/Home_background.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -607,16 +602,9 @@
     max-width: 600px;
   }
 
-  .hero-mobile-img {
-    display: none;
-  }
-
   @media (max-width: 768px) {
-    .hero-mobile-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      margin-top: 32px;
+    .hero-bg {
+      background-image: url('/screens/sqrz_live-dashboard_mobile.png');
     }
   }
 
