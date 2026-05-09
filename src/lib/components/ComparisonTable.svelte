@@ -86,7 +86,7 @@
 
 <style>
   .comparison-section {
-    background: #1a1a1a;
+    background: #f5f5f0;
     padding: 100px 0;
   }
 
@@ -113,7 +113,7 @@
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;
     letter-spacing: -0.01em;
-    color: #ffffff;
+    color: #111111;
     text-transform: uppercase;
     margin: 8px 0 56px;
   }
@@ -131,7 +131,7 @@
   .col {
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(0,0,0,0.08);
   }
 
   .sqrz-col {
@@ -141,11 +141,11 @@
 
   .col-header {
     padding: 20px 28px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
   }
 
   .sqrz-col .col-header { background: rgba(245,166,35,0.08); }
-  .agency-col .col-header { background: rgba(255,255,255,0.03); }
+  .agency-col .col-header { background: rgba(0,0,0,0.03); }
 
   .col-label {
     font-family: 'Barlow Condensed', sans-serif;
@@ -156,7 +156,7 @@
   }
 
   .sqrz-label { color: #F5A623; }
-  .agency-label { color: rgba(255,255,255,0.3); }
+  .agency-label { color: rgba(0,0,0,0.3); }
 
   /* ── Rows ── */
   .row-list {
@@ -171,12 +171,12 @@
     align-items: flex-start;
     gap: 16px;
     padding: 22px 28px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
     transition: background 0.2s;
   }
   .row-item:last-child { border-bottom: none; }
-  .sqrz-col .row-item:hover { background: rgba(245,166,35,0.04); }
-  .agency-col .row-item:hover { background: rgba(255,255,255,0.02); }
+  .sqrz-col .row-item:hover { background: rgba(245,166,35,0.06); }
+  .agency-col .row-item:hover { background: rgba(0,0,0,0.03); }
 
   .icon {
     font-size: 1rem;
@@ -185,7 +185,7 @@
     font-weight: 700;
   }
   .sqrz-icon { color: #F5A623; }
-  .agency-icon { color: rgba(255,255,255,0.2); }
+  .agency-icon { color: rgba(0,0,0,0.2); }
 
   .row-content {
     display: flex;
@@ -197,17 +197,17 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.88rem;
     font-weight: 500;
-    color: #ffffff;
+    color: #111111;
   }
-  .row-title.agency-title { color: rgba(255,255,255,0.45); }
+  .row-title.agency-title { color: rgba(0,0,0,0.45); }
 
   .row-body {
     font-size: 0.82rem;
     font-weight: 300;
-    color: rgba(255,255,255,0.45);
+    color: rgba(0,0,0,0.5);
     line-height: 1.65;
   }
-  .row-body.agency-body { color: rgba(255,255,255,0.28); }
+  .row-body.agency-body { color: rgba(0,0,0,0.32); }
 
   @media (max-width: 720px) {
     .comparison-grid { grid-template-columns: 1fr; }

@@ -75,7 +75,7 @@
 
 <style>
   .faq-section {
-    background: #f5f5f0;
+    background: #1a1a1a;
     padding: 100px 0 120px;
   }
 
@@ -102,7 +102,7 @@
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;
     letter-spacing: -0.01em;
-    color: #111111;
+    color: #ffffff;
     text-transform: uppercase;
     margin: 8px 0 56px;
   }
@@ -118,7 +118,7 @@
   .faq-item {
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.08);
+    border: 1px solid rgba(255,255,255,0.06);
     transition: border-color 0.2s;
   }
   .faq-item.open {
@@ -132,13 +132,13 @@
     justify-content: space-between;
     gap: 20px;
     padding: 22px 24px;
-    background: rgba(0,0,0,0.03);
+    background: rgba(255,255,255,0.03);
     border: none;
     cursor: pointer;
     text-align: left;
     transition: background 0.2s;
   }
-  .faq-question:hover { background: rgba(0,0,0,0.06); }
+  .faq-question:hover { background: rgba(255,255,255,0.06); }
   .faq-item.open .faq-question { background: rgba(245,166,35,0.06); }
 
   .q-text {
@@ -172,7 +172,7 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 0.9rem;
     font-weight: 300;
-    color: rgba(20,20,20,0.65);
+    color: rgba(255,255,255,0.55);
     line-height: 1.8;
     padding-top: 4px;
   }
