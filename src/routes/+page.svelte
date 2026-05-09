@@ -386,7 +386,7 @@
     --border-dark:  rgba(245,166,35,0.25);
     --border-light: rgba(0,0,0,0.08);
     --radius-card:  12px;
-    --radius-btn:   999px;
+    --radius-btn:   8px;
   }
 
   /* ── LAYOUT ─────────────────────────────────────────────────────── */

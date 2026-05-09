@@ -182,7 +182,7 @@
     background: #F3B130;
     text-decoration: none;
     padding: 7px 16px;
-    border-radius: 20px;
+    border-radius: 8px;
     transition: opacity 0.15s;
     white-space: nowrap;
   }
