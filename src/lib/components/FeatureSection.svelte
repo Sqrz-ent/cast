@@ -210,7 +210,7 @@
   /* Tab layout */
   .tab-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.3fr;
     gap: 64px;
     align-items: start;
     padding: 48px 56px;
