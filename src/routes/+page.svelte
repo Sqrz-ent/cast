@@ -270,7 +270,6 @@
 </section>
 
 
-<FAQ half="first" />
 
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark">
