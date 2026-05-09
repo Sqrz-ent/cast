@@ -219,6 +219,10 @@
 
 
 
+<!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
+<FeatureSection />
+
+
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
   <div class="container">
@@ -255,12 +259,6 @@
 
 
     </div>
-
-
-
-<!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
-<FeatureSection />
-
 
     <div class="featured-cta">
       <p class="featured-cta-hint">Want to be featured?</p>
