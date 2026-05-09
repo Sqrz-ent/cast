@@ -166,7 +166,7 @@
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <img src="/screens/sqrz_live-dashboard.png" alt="SQRZ live dashboard" class="feature-img section-img" />
+      <img src="/home-showcase.avif" alt="Sound engineer at mixing desk" class="feature-img section-img" />
     </div>
     <div class="feature-text">
       <p class="section-number">01</p>
@@ -214,7 +214,7 @@
       </ul>
     </div>
     <div class="feature-visual">
-      <img src="/screens/sqrz_office.png" alt="SQRZ booking office" class="feature-img section-img" />
+      <img src="/home-pipeline.avif" alt="Stage and crowd at live show" class="feature-img section-img" />
     </div>
   </div>
 </section>
@@ -350,7 +350,10 @@
       </div>
     </div>
     <div class="wallet-visual">
-      <img src="/screens/sqrz-wallet.png" alt="SQRZ booking wallet" class="feature-img wallet-img" />
+      <!-- Webflow image: booking wallet / payment flow UI -->
+      <div class="image-placeholder wallet-img">
+        <span class="placeholder-label">Booking Wallet — payment flow UI</span>
+      </div>
     </div>
   </div>
 </section>
@@ -679,7 +682,7 @@
   .hero {
     position: relative;
     background: #0a0a0a;
-    background-image: url('/screens/sqrz_splashscreen.png');
+    /* TODO: add background-image: url('/images/home-hero.jpg') here */
     background-size: cover;
     background-position: center;
     padding: 164px 0 100px;
