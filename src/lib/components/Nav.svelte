@@ -132,13 +132,11 @@
     display: block;
   }
 
-  /* Center links (desktop) */
+  /* Left-aligned links (desktop) */
   .nav-links {
     display: flex;
     align-items: center;
     gap: 4px;
-    flex: 1;
-    justify-content: center;
   }
 
   .nav-link {
@@ -148,7 +146,6 @@
     text-decoration: none;
     padding: 6px 12px;
     border-radius: 6px;
-    border-bottom: 2px solid transparent;
     transition: color 0.15s;
   }
 
@@ -156,7 +153,6 @@
 
   .nav-link.active {
     color: #F3B130;
-    border-bottom-color: #F3B130;
   }
 
   /* Right side */
