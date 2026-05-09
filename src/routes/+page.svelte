@@ -551,7 +551,7 @@
 
   .hero-bg {
     position: relative;
-    background-image: url('/screens/Home_background.png');
+    background-image: url('/screens/sqrz_home_desktop.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
