@@ -127,7 +127,7 @@
   }
 
   .nav-logo-img {
-    height: 32px;
+    height: 36px;
     width: auto;
     display: block;
   }
