@@ -279,88 +279,8 @@
   </div>
 </section>
 
-<!-- ── HOW IT WORKS ──────────────────────────────────────────────── -->
-<section class="how-section light">
-  <div class="container">
-    <p class="section-tag dark-tag">How SQRZ Works</p>
-    <h2 class="section-headline centered">Three steps to a<br><em>complete professional</em></h2>
-    <div class="steps-grid">
-      {#each [
-        {
-          num: '01',
-          title: 'Bring Your Portfolio Together',
-          body: 'Not just links — your shows, your projects, your reputation — presented professionally in one place that represents you properly.',
-        },
-        {
-          num: '02',
-          title: 'Your Work Without the Noise',
-          body: 'Requests, deposits, and team payouts handled quietly in the background, so you stay focused on the work that matters.',
-        },
-        {
-          num: '03',
-          title: 'Your Growth on Autopilot',
-          body: 'As your career evolves, SQRZ grows with you. Focus on your craft while SQRZ turns momentum into opportunity.',
-        },
-      ] as step}
-        <div class="step">
-          <div class="step-number">{step.num}</div>
-          <h3 class="step-title">{step.title}</h3>
-          <p class="step-body">{step.body}</p>
-        </div>
-      {/each}
-    </div>
-  </div>
-</section>
-
 <!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
 <FeatureSection />
-
-<!-- ── BOOKING WALLET ─────────────────────────────────────────────── -->
-<section class="wallet-section dark">
-  <div class="container wallet-inner">
-    <div class="wallet-text">
-      <p class="eyebrow-light">New in SQRZ Grow</p>
-      <h2 class="section-headline light-text">Introducing the<br><em>Booking Wallet</em></h2>
-      <p class="wallet-sub">
-        From first request to final payout — every financial movement
-        tied to defined scope, confirmed delivery, and agreed terms.
-      </p>
-      <div class="wallet-steps">
-        {#each [
-          {
-            step: '01',
-            title: 'Request Payment',
-            body: 'Secure deposits directly through your booking page. Each project generates a structured payment request tied to defined scope, terms, and timeline.',
-          },
-          {
-            step: '02',
-            title: 'Manage & Allocate',
-            body: 'Once the deposit is secured, allocate budgets across collaborators, production costs, and agreed expenses.',
-          },
-          {
-            step: '03',
-            title: 'Get Paid After Gig',
-            body: 'Release payments according to confirmed delivery and agreed milestones. No ambiguity. No chasing.',
-          },
-        ] as ws}
-          <div class="wallet-step">
-            <div class="ws-num">{ws.step}</div>
-            <div class="ws-content">
-              <h4 class="ws-title">{ws.title}</h4>
-              <p class="ws-body">{ws.body}</p>
-            </div>
-          </div>
-        {/each}
-      </div>
-    </div>
-    <div class="wallet-visual">
-      <!-- Webflow image: booking wallet / payment flow UI -->
-      <div class="image-placeholder wallet-img">
-        <span class="placeholder-label">Booking Wallet — payment flow UI</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <FAQ />
 
