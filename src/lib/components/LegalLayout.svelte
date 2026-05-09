@@ -20,7 +20,7 @@
   :global(html) { scroll-behavior: smooth; }
   :global(body) {
     font-family: 'DM Sans', sans-serif;
-    background: #ffffff;
+    background: #f5f0eb;
     color: #111111;
     -webkit-font-smoothing: antialiased;
   }
@@ -28,7 +28,7 @@
   :global(:root) {
     --accent:      #F5A623;
     --dark:        #111111;
-    --light:       #F5F5F5;
+    --light:       #f5f0eb;
     --white:       #ffffff;
     --mid:         rgba(255,255,255,0.55);
     --muted:       rgba(255,255,255,0.28);
@@ -40,7 +40,7 @@
   main {
     padding: 80px 0 100px;
     min-height: 100vh;
-    background: #ffffff;
+    background: #f5f0eb;
   }
 
   .container {

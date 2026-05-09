@@ -84,7 +84,7 @@
     --dark:         #111111;
     --dark-2:       #1a1a1a;
     --dark-3:       #242424;
-    --light:        #F5F5F5;
+    --light:        #f5f0eb;
     --white:        #ffffff;
     --mid:          rgba(255,255,255,0.55);
     --muted:        rgba(255,255,255,0.28);
