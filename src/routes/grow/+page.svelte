@@ -158,9 +158,7 @@
       </div>
     </div>
 
-    <p class="boost-nudge">
-      Smaller budget? <a href="https://sqrz.com/signup" class="boost-nudge-link">Start with Boost →</a>
-    </p>
+
   </div>
 </section>
 
