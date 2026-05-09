@@ -28,6 +28,13 @@
   </div>
 </section>
 
+
+
+<ComparisonTable />
+
+<FAQ />
+
+
 <!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
 <section class="intro-section light">
   <div class="container intro-inner--centered">
@@ -46,15 +53,6 @@
     </p>
   </div>
 </section>
-
-
-
-
-<ComparisonTable />
-
-<FAQ />
-
-
 
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark" id="pricing">
