@@ -50,9 +50,9 @@
 
 
 
-<ComparisonTable />
+<ComparisonTable class="intro-section light"/>
 
-<FAQ />
+<FAQ class="pricing-section dark"/>
 
 
 
