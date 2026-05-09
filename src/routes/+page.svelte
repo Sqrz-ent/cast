@@ -84,11 +84,10 @@
 </svelte:head>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero">
+<section class="hero" style="background-image: url('/screens/Home_background.png');">
   <div class="hero-overlay"></div>
   <div class="container hero-inner">
 
-    <!-- Left: hero text -->
     <div class="hero-text">
       <p class="eyebrow">Professional identity &amp; booking</p>
       <h1 class="display-headline">THE LINKINBIO<br>THAT GETS YOU<br><em>BOOKED</em></h1>
@@ -126,37 +125,6 @@
             <span class="status-hint">At least 3 characters</span>
           {/if}
         </div>
-      </div>
-    </div>
-
-    <!-- Right: floating profile cards -->
-    <div class="hero-cards">
-      <!-- Card 1: Will Villa -->
-      <div class="float-card float-card--a">
-        <div class="fc-avatar" style="background: rgba(243,177,48,0.2); color: #F3B130;">WV</div>
-        <div class="fc-info">
-          <div class="fc-name">Will Villa</div>
-          <div class="fc-skill">DJ · Sound Engineer</div>
-        </div>
-        <span class="fc-badge fc-badge--amber">Available</span>
-      </div>
-      <!-- Card 2: Anna Hilbert -->
-      <div class="float-card float-card--b">
-        <div class="fc-avatar" style="background: rgba(168,85,247,0.2); color: #A855F7;">AH</div>
-        <div class="fc-info">
-          <div class="fc-name">Anna Hilbert</div>
-          <div class="fc-skill">Singer · Performer</div>
-        </div>
-        <span class="fc-badge fc-badge--purple">Booked</span>
-      </div>
-      <!-- Card 3: Jake S. -->
-      <div class="float-card float-card--c">
-        <div class="fc-avatar" style="background: rgba(56,189,248,0.2); color: #38BDF8;">JS</div>
-        <div class="fc-info">
-          <div class="fc-name">Jake S.</div>
-          <div class="fc-skill">FOH Engineer</div>
-        </div>
-        <span class="fc-badge fc-badge--blue">Available</span>
       </div>
     </div>
 
@@ -606,7 +574,6 @@
   .hero {
     position: relative;
     background-color: #0a0a0a;
-    background-image: url('/screens/Home_background.png');
     background-size: cover;
     background-position: center;
     padding: 164px 0 100px;
@@ -625,10 +592,9 @@
   .hero-inner {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .hero-sub {
