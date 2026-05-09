@@ -84,7 +84,7 @@
 </svelte:head>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
-<section class="hero" style="background-image: url('/screens/Home_background.png');">
+<section class="hero hero-bg" style="background-image: url('/screens/Home_background.png');">
   <div class="hero-overlay"></div>
   <div class="container hero-inner">
 
@@ -572,14 +572,18 @@
 
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
-    position: relative;
-    background-color: #0a0a0a;
-    background-size: cover;
-    background-position: center;
+    background: #0a0a0a;
     padding: 164px 0 100px;
     min-height: 100vh;
     display: flex;
     align-items: center;
+  }
+
+  .hero-bg {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 
   .hero-overlay {
@@ -587,14 +591,16 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.55);
     pointer-events: none;
+    z-index: 0;
   }
 
   .hero-inner {
     position: relative;
     z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  }
+
+  .hero-text {
+    max-width: 600px;
   }
 
   .hero-sub {

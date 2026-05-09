@@ -348,8 +348,6 @@
 
   .hero-inner--solo {
     grid-template-columns: 1fr;
-    max-width: 680px;
-    margin-left: 0;
     position: relative;
     z-index: 1;
   }
