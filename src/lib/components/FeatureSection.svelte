@@ -341,7 +341,8 @@
       gap: 28px;
     }
     .image-wrapper {
-      aspect-ratio: 4/3;
+      width: 120%;
+      margin-left: -10%;
     }
     .tab-headline {
       font-size: 1.6rem;
