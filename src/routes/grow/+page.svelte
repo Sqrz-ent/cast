@@ -52,31 +52,6 @@
   </div>
 </section>
 
-<!-- ── WHO IS IT FOR ─────────────────────────────────────────────── -->
-<section class="editorial-section editorial-dark">
-  <div class="editorial-container">
-    <p class="editorial-eyebrow">Who Is It For?</p>
-    <h2 class="editorial-heading">Built for professionals who<br>operate at a high level</h2>
-    <div class="editorial-body">
-      <p>You already deliver value. You already command serious fees. But demand still depends on timing, referrals, or chance.</p>
-      <p>You're not looking for exposure. You're building leverage.</p>
-      <p>If you treat growth as an investment — you belong here.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── GROWTH THAT CARRIES ON ────────────────────────────────────── -->
-<section class="editorial-section editorial-light">
-  <div class="editorial-container">
-    <p class="editorial-eyebrow editorial-eyebrow--dark">The Difference</p>
-    <h2 class="editorial-heading editorial-heading--dark">Growth That Carries On</h2>
-    <div class="editorial-body editorial-body--dark">
-      <p>SQRZ Grow isn't about pushing traffic. It's about building a growth environment around your work. We collaborate with you and your team to create clarity around demand — so momentum doesn't fade after a release, a tour, or a season.</p>
-      <p>Attention becomes leverage. Leverage becomes opportunity. Opportunity becomes sustained growth. That's the difference.</p>
-    </div>
-  </div>
-</section>
-
 <!-- ── 4 PILLARS ─────────────────────────────────────────────────── -->
 <section class="pillars-section dark">
   <div class="container">
