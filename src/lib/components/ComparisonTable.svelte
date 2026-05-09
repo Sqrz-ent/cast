@@ -108,7 +108,7 @@
   }
 
   .section-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;
@@ -148,7 +148,7 @@
   .agency-col .col-header { background: rgba(0,0,0,0.03); }
 
   .col-label {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 0.85rem;
     letter-spacing: 0.2em;

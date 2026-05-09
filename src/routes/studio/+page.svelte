@@ -99,7 +99,7 @@
 
 <svelte:head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <title>SQRZ Studio</title>
   {@html `<style>nav.site-nav, footer { display: none !important; }</style>`}
 </svelte:head>
@@ -340,7 +340,7 @@
     position: fixed;
     bottom: 2rem;
     right: 3rem;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-size: 160px;
     font-weight: 900;
     color: rgba(255,255,255,0.03);
@@ -370,7 +370,7 @@
 
   /* ── HEADLINE ─────────────────────────────────────────────────────────── */
   .headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-size: clamp(2.4rem, 5.5vw, 4rem);
     font-weight: 800;
     text-transform: uppercase;

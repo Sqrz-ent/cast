@@ -101,7 +101,7 @@
   }
 
   .c-sqrz-brand {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(20px, 3.5vw, 28px);
     color: #F5A623;
@@ -109,7 +109,7 @@
     letter-spacing: 0.08em;
   }
   .c-vs-word {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(14px, 2vw, 18px);
     color: rgba(255,255,255,0.2);
@@ -117,7 +117,7 @@
     letter-spacing: 0.12em;
   }
   .c-competitor-brand {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(20px, 3.5vw, 28px);
     color: rgba(255,255,255,0.38);
@@ -126,7 +126,7 @@
   }
 
   .c-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(36px, 6.5vw, 68px);
     text-transform: uppercase;
@@ -233,7 +233,7 @@
     color: #F5A623;
   }
   :global(.cmp-col-title) {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.1rem;
     text-transform: uppercase;
@@ -353,7 +353,7 @@
     margin-bottom: 0;
   }
   :global(.cmp-dive-h3) {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.35rem;
     text-transform: uppercase;
@@ -406,7 +406,7 @@
 
   /* ── CTA SECTION ─────────────────────────────────────────────── */
   :global(.cmp-cta-text) {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(22px, 3.5vw, 32px);
     text-transform: uppercase;

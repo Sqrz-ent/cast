@@ -4,7 +4,7 @@
 
 <svelte:head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </svelte:head>
 
 <!-- ── CONTENT ───────────────────────────────────────────────────── -->
@@ -51,7 +51,7 @@
 
   /* ── LEGAL TYPOGRAPHY (consumed by child pages) ───────────────── */
   :global(.legal-page h1) {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(40px, 6vw, 64px);
     text-transform: uppercase;
@@ -71,7 +71,7 @@
   }
 
   :global(.legal-page h2) {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.4rem;
     text-transform: uppercase;

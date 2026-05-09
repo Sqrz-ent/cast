@@ -12,7 +12,7 @@
 
 <svelte:head>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </svelte:head>
 
 {#if !isStandalone}<Nav />{/if}
@@ -111,7 +111,7 @@
 
   /* Brand column */
   .footer-logo {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 2rem;
     letter-spacing: 0.06em;

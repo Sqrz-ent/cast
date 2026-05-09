@@ -97,7 +97,7 @@
   }
 
   .section-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;

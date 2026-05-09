@@ -140,7 +140,7 @@
   }
 
   h1 {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(40px, 7vw, 72px);
     text-transform: uppercase;
@@ -191,7 +191,7 @@
   }
 
   .card-sqrz {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 1.5rem;
     color: #F5A623;
@@ -200,7 +200,7 @@
   }
 
   .card-vs {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 0.9rem;
     color: rgba(255,255,255,0.18);
@@ -209,7 +209,7 @@
   }
 
   .card-competitor {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.5rem;
     color: rgba(255,255,255,0.45);

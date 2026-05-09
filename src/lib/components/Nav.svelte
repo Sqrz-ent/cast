@@ -119,7 +119,7 @@
 
   /* Logo */
   .nav-logo {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 1.5rem;
     letter-spacing: 0.06em;
@@ -241,7 +241,7 @@
   }
 
   .nav-panel-link {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.6rem;
     text-transform: uppercase;

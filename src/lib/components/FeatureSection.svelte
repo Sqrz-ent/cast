@@ -160,7 +160,7 @@
   }
 
   .ft-heading {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;
@@ -262,7 +262,7 @@
   }
 
   .tab-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: 0.02em;

@@ -80,7 +80,7 @@
   <title>SQRZ — The LinkInBio That Gets You Booked</title>
   <meta name="description" content="One professional profile to promote your work, manage bookings, and secure payments with clarity and trust.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
 <!-- ── HERO ─────────────────────────────────────────────────────── -->
@@ -471,7 +471,7 @@
 
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
   .display-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(52px, 7vw, 96px);
     line-height: 0.95;
@@ -485,7 +485,7 @@
   }
 
   .section-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;
@@ -524,7 +524,7 @@
   .section-tag.dark-tag { color: var(--accent); }
 
   .section-number {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 5rem;
     line-height: 1;
@@ -637,7 +637,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 0.9rem;
     flex-shrink: 0;
@@ -853,7 +853,7 @@
   }
 
   .card-title {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.3rem;
     text-transform: uppercase;
@@ -880,7 +880,7 @@
   }
 
   .step-number {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 3.5rem;
     color: var(--accent);
@@ -889,7 +889,7 @@
   }
 
   .step-title {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.2rem;
     text-transform: uppercase;
@@ -942,7 +942,7 @@
   .wallet-step:hover { background: rgba(255,255,255,0.05); }
 
   .ws-num {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 1.4rem;
     color: var(--accent);
@@ -951,7 +951,7 @@
   }
 
   .ws-title {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1rem;
     text-transform: uppercase;
@@ -1031,7 +1031,7 @@
   }
 
   .profile-name {
-    font-family: "Barlow Condensed", sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 1.25rem;
     text-transform: uppercase;
@@ -1159,7 +1159,7 @@
   }
 
   .plan-name {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.4rem;
     text-transform: uppercase;
@@ -1176,7 +1176,7 @@
   }
 
   .price-amount {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 2.8rem;
     color: var(--white);

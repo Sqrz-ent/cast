@@ -7,7 +7,7 @@
   <title>SQRZ Grow — Turn Attention Into Demand</title>
   <meta name="description" content="A growth infrastructure for independent professionals who want predictable leverage — not random exposure.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
 <!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
@@ -155,7 +155,7 @@
 
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
   .display-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(52px, 7vw, 96px);
     line-height: 0.95;
@@ -166,7 +166,7 @@
   .display-headline em { font-style: normal; color: var(--accent); }
 
   .section-headline {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: clamp(36px, 5vw, 60px);
     line-height: 1.0;
@@ -358,7 +358,7 @@
   }
 
   .editorial-heading {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(2rem, 5vw, 3.2rem);
     line-height: 1.08;
@@ -431,7 +431,7 @@
   }
 
   .stat-value {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.3rem;
     text-transform: uppercase;
@@ -460,7 +460,7 @@
   .pillar-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
 
   .pillar-num {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 2.2rem;
     color: var(--accent);
@@ -469,7 +469,7 @@
   }
 
   .pillar-title {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.3rem;
     text-transform: uppercase;
@@ -513,7 +513,7 @@
   }
 
   .plan-tier {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-size: 1.4rem;
     font-weight: 800;
     letter-spacing: 0.12em;
@@ -529,7 +529,7 @@
   }
 
   .price-amount {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: 2.8rem;
     color: var(--white);
