@@ -250,8 +250,6 @@
 <!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
 <FeatureSection />
 
-<FAQ half="first" />
-
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
   <div class="container">
@@ -301,6 +299,8 @@
   </div>
 </section>
 
+
+<FAQ half="first" />
 
 <!-- ── PRICING ───────────────────────────────────────────────────── -->
 <section class="pricing-section dark">

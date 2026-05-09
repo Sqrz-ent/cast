@@ -44,9 +44,6 @@
     allFaqs
   );
 
-  const col1 = $derived(faqs.slice(0, Math.ceil(faqs.length / 2)));
-  const col2 = $derived(faqs.slice(Math.ceil(faqs.length / 2)));
-
   let openIndex = $state(null);
 
   function toggle(i) {
@@ -58,23 +55,18 @@
   <div class="container">
     <p class="section-tag">FAQ</p>
     <h2 class="section-headline centered">Common<br><em>questions</em></h2>
-    <div class="faq-grid">
-      {#each [col1, col2] as col, colIdx}
-        <div class="faq-list">
-          {#each col as faq, rowIdx}
-            {@const i = (colIdx === 0 ? 0 : col1.length) + rowIdx}
-            <div class="faq-item" class:open={openIndex === i}>
-              <button class="faq-question" onclick={() => toggle(i)} aria-expanded={openIndex === i}>
-                <span class="q-text">{faq.q}</span>
-                <span class="faq-arrow" class:rotated={openIndex === i}>›</span>
-              </button>
-              {#if openIndex === i}
-                <div class="faq-answer" transition:slide={{ duration: 240 }}>
-                  <p>{faq.a}</p>
-                </div>
-              {/if}
+    <div class="faq-list">
+      {#each faqs as faq, i}
+        <div class="faq-item" class:open={openIndex === i}>
+          <button class="faq-question" onclick={() => toggle(i)} aria-expanded={openIndex === i}>
+            <span class="q-text">{faq.q}</span>
+            <span class="faq-arrow" class:rotated={openIndex === i}>›</span>
+          </button>
+          {#if openIndex === i}
+            <div class="faq-answer" transition:slide={{ duration: 240 }}>
+              <p>{faq.a}</p>
             </div>
-          {/each}
+          {/if}
         </div>
       {/each}
     </div>
@@ -116,13 +108,6 @@
   }
   .section-headline.centered { text-align: center; }
   .section-headline em { font-style: normal; color: #F5A623; }
-
-  .faq-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: start;
-  }
 
   .faq-list {
     display: flex;
@@ -193,7 +178,6 @@
   }
 
   @media (max-width: 720px) {
-    .faq-grid { grid-template-columns: 1fr; }
     .container { padding: 0 24px; }
   }
 </style>
