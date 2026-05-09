@@ -394,23 +394,6 @@
         </a>
       {/each}
 
-      <!-- Placeholder 1 -->
-      <div class="profile-card profile-card--placeholder">
-        <div class="profile-card-overlay"></div>
-        <div class="profile-card-content">
-          <div class="profile-name">Coming Soon</div>
-          <span class="profile-link">Your profile here</span>
-        </div>
-      </div>
-
-      <!-- Placeholder 2 -->
-      <div class="profile-card profile-card--placeholder">
-        <div class="profile-card-overlay"></div>
-        <div class="profile-card-content">
-          <div class="profile-name">Coming Soon</div>
-          <span class="profile-link">Your profile here</span>
-        </div>
-      </div>
 
     </div>
 

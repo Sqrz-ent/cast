@@ -29,7 +29,7 @@
         <a href="/" class="footer-logo">SQRZ</a>
         <p class="footer-tagline">The LinkInBio that gets you booked.</p>
         <p class="footer-address">
-          © 2025 SQRZ Enterprises, Inc.<br>
+          © 2026 SQRZ Enterprises, Inc.<br>
           1250 Broadway, 10001 NY, US
         </p>
       </div>
@@ -81,7 +81,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 SQRZ Enterprises, Inc. All rights reserved.</p>
+    <p>© 2026 SQRZ Enterprises, Inc. All rights reserved.</p>
   </div>
 </footer>
 {/if}
