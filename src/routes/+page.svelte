@@ -161,7 +161,7 @@
 </section>
 
 <!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
-<section class="feature-section dark">
+<section class="feature-section warm-dark">
   <div class="container feature-inner">
     <div class="feature-text">
       <p class="section-number accent">02</p>
@@ -763,8 +763,9 @@
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
   .feature-section { padding: 100px 0; }
-  .feature-section.light { background: var(--light); }
-  .feature-section.dark  { background: var(--dark-2); }
+  .feature-section.light     { background: var(--light); }
+  .feature-section.dark      { background: var(--dark-2); }
+  .feature-section.warm-dark { background: #2d2418; }
 
   .feature-inner {
     display: grid;
