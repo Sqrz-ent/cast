@@ -605,8 +605,8 @@
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
     position: relative;
-    background: #0a0a0a;
-    /* TODO: add background-image: url('/images/home-hero.jpg') here */
+    background-color: #0a0a0a;
+    background-image: url('/screens/Home_background.png');
     background-size: cover;
     background-position: center;
     padding: 164px 0 100px;
