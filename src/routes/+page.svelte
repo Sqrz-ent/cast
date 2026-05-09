@@ -219,10 +219,6 @@
 
 
 
-<!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
-<FeatureSection />
-
-
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
   <div class="container">
@@ -271,6 +267,10 @@
     </div>
   </div>
 </section>
+
+
+<!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
+<FeatureSection />
 
 
 
