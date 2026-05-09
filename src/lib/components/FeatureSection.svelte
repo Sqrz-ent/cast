@@ -340,6 +340,9 @@
       padding: 28px 24px;
       gap: 28px;
     }
+    .image-wrapper {
+      aspect-ratio: 4/3;
+    }
     .tab-headline {
       font-size: 1.6rem;
     }
