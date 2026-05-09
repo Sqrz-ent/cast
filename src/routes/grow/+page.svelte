@@ -30,25 +30,20 @@
 
 <!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
 <section class="intro-section light">
-  <div class="container intro-inner">
-    <div class="intro-text">
-      <p class="section-tag dark-tag">What Is SQRZ Grow?</p>
-      <h2 class="section-headline">Not marketing.<br><em>Your demand<br>intelligence layer.</em></h2>
-      <p class="body-text">
-        Built for professionals who understand that high-value work requires
-        structure — not exposure. SQRZ Grow is not an agency and not another
-        tool. It's the intelligence layer behind your demand.
-      </p>
-      <p class="body-text">
-        Visibility connects to audience data. Audience data connects to
-        bookings. Bookings connect to revenue. This is not a campaign you
-        run once. It's an operational system you refine and re-activate
-        whenever you choose to grow.
-      </p>
-    </div>
-    <div class="intro-visual">
-      <img src="/grow_whatitis.avif" alt="Dancer silhouette on stage" class="intro-img section-img" />
-    </div>
+  <div class="container intro-inner--centered">
+    <p class="section-tag">What Is SQRZ Grow?</p>
+    <h2 class="section-headline centered">Not marketing.<br><em>Your demand intelligence layer.</em></h2>
+    <p class="body-text body-text--centered">
+      Built for professionals who understand that high-value work requires
+      structure — not exposure. SQRZ Grow is not an agency and not another
+      tool. It's the intelligence layer behind your demand.
+    </p>
+    <p class="body-text body-text--centered">
+      Visibility connects to audience data. Audience data connects to
+      bookings. Bookings connect to revenue. This is not a campaign you
+      run once. It's an operational system you refine and re-activate
+      whenever you choose to grow.
+    </p>
   </div>
 </section>
 
@@ -90,19 +85,7 @@
   </div>
 </section>
 
-<!-- ── BUILT TO WORK WITH YOUR TEAM ─────────────────────────────── -->
-<section class="editorial-section editorial-light">
-  <div class="editorial-container">
-    <p class="editorial-eyebrow editorial-eyebrow--dark">Why Choose SQRZ Grow</p>
-    <h2 class="editorial-heading editorial-heading--dark">Built To Work With Your Team</h2>
-    <div class="editorial-body editorial-body--dark">
-      <p>SQRZ Grow doesn't replace your management. It doesn't compete with your agency. It connects the pieces.</p>
-      <p>We work alongside your existing structure — management, assistants, labels, collaborators — and provide the growth infrastructure that often sits between strategy and execution.</p>
-      <p>Creative teams focus on content. Managers focus on deals. Agencies focus on exposure.</p>
-      <p>We focus on connecting it all — so momentum builds instead of scattering.</p>
-    </div>
-  </div>
-</section>
+<FAQ />
 
 <ComparisonTable />
 
@@ -137,8 +120,6 @@
 
   </div>
 </section>
-
-<FAQ half="last" />
 
 <style>
   /* ── RESET & BASE ───────────────────────────────────────────────── */
@@ -352,6 +333,20 @@
     grid-template-columns: 1fr 1fr;
     gap: 80px;
     align-items: center;
+  }
+
+  .intro-inner--centered {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 40px;
+    text-align: center;
+  }
+
+  .body-text--centered {
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .intro-img {
