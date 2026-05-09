@@ -4,7 +4,7 @@
   const tabs = [
     {
       label: 'Dashboard',
-      img: '/screens/sqrz_live-dashboard.png?v=3',
+      img: '/screens/sqrz_live-dashboard_new.png',
       imgAlt: 'SQRZ live dashboard',
       headline: 'Your Professional\nCommand Center',
       bullets: [
@@ -15,7 +15,7 @@
     },
     {
       label: 'Office',
-      img: '/screens/sqrz_office.png?v=3',
+      img: '/screens/sqrz_office_new.png',
       imgAlt: 'SQRZ office',
       headline: 'Run a Structured\nBooking Pipeline',
       bullets: [
@@ -26,7 +26,7 @@
     },
     {
       label: 'Promotion',
-      img: '/screens/sqrz_boost.png?v=3',
+      img: '/screens/sqrz_boost_new.png',
       imgAlt: 'SQRZ promotion',
       headline: 'Promote Your Work\nIntelligently',
       bullets: [
@@ -37,7 +37,7 @@
     },
     {
       label: 'Booking Wallet',
-      img: '/screens/sqrz_wallet.png?v=3',
+      img: '/screens/sqrz_wallet_new.png',
       imgAlt: 'SQRZ booking wallet',
       headline: 'Payments Tied\nto Delivery',
       bullets: [
