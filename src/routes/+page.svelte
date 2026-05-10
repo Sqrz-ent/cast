@@ -105,20 +105,22 @@
       <!-- Username availability checker -->
       <div class="username-checker">
         <div class="username-input-row">
-          <input
-            type="text"
-            class="username-input"
-            placeholder="yourname"
-            value={username}
-            oninput={onInput}
-            onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
-            maxlength="30"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-          />
-          <span class="username-suffix">.sqrz.com</span>
+          <div class="username-input-field">
+            <input
+              type="text"
+              class="username-input"
+              placeholder="yourname"
+              value={username}
+              oninput={onInput}
+              onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
+              maxlength="30"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+            <span class="username-suffix">.sqrz.com</span>
+          </div>
           <a href={ctaUrl} class="username-cta-btn">Claim your link →</a>
         </div>
         <div class="username-feedback" aria-live="polite">
@@ -713,6 +715,13 @@
   .username-input-row:focus-within {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(245,166,35,0.22);
+  }
+
+  .username-input-field {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
   }
 
   .username-input {
@@ -1316,10 +1325,11 @@
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
-    .username-input-row { max-width: 100%; }
+    .username-input-row { max-width: 60vw; flex-direction: column; }
+    .username-input-field { width: 100%; }
     .username-input { padding: 14px 10px 14px 18px; font-size: 16px; }
-    .username-suffix { font-size: 0.82rem; padding-right: 10px; }
-    .username-cta-btn { padding: 0 16px; font-size: 0.78rem; }
+    .username-suffix { font-size: 0.82rem; padding-right: 12px; }
+    .username-cta-btn { padding: 14px 22px; justify-content: center; font-size: 0.85rem; }
     .feature-section,
     .audience-section,
     .how-section,
