@@ -588,6 +588,12 @@
       background-image: url('/screens/sqrz_live-dashboard_mobile7.png');
     }
 
+  .hero-text {
+    width: 80vw;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
     /* Feature sections: text above, image below on mobile */
     .feature-inner {
       display: flex;
