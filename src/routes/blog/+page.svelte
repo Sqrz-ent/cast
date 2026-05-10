@@ -56,7 +56,7 @@
 
 <style>
   main {
-    background: #f5f0eb;
+    background: #0d0d0d;
     min-height: 100vh;
     padding: 120px 0 100px;
     font-family: 'DM Sans', sans-serif;
@@ -91,7 +91,7 @@
     line-height: 0.95;
     letter-spacing: -0.01em;
     text-transform: uppercase;
-    color: #111111;
+    color: #ffffff;
     margin-bottom: 20px;
   }
 
@@ -103,7 +103,7 @@
   .subtitle {
     font-size: 1rem;
     font-weight: 300;
-    color: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.45);
     line-height: 1.7;
   }
 
@@ -117,8 +117,8 @@
   /* ── CARD ─────────────────────────────────────────────────────── */
   .card {
     position: relative;
-    background: #fffdf9;
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #181818;
+    border: 1px solid rgba(245, 166, 35, 0.1);
     border-radius: 12px;
     padding: 32px 28px 24px;
     display: flex;
@@ -128,8 +128,8 @@
 
   .card:hover {
     transform: translateY(-4px);
-    border-color: rgba(245, 166, 35, 0.4);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(245, 166, 35, 0.15);
+    border-color: rgba(245, 166, 35, 0.35);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(245, 166, 35, 0.12);
   }
 
   .card-body {
@@ -145,7 +145,7 @@
     line-height: 1.15;
     letter-spacing: 0.01em;
     text-transform: uppercase;
-    color: #111111;
+    color: #ffffff;
     margin-bottom: 16px;
     transition: color 0.2s;
   }
@@ -172,7 +172,7 @@
     font-size: 0.9rem;
     font-weight: 300;
     line-height: 1.75;
-    color: rgba(0, 0, 0, 0.52);
+    color: rgba(255, 255, 255, 0.48);
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -185,7 +185,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding-top: 16px;
   }
 
@@ -227,13 +227,13 @@
   .author-name {
     font-size: 0.78rem;
     font-weight: 400;
-    color: rgba(0, 0, 0, 0.42);
+    color: rgba(255, 255, 255, 0.38);
     transition: color 0.2s;
     white-space: nowrap;
   }
 
   .author-banner:hover .author-name {
-    color: rgba(0, 0, 0, 0.75);
+    color: rgba(255, 255, 255, 0.75);
   }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────── */
