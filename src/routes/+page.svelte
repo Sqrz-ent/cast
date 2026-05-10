@@ -322,7 +322,6 @@
           <span class="price-period">/month</span>
         </div>
         <p class="plan-tagline">Everything — domain, links, pixels, campaigns</p>
-        <p class="plan-annual">or $84/year — save 30%</p>
         <ul class="plan-features">
           {#each [
             'Custom domain — own your identity',
