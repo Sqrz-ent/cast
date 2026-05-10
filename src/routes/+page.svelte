@@ -318,13 +318,13 @@
           <span class="price-amount">$12</span>
           <span class="price-period">/month</span>
         </div>
-        <p class="plan-tagline">Everything — domain, links, pixels, campaigns</p>
+        <p class="plan-tagline">Domain, links, pixels, campaigns</p>
         <ul class="plan-features">
           {#each [
-            'Custom domain — own your identity',
+            'Custom domain — own your online identity',
             'Advanced tracking — see what drives bookings',
             'Private links, lead capture & pixel tracking',
-            'Boost campaigns — $25 activation, $5 reactivation',
+            'Drive targeted traffic with Boost campaigns - 25$/campaign',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
