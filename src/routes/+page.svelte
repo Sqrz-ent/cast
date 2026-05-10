@@ -324,7 +324,7 @@
             'Custom domain — own your online identity',
             'Advanced tracking — see what drives bookings',
             'Private links, lead capture & pixel tracking',
-            'Drive targeted traffic with Boost campaigns - 25$/campaign',
+            'Drive targeted traffic  - 25$ per Boost campaign',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
