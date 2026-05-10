@@ -26,7 +26,7 @@
     },
     {
       label: 'Promotion',
-      img: '/screens/sqrz_boost_new.png',
+      img: '/screens/sqrz_boost_final.png',
       imgAlt: 'SQRZ promotion',
       headline: 'Promote Your Work\nIntelligently',
       bullets: [
@@ -37,7 +37,7 @@
     },
     {
       label: 'Booking Wallet',
-      img: '/screens/sqrz_wallet_new.png',
+      img: '/screens/sqrz_wallet_final.png',
       imgAlt: 'SQRZ booking wallet',
       headline: 'Payments Tied\nto Delivery',
       bullets: [
