@@ -12,20 +12,22 @@
 
 <!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
 <section class="intro-section light intro-section--top">
-  <div class="container intro-inner--hero">
-    <p class="section-tag" style="text-align:left;">What Is SQRZ Grow?</p>
-    <h2 class="section-headline">Not marketing.<br><em>Your demand intelligence layer.</em></h2>
-    <p class="body-text">
-      Built for professionals who understand that high-value work requires
-      structure — not exposure. SQRZ Grow is not an agency and not another
-      tool. It's the intelligence layer behind your demand.
-    </p>
-    <p class="body-text">
-      Visibility connects to audience data. Audience data connects to
-      bookings. Bookings connect to revenue. This is not a campaign you
-      run once. It's an operational system you refine and re-activate
-      whenever you choose to grow.
-    </p>
+  <div class="container">
+    <div class="intro-inner--hero">
+      <p class="section-tag" style="text-align:left;">What Is SQRZ Grow?</p>
+      <h2 class="section-headline">Not marketing.<br><em>Your demand intelligence layer.</em></h2>
+      <p class="body-text">
+        Built for professionals who understand that high-value work requires
+        structure — not exposure. SQRZ Grow is not an agency and not another
+        tool. It's the intelligence layer behind your demand.
+      </p>
+      <p class="body-text">
+        Visibility connects to audience data. Audience data connects to
+        bookings. Bookings connect to revenue. This is not a campaign you
+        run once. It's an operational system you refine and re-activate
+        whenever you choose to grow.
+      </p>
+    </div>
   </div>
 </section>
 
@@ -290,7 +292,6 @@
 
   .intro-inner--hero {
     max-width: 600px;
-    margin-left: 0;
   }
 
   .body-text--centered {
