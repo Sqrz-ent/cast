@@ -17,6 +17,14 @@
   let pricingGrid: HTMLElement | undefined;
   let activeDot = $state(0);
 
+  // Set --vh CSS variable for reliable mobile viewport height
+  onMount(() => {
+    const setVh = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    window.addEventListener('resize', setVh);
+    setVh();
+    return () => window.removeEventListener('resize', setVh);
+  });
+
   // Capture ?ref=CODE from URL and persist in localStorage
   onMount(() => {
     const params = new URLSearchParams(window.location.search);
@@ -544,6 +552,7 @@
     background: #0a0a0a;
     padding: 164px 0 100px;
     min-height: 100vh;
+    min-height: calc(var(--vh, 1svh) * 100);
   }
 
   .hero-bg {
@@ -552,6 +561,7 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: scroll;
   }
 
   .hero-overlay {
