@@ -1325,7 +1325,7 @@
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
-    .username-input-row { max-width: 60vw; flex-direction: column; }
+    .username-input-row { max-width: 80vw; flex-direction: column; margin-left: auto; margin-right: auto; }
     .username-input-field { width: 100%; }
     .username-input { padding: 14px 10px 14px 18px; font-size: 16px; }
     .username-suffix { font-size: 0.82rem; padding-right: 12px; }
