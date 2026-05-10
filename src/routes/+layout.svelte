@@ -68,15 +68,6 @@
         </ul>
       </div>
 
-      <!-- Compare — col 2 -->
-      <div class="footer-col">
-        <p class="footer-col-heading footer-col-heading-spacer" aria-hidden="true">&nbsp;</p>
-        <ul class="footer-links">
-          <li><a href="/compare/sqrz-vs-fiverr-upwork">SQRZ vs Upwork</a></li>
-          <li><a href="/compare/sqrz-vs-beacons">SQRZ vs Beacons</a></li>
-          <li><a href="/compare/sqrz-vs-casting-platforms">SQRZ vs Casting Apps</a></li>
-        </ul>
-      </div>
 
     </div>
   </div>
@@ -105,7 +96,7 @@
     margin: 0 auto;
     padding: 0 40px;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 48px;
   }
 
