@@ -7,7 +7,9 @@ export const load: PageServerLoad = async () => {
 		title: mod.metadata.title,
 		date: mod.metadata.date,
 		description: mod.metadata.description,
-		slug: mod.metadata.slug
+		slug: mod.metadata.slug,
+		author: mod.metadata.author ?? null,
+		authorSlug: mod.metadata.authorSlug ?? null,
 	}));
 
 	posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
