@@ -149,7 +149,6 @@
       <img src="/home-showcase.avif" alt="Sound engineer at mixing desk" class="feature-img section-img" />
     </div>
     <div class="feature-text">
-      <p class="section-number">01</p>
       <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
       <p class="body-text">
         Create a powerful SQRZ profile and showcase your portfolio, services,
@@ -175,7 +174,6 @@
 <section class="feature-section warm-dark">
   <div class="container feature-inner">
     <div class="feature-text">
-      <p class="section-number accent">02</p>
       <h2 class="section-headline light-text">Run Your<br><em>Booking Pipeline</em></h2>
       <p class="body-text mid-text">
         Clients don't just message you — they enter a structured flow.
@@ -206,7 +204,6 @@
       <img src="/home_getpaid.avif" alt="Cruise ship — get paid to perform" class="feature-img section-img" />
     </div>
     <div class="feature-text">
-      <p class="section-number">03</p>
       <h2 class="section-headline">Get Paid<br><em>Through SQRZ</em></h2>
       <p class="body-text">
         Focus on your work, not your invoices. From first request to
