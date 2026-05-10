@@ -47,6 +47,9 @@
     refCode ? `https://dashboard.sqrz.com/join?ref=${refCode}` : 'https://dashboard.sqrz.com/join'
   );
 
+  // CTA button URL — uses slug URL when available, otherwise base join URL
+  let ctaUrl = $derived(status === 'available' ? joinUrl : baseJoinUrl);
+
   function onInput(e) {
     username = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
     status = 'idle';
@@ -116,6 +119,7 @@
             spellcheck="false"
           />
           <span class="username-suffix">.sqrz.com</span>
+          <a href={ctaUrl} class="username-cta-btn">Claim your link →</a>
         </div>
         <div class="username-feedback" aria-live="polite">
           {#if status === 'checking'}
@@ -700,14 +704,15 @@
     display: flex;
     align-items: stretch;
     background: rgba(255,255,255,0.06);
-    border: 1.5px solid rgba(255,255,255,0.12);
+    border: 2px solid rgba(245,166,35,0.45);
     border-radius: var(--radius-btn);
     overflow: hidden;
-    transition: border-color 0.2s;
-    max-width: 380px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    max-width: 520px;
   }
   .username-input-row:focus-within {
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(245,166,35,0.22);
   }
 
   .username-input {
@@ -715,9 +720,9 @@
     background: transparent;
     border: none;
     outline: none;
-    padding: 13px 16px 13px 20px;
+    padding: 19px 12px 19px 22px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
     color: var(--white);
     min-width: 0;
@@ -728,7 +733,7 @@
   .username-suffix {
     display: flex;
     align-items: center;
-    padding: 0 18px 0 0;
+    padding: 0 14px 0 0;
     font-family: 'DM Sans', sans-serif;
     font-size: 0.88rem;
     font-weight: 300;
@@ -736,6 +741,23 @@
     white-space: nowrap;
     flex-shrink: 0;
   }
+
+  .username-cta-btn {
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    background: var(--accent);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s, opacity 0.2s;
+    letter-spacing: 0.01em;
+  }
+  .username-cta-btn:hover { opacity: 0.88; }
 
   .username-feedback {
     min-height: 20px;
@@ -1294,6 +1316,10 @@
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
+    .username-input-row { max-width: 100%; }
+    .username-input { padding: 14px 10px 14px 18px; font-size: 16px; }
+    .username-suffix { font-size: 0.82rem; padding-right: 10px; }
+    .username-cta-btn { padding: 0 16px; font-size: 0.78rem; }
     .feature-section,
     .audience-section,
     .how-section,
