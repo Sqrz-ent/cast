@@ -581,6 +581,7 @@
 
   .hero-text {
     max-width: 600px;
+
   }
 
   @media (max-width: 768px) {
@@ -589,10 +590,12 @@
     }
 
   .hero-text {
-    width: 80vw;
+    width: 75%;
     max-width: 520px;
     margin: 0 auto;
   }
+  
+  
 
     /* Feature sections: text above, image below on mobile */
     .feature-inner {
