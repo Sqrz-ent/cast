@@ -292,17 +292,17 @@
 
       <!-- Free -->
       <div class="pricing-card">
-        <div class="plan-name">Free</div>
+        <div class="plan-name">Freelancer</div>
         <div class="plan-price">
           <span class="price-amount">Free</span>
         </div>
-        <p class="plan-tagline">Build Your Professional Base</p>
+        <p class="plan-tagline">Build Your Professional Presence</p>
         <ul class="plan-features">
           {#each [
-            'Professional profile & services',
-            'Booking pipeline & dashboard',
-            'Boost campaigns — $25 per activation',
-            'Do what you love & get paid for it',
+            'Showcase your professional Profile and offer your services',
+            'Booking pipeline & invoicing - (E-Invoice ready)',
+            'Promote your work with Boost campaigns — $25 per activation',
+            'Do what you love & build your reputation',
           ] as f}
             <li><span class="feat-check">✓</span>{f}</li>
           {/each}
