@@ -102,7 +102,7 @@
     <div class="hero-text">
       <p class="eyebrow">Promote.  Book.  Get Paid!</p>
 <h1 class="display-headline">
-  THE <em>LINKINBIO</em><br>
+  THE <br><em>LINKINBIO</em><br>
   <span class="tight-line">THAT GETS YOU</span><br>
   <em>BOOKED</em>
 </h1>      <!-- Username availability checker -->
@@ -489,14 +489,16 @@
     color: var(--white);
     text-transform: uppercase;
   }
-
+.no-break {
+  white-space: nowrap;
+}
   .display-headline em {
     font-style: normal;
     color: var(--accent);
   }
 
 .tight-line {
-  letter-spacing: -0.091em;
+  letter-spacing: -0.055em;
 }
 
   .section-headline {
