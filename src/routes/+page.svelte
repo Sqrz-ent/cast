@@ -583,7 +583,7 @@
 
   @media (max-width: 768px) {
     .hero-bg {
-      background-image: url('/screens/sqrz_live-dashboard_mobile6.png');
+      background-image: url('/screens/sqrz_live-dashboard_mobile7.png');
     }
 
     /* Feature sections: text above, image below on mobile */
