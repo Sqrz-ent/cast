@@ -174,13 +174,13 @@
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-text">
-      <h2 class="section-headline light-text">Run Your<br><em>Booking Pipeline</em></h2>
-      <p class="body-text mid-text">
+      <h2 class="section-headline">Run Your<br><em>Booking Pipeline</em></h2>
+      <p class="body-text">
         Clients don't just message you — they enter a structured flow.
         Scope, terms, collaboration, and payment move forward in one
         clear system.
       </p>
-      <ul class="feature-list dark-list">
+      <ul class="feature-list">
         {#each [
           'Structured booking requests — no back-and-forth',
           'Defined scope and terms before any commitment',
