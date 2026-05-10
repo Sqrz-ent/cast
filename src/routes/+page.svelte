@@ -799,7 +799,7 @@
   .feature-section { padding: 100px 0; }
   .feature-section.light     { background: var(--light); }
   .feature-section.dark      { background: var(--dark-2); }
-  .feature-section.warm-dark { background: #C29F7C; }
+  .feature-section.warm-dark { background: #D4B896; }
 
   .feature-inner {
     display: grid;
