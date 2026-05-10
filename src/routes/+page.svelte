@@ -171,7 +171,7 @@
 </section>
 
 <!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
-<section class="feature-section warm-dark">
+<section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-text">
       <h2 class="section-headline light-text">Run Your<br><em>Booking Pipeline</em></h2>
