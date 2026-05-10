@@ -290,6 +290,7 @@
 
   .intro-inner--hero {
     max-width: 600px;
+    margin-left: 0;
   }
 
   .body-text--centered {
