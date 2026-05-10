@@ -101,8 +101,11 @@
 
     <div class="hero-text">
       <p class="eyebrow">Promote.  Book.  Get Paid!</p>
-      <h1 class="display-headline">THE <em>LINKINBIO</em><br>THAT GETS YOU<br><em>BOOKED</em></h1>
-      <!-- Username availability checker -->
+<h1 class="display-headline">
+  THE <em>LINKINBIO</em><br>
+  <span class="tight-line">THAT GETS YOU</span><br>
+  <em>BOOKED</em>
+</h1>      <!-- Username availability checker -->
       <div class="username-checker">
         <div class="username-input-row">
           <div class="username-input-field">
@@ -486,10 +489,15 @@
     color: var(--white);
     text-transform: uppercase;
   }
+
   .display-headline em {
     font-style: normal;
     color: var(--accent);
   }
+
+.tight-line {
+  letter-spacing: -0.091em;
+}
 
   .section-headline {
     font-family: Impact, sans-serif;
@@ -595,6 +603,16 @@
     margin: 0 auto;
   }
   
+  .display-headline {
+    font-size: clamp(52px, 11vw, 68px);
+    line-height: 0.80;
+    letter-spacing: -0.04em;
+  }
+
+  .no-break {
+    white-space: nowrap;
+  }
+
   
 
     /* Feature sections: text above, image below on mobile */
