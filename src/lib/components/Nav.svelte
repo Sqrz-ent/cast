@@ -44,7 +44,7 @@
       <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>SQRZ</a>
       <a href="/grow" class="nav-link" class:active={$page.url.pathname === '/grow'}>Grow</a>
       <a href="/blog" class="nav-link" class:active={$page.url.pathname.startsWith('/blog')}>Blog</a>
-      <a href="/cast" class="nav-link" class:active={$page.url.pathname.startsWith('/creators')}>Blog</a>
+      <a href="/creators" class="nav-link" class:active={$page.url.pathname.startsWith('/creators')}>Blog</a>
 
     </div>
 
