@@ -53,7 +53,6 @@
           <li><a href="/impressum">Impressum</a></li>
           <li><a href="/terms">Terms &amp; Conditions</a></li>
           <li><a href="/cookies">Cookie Policy</a></li>
-          <li><a href="https://dashboard.sqrz.com">Dashboard</a></li>
         </ul>
       </div>
 
