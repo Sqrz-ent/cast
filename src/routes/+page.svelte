@@ -802,7 +802,7 @@
   .feature-section { padding: 100px 0; }
   .feature-section.light     { background: var(--light); }
   .feature-section.dark      { background: var(--dark-2); }
-  .feature-section.warm-dark { background: #A8A5A2; }
+  .feature-section.warm-dark { background: #C29F7C; }
 
   .feature-inner {
     display: grid;
