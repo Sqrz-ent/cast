@@ -56,7 +56,7 @@
 
 <style>
   main {
-    background: #0d0d0d;
+    background: #f5f0eb;
     min-height: 100vh;
     padding: 120px 0 100px;
     font-family: 'DM Sans', sans-serif;
@@ -103,7 +103,7 @@
   .subtitle {
     font-size: 1rem;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.45);
+    color: 111111;
     line-height: 1.7;
   }
 
@@ -117,7 +117,7 @@
   /* ── CARD ─────────────────────────────────────────────────────── */
   .card {
     position: relative;
-    background: #181818;
+    background: #f5f0eb;
     border: 1px solid rgba(245, 166, 35, 0.1);
     border-radius: 12px;
     padding: 32px 28px 24px;
@@ -145,13 +145,13 @@
     line-height: 1.15;
     letter-spacing: 0.01em;
     text-transform: uppercase;
-    color: #ffffff;
+    color: #111111;
     margin-bottom: 16px;
     transition: color 0.2s;
   }
 
   .card:hover .card-title {
-    color: #F5A623;
+    color: #111111;
   }
 
   /* Cover-link pattern: title link stretches to fill the whole card */
@@ -172,7 +172,7 @@
     font-size: 0.9rem;
     font-weight: 300;
     line-height: 1.75;
-    color: rgba(255, 255, 255, 0.48);
+    color: 111111(255, 255, 255, 0.48);
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -227,13 +227,13 @@
   .author-name {
     font-size: 0.78rem;
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.38);
+    color: #111111;
     transition: color 0.2s;
     white-space: nowrap;
   }
 
   .author-banner:hover .author-name {
-    color: rgba(255, 255, 255, 0.75);
+    color: 111111(255, 255, 255, 0.75);
   }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────── */
