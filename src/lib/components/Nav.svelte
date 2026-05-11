@@ -43,7 +43,7 @@
     <div class="nav-links">
       <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>SQRZ</a>
       <a href="/grow" class="nav-link" class:active={$page.url.pathname === '/grow'}>Grow</a>
-      <a href="/creators" class="nav-link" class:active={$page.url.pathname.startsWith('/creators')}>Cast</a>
+      <a href="/cast" class="nav-link" class:active={$page.url.pathname.startsWith('/cast')}>Cast</a>
       <a href="/blog" class="nav-link" class:active={$page.url.pathname.startsWith('/blog')}>Blog</a>
 
     </div>
@@ -80,7 +80,7 @@
     <div class="nav-panel">
       <a href="/" class="nav-panel-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>SQRZ</a>
       <a href="/grow" class="nav-panel-link" class:active={$page.url.pathname === '/grow'} onclick={closeMenu}>Grow</a>
-      <a href="/creators" class="nav-panel-link" class:active={$page.url.pathname.startsWith('/creators')} onclick={closeMenu}>Cast</a>
+      <a href="/cast" class="nav-panel-link" class:active={$page.url.pathname.startsWith('/cast')} onclick={closeMenu}>Cast</a>
       <a href="/blog" class="nav-panel-link" class:active={$page.url.pathname.startsWith('/blog')} onclick={closeMenu}>Blog</a>
 
       <div class="nav-panel-divider"></div>

@@ -17,14 +17,6 @@
 <section class="creators-hero">
   <div class="container">
     <p class="section-tag">Creators</p>
-    <h1 class="section-headline light-text centered">
-      MEET THE CREATIVES<br />
-      <em>ALREADY ON SQRZ</em>
-    </h1>
-    <p class="creators-intro">
-      Explore artists, performers, technicians, and creative professionals building their
-      profile, booking flow, and business presence with SQRZ.
-    </p>
   </div>
 </section>
 
@@ -72,7 +64,6 @@
   .creators-hero {
     padding: 150px 0 70px;
     background:
-      radial-gradient(circle at top, rgba(243, 177, 48, 0.16), transparent 38%),
       #050505;
   }
 
@@ -81,14 +72,7 @@
     background: #050505;
   }
 
-  .creators-intro {
-    max-width: 680px;
-    margin: 24px auto 0;
-    color: rgba(255, 255, 255, 0.68);
-    text-align: center;
-    font-size: 18px;
-    line-height: 1.7;
-  }
+
 
   .creators-grid {
     display: grid;
