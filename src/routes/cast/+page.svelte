@@ -6,14 +6,6 @@
   const profiles = data.featuredProfiles ?? [];
 </script>
 
-<svelte:head>
-  <title>Creators on SQRZ</title>
-  <meta
-    name="description"
-    content="Explore creative professionals already using SQRZ."
-  />
-</svelte:head>
-
 <section class="creators-hero">
   <div class="container">
     <p class="section-tag">Creators</p>
@@ -61,6 +53,12 @@
 </section>
 
 <style>
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
   .creators-hero {
     padding: 150px 0 70px;
     background:
@@ -71,8 +69,6 @@
     padding: 40px 0 120px;
     background: #050505;
   }
-
-
 
   .creators-grid {
     display: grid;
