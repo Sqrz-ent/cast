@@ -485,7 +485,7 @@
     font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(52px, 7vw, 96px);
-    line-height: 0.84;
+    line-height: 0.80;
     letter-spacing: 0;
     color: var(--white);
     text-transform: uppercase;
