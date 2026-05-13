@@ -1,10 +1,23 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
+  import { allLocaleCodes, getLocaleFromPathname, localizePath, locales, stripLocalePrefix, type Locale } from '$lib/i18n';
 
   let scrolled = $state(false);
   let menuOpen = $state(false);
   let joinUrl = $state('https://dashboard.sqrz.com/join');
+  const showLanguageSwitcher = false;
+  const currentLocale = $derived(getLocaleFromPathname($page.url.pathname));
+  const barePath = $derived(stripLocalePrefix($page.url.pathname));
+
+  function hrefFor(path: string) {
+    return localizePath(path, currentLocale);
+  }
+
+  function languageHref(locale: Locale) {
+    const targetPath = /^\/blog\/[^/]+/.test(barePath) ? '/blog' : barePath;
+    return localizePath(targetPath, locale);
+  }
 
   onMount(() => {
     function onScroll() {
@@ -41,16 +54,27 @@
 
     <!-- Center: Links (desktop only) -->
     <div class="nav-links">
-      <a href="/" class="nav-link" class:active={$page.url.pathname === '/'}>SQRZ</a>
-      <a href="/grow" class="nav-link" class:active={$page.url.pathname === '/grow'}>Grow</a>
-      <a href="/cast" class="nav-link" class:active={$page.url.pathname.startsWith('/cast')}>Cast</a>
-      <a href="/blog" class="nav-link" class:active={$page.url.pathname.startsWith('/blog')}>Blog</a>
+      <a href={hrefFor('/')} class="nav-link" class:active={barePath === '/'}>SQRZ</a>
+      <a href={hrefFor('/grow')} class="nav-link" class:active={barePath === '/grow'}>Grow</a>
+      <a href={hrefFor('/cast')} class="nav-link" class:active={barePath.startsWith('/cast')}>Cast</a>
+      <a href={hrefFor('/blog')} class="nav-link" class:active={barePath.startsWith('/blog')}>Blog</a>
 
     </div>
 
     <!-- Right: Auth + Hamburger -->
     <div class="nav-right">
       <!-- Auth links: desktop only -->
+      {#if showLanguageSwitcher}
+        <div class="language-switcher nav-desktop-only" aria-label="Language">
+          {#each allLocaleCodes as locale}
+            <a
+              href={languageHref(locale)}
+              class:active={currentLocale === locale}
+              aria-label={locales[locale].label}
+            >{locales[locale].shortLabel}</a>
+          {/each}
+        </div>
+      {/if}
       <a href="https://dashboard.sqrz.com/login" class="nav-login nav-desktop-only">Login</a>
       <a href={joinUrl} class="nav-signup nav-desktop-only">Sign Up</a>
 
@@ -78,12 +102,24 @@
     <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
     <div class="nav-backdrop" onclick={closeMenu}></div>
     <div class="nav-panel">
-      <a href="/" class="nav-panel-link" class:active={$page.url.pathname === '/'} onclick={closeMenu}>SQRZ</a>
-      <a href="/grow" class="nav-panel-link" class:active={$page.url.pathname === '/grow'} onclick={closeMenu}>Grow</a>
-      <a href="/cast" class="nav-panel-link" class:active={$page.url.pathname.startsWith('/cast')} onclick={closeMenu}>Cast</a>
-      <a href="/blog" class="nav-panel-link" class:active={$page.url.pathname.startsWith('/blog')} onclick={closeMenu}>Blog</a>
+      <a href={hrefFor('/')} class="nav-panel-link" class:active={barePath === '/'} onclick={closeMenu}>SQRZ</a>
+      <a href={hrefFor('/grow')} class="nav-panel-link" class:active={barePath === '/grow'} onclick={closeMenu}>Grow</a>
+      <a href={hrefFor('/cast')} class="nav-panel-link" class:active={barePath.startsWith('/cast')} onclick={closeMenu}>Cast</a>
+      <a href={hrefFor('/blog')} class="nav-panel-link" class:active={barePath.startsWith('/blog')} onclick={closeMenu}>Blog</a>
 
       <div class="nav-panel-divider"></div>
+      {#if showLanguageSwitcher}
+        <div class="language-switcher language-switcher-panel" aria-label="Language">
+          {#each allLocaleCodes as locale}
+            <a
+              href={languageHref(locale)}
+              class:active={currentLocale === locale}
+              aria-label={locales[locale].label}
+              onclick={closeMenu}
+            >{locales[locale].shortLabel}</a>
+          {/each}
+        </div>
+      {/if}
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
       <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
     </div>
@@ -179,6 +215,40 @@
   }
   .nav-login:hover { color: #444444; }
 
+  .language-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .language-switcher a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 26px;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .language-switcher a:hover {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .language-switcher a.active {
+    background: rgba(245, 166, 35, 0.16);
+    color: #F3B130;
+  }
+
   .nav-signup {
     font-size: 0.88rem;
     font-weight: 700;
@@ -265,6 +335,10 @@
     height: 1px;
     background: rgba(255, 255, 255, 0.12);
     margin: 8px 0;
+  }
+
+  .language-switcher-panel {
+    margin: 10px 0 6px;
   }
 
   .nav-panel-login {

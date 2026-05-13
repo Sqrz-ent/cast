@@ -2,10 +2,17 @@
   import Analytics from '$lib/Analytics.svelte';
   import Nav from '$lib/components/Nav.svelte';
   import { page } from '$app/state';
+  import { getLocaleFromPathname, localizePath } from '$lib/i18n';
+
   let { children } = $props();
 
   const standaloneRoutes = ['/studio'];
   const isStandalone = $derived(standaloneRoutes.some(r => page.route.id === r || (page.route.id?.startsWith(r + '/') ?? false)));
+  const currentLocale = $derived(getLocaleFromPathname(page.url.pathname));
+
+  function hrefFor(path) {
+    return localizePath(path, currentLocale);
+  }
 </script>
 
 <Analytics />
@@ -26,7 +33,7 @@
 
       <!-- Left — Brand -->
       <div class="footer-col footer-brand">
-        <a href="/" class="footer-logo">SQRZ</a>
+        <a href={hrefFor('/')} class="footer-logo">SQRZ</a>
         <p class="footer-tagline">The LinkInBio that gets you booked.</p>
         <p class="footer-address">
           © 2026 SQRZ Enterprises, Inc.<br>
@@ -38,9 +45,10 @@
       <div class="footer-col">
         <p class="footer-col-heading">Platform</p>
         <ul class="footer-links">
-          <li><a href="/">SQRZ</a></li>
-          <li><a href="/grow">Grow</a></li>
-          <li><a href="/blog">Blog</a></li>
+          <li><a href={hrefFor('/')}>SQRZ</a></li>
+          <li><a href={hrefFor('/grow')}>Grow</a></li>
+          <li><a href={hrefFor('/cast')}>Cast</a></li>
+          <li><a href={hrefFor('/blog')}>Blog</a></li>
           <li><a href="/studio" data-sveltekit-preload-data="off">Studio</a></li>
         </ul>
       </div>

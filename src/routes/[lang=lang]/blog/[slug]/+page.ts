@@ -1,7 +1,7 @@
 import type { PageLoad } from './$types';
-import { defaultLocale } from '$lib/i18n';
 import { getBlogPost } from '$lib/blog';
+import { normalizeLocale } from '$lib/i18n';
 
 export const load: PageLoad = async ({ params }) => {
-	return getBlogPost(params.slug, defaultLocale);
+	return getBlogPost(params.slug, normalizeLocale(params.lang));
 };

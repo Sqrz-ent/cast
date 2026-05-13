@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { locales, normalizeLocale } from '$lib/i18n';
+
   export let data;
 
   const { content: Content, meta } = data;
+  const locale = normalizeLocale(meta.lang);
+  const pathPrefix = locales[locale].pathPrefix;
+  const dateLocale = locale === 'en' ? 'en-GB' : locale;
 
   function formatDate(d: string) {
-    return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    return new Date(d).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   function initials(name: string) {
@@ -21,7 +26,7 @@
   <div class="container">
     <article class="post">
       <header class="post-hero">
-        <a href="/blog" class="back-link">← Journal</a>
+        <a href="{pathPrefix}/blog" class="back-link">← Journal</a>
         <p class="eyebrow">SQRZ Journal</p>
         <h1>{meta.title}</h1>
         {#if meta.description}

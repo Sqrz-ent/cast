@@ -3,7 +3,6 @@
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
   import type { PageData } from './$types';
-  import FAQ from '$lib/components/FAQ.svelte';
   import FeatureSection from '$lib/components/FeatureSection.svelte';
 
   const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY);

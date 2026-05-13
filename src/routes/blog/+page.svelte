@@ -1,13 +1,18 @@
 <script lang="ts">
+  import { locales, normalizeLocale } from '$lib/i18n';
+
   export let data;
 
   const posts = data.posts ?? [];
   const featuredPost = posts[0];
   const remainingPosts = posts.slice(1);
   const topics = ['All', 'Getting booked', 'Audience', 'Pricing', 'Growth', 'Platforms'];
+  const locale = normalizeLocale(data.locale);
+  const pathPrefix = locales[locale].pathPrefix;
+  const dateLocale = locale === 'en' ? 'en-GB' : locale;
 
   function formatDate(d: string) {
-    return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    return new Date(d).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric' });
   }
 
   function initials(name: string) {
@@ -46,7 +51,7 @@
       </div>
 
       {#if featuredPost}
-        <a href="/blog/{featuredPost.slug}" class="featured-article">
+        <a href="{pathPrefix}/blog/{featuredPost.slug}" class="featured-article">
           <div class="featured-meta">
             <span>Featured article</span>
             <time datetime={featuredPost.date}>{formatDate(featuredPost.date)}</time>
@@ -91,7 +96,7 @@
           </div>
           <div class="card-body">
             <h2 class="card-title">
-              <a href="/blog/{post.slug}" class="card-link">{post.title}</a>
+              <a href="{pathPrefix}/blog/{post.slug}" class="card-link">{post.title}</a>
             </h2>
             <p class="card-excerpt">{post.description}</p>
           </div>

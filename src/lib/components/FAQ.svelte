@@ -3,36 +3,36 @@
 
   const allFaqs = [
     {
-      q: 'Is SQRZ Grow a subscription?',
-      a: 'No. SQRZ Grow is a time-limited growth program. Pro plans run 3–6 months. Starter plans can be cancelled monthly.',
+      q: 'Is SQRZ Grow software or a service?',
+      a: 'Grow is a managed service workflow. SQRZ is the conversion surface, but the value is the manual campaign direction, setup, review, and refinement around it.',
     },
     {
-      q: 'Who is SQRZ Grow for?',
-      a: 'Independent professionals who already take their work seriously and want consistent, higher-quality opportunities.',
+      q: 'Who is Grow built for?',
+      a: 'Professionals who already have a clear offer, a public SQRZ profile, and enough budget to test paid demand with intention.',
     },
     {
-      q: 'What am I actually investing in?',
-      a: 'A complete growth system: profile, tracking, campaigns, and booking infrastructure — not just ads.',
+      q: 'What do you manage?',
+      a: 'We help shape the campaign angle, audience structure, traffic path, profile conversion notes, performance review, and next-cycle decisions.',
     },
     {
-      q: 'What ad budget do you recommend?',
-      a: 'Budgets depend on industry and offer value. For most professionals, we recommend $200–500/month in controlled growth cycles.',
+      q: 'What budget do I need?',
+      a: 'Grow starts at $1,000 in ad budget. The point is to give campaigns enough room to create useful signals, not just isolated traffic spikes.',
     },
     {
-      q: 'How long should campaigns run?',
-      a: 'SQRZ Grow operates in waves — define, activate, measure, refine. The goal isn\'t short bursts of traffic or vanity metrics.',
+      q: 'How does a campaign cycle work?',
+      a: 'Each cycle moves through diagnosis, planning, activation, and refinement. The next cycle is based on what the previous one revealed.',
     },
     {
       q: 'Do you guarantee bookings?',
-      a: 'No. We don\'t promise outcomes we can\'t control — we build systems that increase the probability of real demand over time.',
+      a: 'No. We do not promise outcomes we cannot control. We build the conditions for better demand: clearer offers, better traffic, and stronger conversion paths.',
     },
     {
-      q: 'How does the booking wallet work?',
-      a: 'Each booking runs through its own structured wallet, with deposits processed via Stripe and assigned to that project. Funds can be allocated and released according to agreed terms, including team payments.',
+      q: 'Do I need to use SQRZ for bookings?',
+      a: 'Yes. Grow is designed around your SQRZ profile because that gives campaigns a focused place to convert visitors into qualified booking intent.',
     },
     {
-      q: 'Is my profile legally compliant in the EU?',
-      a: 'Yes — SQRZ is built with European freelancers in mind. Every profile automatically includes a legal footer with your business details and a GDPR-compliant privacy page at [yourname].sqrz.com/privacy. If you add your own tracking pixels as a paid user, SQRZ will prompt you to complete your Impressum and automatically disclose the active tools in your privacy page. No lawyer needed.',
+      q: 'What happens after the first cycle?',
+      a: 'We review the signals, decide what is worth improving, and either refine the campaign, adjust the offer, or pause before spending more.',
     },
   ];
 
