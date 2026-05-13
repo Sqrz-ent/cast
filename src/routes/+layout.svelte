@@ -47,7 +47,6 @@
         <ul class="footer-links">
           <li><a href={hrefFor('/')}>SQRZ</a></li>
           <li><a href={hrefFor('/grow')}>Grow</a></li>
-          <li><a href={hrefFor('/cast')}>Cast</a></li>
           <li><a href={hrefFor('/blog')}>Blog</a></li>
           <li><a href="/studio" data-sveltekit-preload-data="off">Studio</a></li>
         </ul>
