@@ -613,7 +613,6 @@
   }
 
   .tight-line {
-    font-size: clamp(40px, 9.6vw, 64px);
     letter-spacing: -0.065em;
   }
 
