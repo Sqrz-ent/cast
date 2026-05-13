@@ -607,7 +607,7 @@
   }
   
   .display-headline {
-    font-size: clamp(50px, 12vw, 72px);
+    font-size: clamp(56px, 15vw, 82px);
     line-height: 0.80;
     letter-spacing: -0.04em;
   }
@@ -733,7 +733,7 @@
     align-items: stretch;
     background: rgba(255,255,255,0.06);
     border: 2px solid rgba(245,166,35,0.45);
-    border-radius: var(--radius-btn);
+    border-radius: 8px;
     overflow: hidden;
     transition: border-color 0.2s, box-shadow 0.2s;
     max-width: 520px;
@@ -1351,11 +1351,11 @@
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
-    .username-input-row { width: 100%; max-width: none; flex-direction: column; margin-left: auto; margin-right: auto; }
+    .username-input-row { width: 100%; max-width: none; flex-direction: column; margin-left: auto; margin-right: auto; border-radius: 8px; }
     .username-input-field { width: 100%; }
     .username-input { padding: 14px 10px 14px 18px; font-size: 16px; }
     .username-suffix { font-size: 0.82rem; padding-right: 12px; }
-    .username-cta-btn { padding: 14px 22px; justify-content: center; font-size: 0.85rem; }
+    .username-cta-btn { padding: 14px 22px; justify-content: center; font-size: 0.85rem; border-radius: 0; }
     .feature-section,
     .audience-section,
     .how-section,
