@@ -101,11 +101,12 @@
 
     <div class="hero-text">
       <p class="eyebrow">Promote.  Book.  Get Paid!</p>
-<h1 class="display-headline">
-  THE <br><em>LINKINBIO</em><br>
-  <span class="tight-line">THAT GETS YOU</span><br>
-  <em>BOOKED</em>
-</h1>      <!-- Username availability checker -->
+      <h1 class="display-headline">
+        THE<br><em>LINKINBIO</em><br>
+        <span class="tight-line">THAT GETS YOU</span><br>
+        <em>BOOKED</em>
+      </h1>
+      <!-- Username availability checker -->
       <div class="username-checker">
         <div class="username-input-row">
           <div class="username-input-field">
@@ -484,22 +485,22 @@
     font-family: Impact, sans-serif;
     font-weight: 800;
     font-size: clamp(52px, 7vw, 96px);
-    line-height: 0.95;
-    letter-spacing: -0.01em;
+    line-height: 0.84;
+    letter-spacing: 0;
     color: var(--white);
     text-transform: uppercase;
   }
-.no-break {
-  white-space: nowrap;
-}
+
   .display-headline em {
     font-style: normal;
     color: var(--accent);
   }
 
-.tight-line {
-  letter-spacing: -0.055em;
-}
+  .tight-line {
+    display: inline-block;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+  }
 
   .section-headline {
     font-family: Impact, sans-serif;
@@ -606,13 +607,14 @@
   }
   
   .display-headline {
-    font-size: clamp(52px, 11vw, 68px);
+    font-size: clamp(46px, 10.8vw, 68px);
     line-height: 0.80;
     letter-spacing: -0.04em;
   }
 
-  .no-break {
-    white-space: nowrap;
+  .tight-line {
+    font-size: clamp(40px, 9.6vw, 64px);
+    letter-spacing: -0.065em;
   }
 
   

@@ -72,6 +72,7 @@
   /* ── PAGE HEADER ──────────────────────────────────────────────── */
   .page-header {
     margin-bottom: 64px;
+    max-width: 760px;
   }
 
   .eyebrow {
@@ -89,9 +90,9 @@
     font-weight: 800;
     font-size: clamp(44px, 6vw, 80px);
     line-height: 0.95;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     text-transform: uppercase;
-    color: #ffffff;
+    color: #111111;
     margin-bottom: 20px;
   }
 
@@ -103,7 +104,7 @@
   .subtitle {
     font-size: 1rem;
     font-weight: 300;
-    color: 111111;
+    color: #444444;
     line-height: 1.7;
   }
 
@@ -117,9 +118,9 @@
   /* ── CARD ─────────────────────────────────────────────────────── */
   .card {
     position: relative;
-    background: #f5f0eb;
-    border: 1px solid rgba(245, 166, 35, 0.1);
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(17, 17, 17, 0.08);
+    border-radius: 8px;
     padding: 32px 28px 24px;
     display: flex;
     flex-direction: column;
@@ -128,8 +129,8 @@
 
   .card:hover {
     transform: translateY(-4px);
-    border-color: rgba(245, 166, 35, 0.35);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(245, 166, 35, 0.12);
+    border-color: rgba(245, 166, 35, 0.45);
+    box-shadow: 0 18px 42px rgba(17, 17, 17, 0.08), 0 0 0 1px rgba(245, 166, 35, 0.12);
   }
 
   .card-body {
@@ -143,7 +144,7 @@
     font-weight: 700;
     font-size: clamp(18px, 2vw, 22px);
     line-height: 1.15;
-    letter-spacing: 0.01em;
+    letter-spacing: 0;
     text-transform: uppercase;
     color: #111111;
     margin-bottom: 16px;
@@ -164,7 +165,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 12px;
+    border-radius: 8px;
   }
 
   /* ── EXCERPT ──────────────────────────────────────────────────── */
@@ -172,7 +173,7 @@
     font-size: 0.9rem;
     font-weight: 300;
     line-height: 1.75;
-    color: 111111(255, 255, 255, 0.48);
+    color: #555555;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -185,7 +186,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(17, 17, 17, 0.08);
     padding-top: 16px;
   }
 
@@ -233,7 +234,7 @@
   }
 
   .author-banner:hover .author-name {
-    color: 111111(255, 255, 255, 0.75);
+    color: #F5A623;
   }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────── */
