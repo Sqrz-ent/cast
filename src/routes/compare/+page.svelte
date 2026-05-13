@@ -1,3 +1,14 @@
+<script>
+  import { page } from '$app/state';
+  import { getLocaleFromPathname, localizePath } from '$lib/i18n';
+
+  const currentLocale = $derived(getLocaleFromPathname(page.url.pathname));
+
+  function hrefFor(path) {
+    return localizePath(path, currentLocale);
+  }
+</script>
+
 <svelte:head>
   <title>SQRZ vs The Competition — Why Creative Professionals Choose SQRZ</title>
   <meta name="description" content="See how SQRZ compares to every alternative — and why creative professionals choose a system built for real work." />
@@ -5,16 +16,20 @@
 
 <div class="compare-index">
 
-  <header class="index-hero">
-    <p class="eyebrow">Comparisons</p>
-    <h1>SQRZ vs The Competition</h1>
-    <p class="subtitle">See how SQRZ compares to every alternative — and why creative professionals choose a system built for real work.</p>
+  <header class="index-hero hero-band">
+    <div class="index-container hero-grid">
+      <div>
+        <p class="eyebrow">Comparisons</p>
+        <h1>SQRZ vs The Competition</h1>
+      </div>
+      <p class="subtitle">See how SQRZ compares to every alternative — and why creative professionals choose a system built for real work.</p>
+    </div>
   </header>
 
-  <ul class="compare-grid">
+  <ul class="compare-grid index-container">
 
     <li>
-      <a href="/compare/sqrz-vs-linktree" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-linktree')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -26,7 +41,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-komi" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-komi')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -38,7 +53,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-website" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-website')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -50,7 +65,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-agency" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-agency')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -62,7 +77,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-fiverr-upwork" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-fiverr-upwork')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -74,7 +89,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-casting-platforms" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-casting-platforms')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -86,7 +101,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-onlyfans" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-onlyfans')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -98,7 +113,7 @@
     </li>
 
     <li>
-      <a href="/compare/sqrz-vs-beacons" class="compare-card">
+      <a href={hrefFor('/compare/sqrz-vs-beacons')} class="compare-card">
         <div class="card-lockup">
           <span class="card-sqrz">SQRZ</span>
           <span class="card-vs">vs</span>
@@ -115,18 +130,30 @@
 
 <style>
   .compare-index {
-    background: #0a0a0a;
-    color: #f5f5f5;
+    background: #f5f0eb;
+    color: #111111;
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
-    padding: 100px 40px 120px;
-    max-width: 960px;
-    margin: 0 auto;
+    padding: 96px 0 120px;
     -webkit-font-smoothing: antialiased;
   }
 
-  .index-hero {
-    margin-bottom: 64px;
+  .index-container {
+    width: min(1120px, calc(100% - 80px));
+    margin: 0 auto;
+  }
+
+  .hero-band {
+    background: #080808;
+    padding: 72px 0 78px;
+    margin-bottom: 48px;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.42fr);
+    gap: 64px;
+    align-items: end;
   }
 
   .eyebrow {
@@ -145,15 +172,15 @@
     font-size: clamp(40px, 7vw, 72px);
     text-transform: uppercase;
     color: #ffffff;
-    letter-spacing: 0.01em;
-    line-height: 1;
+    letter-spacing: 0;
+    line-height: 0.9;
     margin-bottom: 18px;
   }
 
   .subtitle {
     font-size: 1rem;
     font-weight: 300;
-    color: rgba(255,255,255,0.42);
+    color: rgba(255,255,255,0.62);
     max-width: 520px;
     line-height: 1.65;
   }
@@ -163,23 +190,23 @@
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 16px;
   }
 
   .compare-card {
     display: flex;
     flex-direction: column;
     padding: 26px 28px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 16px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(17,17,17,0.08);
+    border-radius: 8px;
     text-decoration: none;
     height: 100%;
     transition: border-color 0.2s, background 0.2s;
   }
   .compare-card:hover {
     border-color: rgba(245,166,35,0.35);
-    background: rgba(245,166,35,0.04);
+    background: rgba(255,255,255,0.82);
   }
 
   .card-lockup {
@@ -203,7 +230,7 @@
     font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 0.9rem;
-    color: rgba(255,255,255,0.18);
+    color: rgba(17,17,17,0.24);
     text-transform: uppercase;
     letter-spacing: 0.12em;
   }
@@ -212,7 +239,7 @@
     font-family: Impact, sans-serif;
     font-weight: 700;
     font-size: 1.5rem;
-    color: rgba(255,255,255,0.45);
+    color: rgba(17,17,17,0.58);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -220,7 +247,7 @@
   .card-desc {
     font-size: 0.85rem;
     font-weight: 300;
-    color: rgba(255,255,255,0.35);
+    color: rgba(17,17,17,0.58);
     line-height: 1.6;
     margin-bottom: 18px;
     flex: 1;
@@ -235,7 +262,10 @@
   }
 
   @media (max-width: 640px) {
-    .compare-index { padding: 80px 24px 80px; }
+    .compare-index { padding: 80px 0 90px; }
+    .index-container { width: calc(100% - 48px); }
+    .hero-band { padding: 54px 0 58px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 26px; }
     .compare-grid { grid-template-columns: 1fr; }
     .compare-card { padding: 22px 22px; }
   }

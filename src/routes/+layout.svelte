@@ -68,10 +68,10 @@
       <div class="footer-col">
         <p class="footer-col-heading">Compare</p>
         <ul class="footer-links">
-          <li><a href="/compare/sqrz-vs-linktree">SQRZ vs Linktree</a></li>
-          <li><a href="/compare/sqrz-vs-komi">SQRZ vs Komi</a></li>
-          <li><a href="/compare/sqrz-vs-website">SQRZ vs Your Website</a></li>
-          <li><a href="/compare/sqrz-vs-agency">SQRZ vs Agency</a></li>
+          <li><a href={hrefFor('/compare/sqrz-vs-linktree')}>SQRZ vs Linktree</a></li>
+          <li><a href={hrefFor('/compare/sqrz-vs-komi')}>SQRZ vs Komi</a></li>
+          <li><a href={hrefFor('/compare/sqrz-vs-website')}>SQRZ vs Your Website</a></li>
+          <li><a href={hrefFor('/compare/sqrz-vs-agency')}>SQRZ vs Agency</a></li>
         </ul>
       </div>
 

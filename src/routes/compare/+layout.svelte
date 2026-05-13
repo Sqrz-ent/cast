@@ -8,7 +8,7 @@
 
 <style>
   .compare-shell {
-    background: #0a0a0a;
+    background: #f5f0eb;
     min-height: 100vh;
   }
 </style>
