@@ -1,6 +1,45 @@
 <script>
   import ComparisonTable from '$lib/components/ComparisonTable.svelte';
   import FAQ from '$lib/components/FAQ.svelte';
+
+  const workflowSteps = [
+    {
+      step: '01',
+      title: 'Diagnose',
+      body: 'Profile, offer, audience, funnel, and budget readiness are reviewed before spend begins.',
+    },
+    {
+      step: '02',
+      title: 'Plan',
+      body: 'We define the campaign angle, audience pools, creative direction, and conversion path.',
+    },
+    {
+      step: '03',
+      title: 'Activate',
+      body: 'Campaigns are launched manually, monitored closely, and connected back to your SQRZ profile.',
+    },
+    {
+      step: '04',
+      title: 'Refine',
+      body: 'Signals from traffic, profile behavior, and booking intent guide the next campaign cycle.',
+    },
+  ];
+
+  const scopeItems = [
+    'Growth audit and campaign direction',
+    'Audience and retargeting structure',
+    'Budget allocation guidance',
+    'Profile conversion recommendations',
+    'Performance review and decision notes',
+    'Next-cycle refinement roadmap',
+  ];
+
+  const qualificationItems = [
+    'You already use SQRZ as your conversion surface',
+    'Your offer, pricing, or booking path is ready to be tested',
+    'You can invest meaningful paid media budget for at least one cycle',
+    'You want hands-on growth support, not another software dashboard',
+  ];
 </script>
 
 <svelte:head>
@@ -10,23 +49,138 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
-<!-- ── WHAT IS GROW ──────────────────────────────────────────────── -->
-<section class="intro-section light intro-section--top">
+<!-- ── HERO ──────────────────────────────────────────────────────── -->
+<section class="grow-hero">
+  <div class="grow-hero-bg"></div>
+  <div class="grow-hero-shade"></div>
+  <div class="container grow-hero-inner">
+    <div class="grow-hero-copy">
+      <p class="section-tag section-tag--left">SQRZ Grow</p>
+      <h1 class="grow-headline">
+        Managed<br><em>growth</em><br>
+        for emerging<br>Professionals
+      </h1>
+      <p class="grow-subhead">
+        A hands-on growth workflow for professionals ready to invest in paid demand, sharper positioning, and better conversion through their SQRZ profile.
+      </p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-primary btn-lg">Apply to Grow →</a>
+        <span class="hero-note">Manual strategy, campaign cycles, and refinement.</span>
+      </div>
+    </div>
+
+    <aside class="hero-brief" aria-label="Grow program summary">
+      <div class="brief-header">
+        <span>Managed workflow</span>
+        <strong>High-budget growth desk</strong>
+      </div>
+      <div class="brief-grid">
+        <div>
+          <span class="brief-label">Entry budget</span>
+          <strong>$1,000+</strong>
+        </div>
+        <div>
+          <span class="brief-label">Model</span>
+          <strong>Manual</strong>
+        </div>
+        <div>
+          <span class="brief-label">Cadence</span>
+          <strong>Cycles</strong>
+        </div>
+        <div>
+          <span class="brief-label">Surface</span>
+          <strong>SQRZ</strong>
+        </div>
+      </div>
+      <div class="brief-flow">
+        <span>Audit</span>
+        <span>Plan</span>
+        <span>Launch</span>
+        <span>Refine</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ── POSITIONING ──────────────────────────────────────────────── -->
+<section class="intro-section light">
+  <div class="container intro-premium">
+    <div>
+      <p class="section-tag section-tag--left">What Grow Is</p>
+      <h2 class="section-headline">A managed operating layer<br><em>around your profile.</em></h2>
+    </div>
+    <div class="intro-copy">
+      <p class="body-text">
+        Grow is for SQRZ users who already have something worth promoting and want a structured way to turn paid attention into qualified demand.
+      </p>
+      <p class="body-text">
+        It is not a self-serve feature bundle. The value is the manual workflow: campaign direction, budget decisions, profile refinement, and repeated review of real signals.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── WORKFLOW ─────────────────────────────────────────────────── -->
+<section class="workflow-section">
   <div class="container">
-    <div class="intro-inner--hero">
-      <p class="section-tag" style="text-align:left;">What Is SQRZ Grow?</p>
-      <h2 class="section-headline">Not marketing.<br><em>Your demand intelligence layer.</em></h2>
-      <p class="body-text">
-        Built for professionals who understand that high-value work requires
-        structure — not exposure. SQRZ Grow is not an agency and not another
-        tool. It's the intelligence layer behind your demand.
+    <div class="section-row">
+      <div>
+        <p class="section-tag section-tag--left">The Workflow</p>
+        <h2 class="section-headline light-text">How managed growth<br><em>moves through cycles.</em></h2>
+      </div>
+      <p class="section-kicker">
+        Every cycle creates decisions: what audience responds, where intent appears, and what should be changed before the next round of spend.
       </p>
+    </div>
+
+    <div class="workflow-grid">
+      {#each workflowSteps as item}
+        <article class="workflow-step">
+          <span class="step-index">{item.step}</span>
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+        </article>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- ── SCOPE ────────────────────────────────────────────────────── -->
+<section class="scope-section">
+  <div class="container scope-inner">
+    <div class="scope-panel">
+      <p class="section-tag section-tag--left">What We Manage</p>
+      <h2 class="section-headline">A premium service layer,<br><em>not a dashboard.</em></h2>
       <p class="body-text">
-        Visibility connects to audience data. Audience data connects to
-        bookings. Bookings connect to revenue. This is not a campaign you
-        run once. It's an operational system you refine and re-activate
-        whenever you choose to grow.
+        The page should make the manual nature feel intentional. Grow is the team thinking through your campaign mechanics, your SQRZ profile, and the quality of demand your budget is buying.
       </p>
+    </div>
+
+    <div class="scope-list" aria-label="Grow service scope">
+      {#each scopeItems as item}
+        <div class="scope-item">
+          <span>✓</span>
+          <p>{item}</p>
+        </div>
+      {/each}
+    </div>
+  </div>
+</section>
+
+<!-- ── QUALIFICATION ────────────────────────────────────────────── -->
+<section class="qualification-section">
+  <div class="container qualification-inner">
+    <div class="qualification-copy">
+      <p class="section-tag section-tag--left">Who It Is For</p>
+      <h2 class="section-headline light-text">Built for users<br><em>ready to spend.</em></h2>
+      <p class="section-kicker">
+        Grow should feel selective. The more clearly the page explains readiness, the more premium the application step becomes.
+      </p>
+    </div>
+    <div class="qualification-list">
+      {#each qualificationItems as item}
+        <div class="qualification-item">{item}</div>
+      {/each}
     </div>
   </div>
 </section>
@@ -212,6 +366,7 @@
     margin-bottom: 16px;
   }
   .section-tag.dark-tag { text-align: left; }
+  .section-tag--left { text-align: left; }
 
   .body-text {
     font-size: 1rem;
@@ -219,6 +374,295 @@
     line-height: 1.8;
     color: #444444;
     margin-bottom: 20px;
+  }
+
+  /* ── GROW HERO ────────────────────────────────────────────────────── */
+  .grow-hero {
+    position: relative;
+    min-height: 88vh;
+    padding: 148px 0 88px;
+    background: #0a0a0a;
+    overflow: hidden;
+  }
+
+  .grow-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/grow_hero.avif');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.24;
+    transform: scale(1.02);
+  }
+
+  .grow-hero-shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10, 10, 10, 0.96) 0%, rgba(10, 10, 10, 0.82) 48%, rgba(10, 10, 10, 0.58) 100%),
+      radial-gradient(circle at 78% 28%, rgba(245, 166, 35, 0.16), transparent 34%);
+  }
+
+  .grow-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) 420px;
+    gap: 72px;
+    align-items: center;
+  }
+
+  .grow-hero-copy {
+    max-width: 720px;
+  }
+
+  .grow-headline {
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: clamp(56px, 7vw, 104px);
+    line-height: 0.80;
+    letter-spacing: 0;
+    color: var(--white);
+    text-transform: uppercase;
+    margin: 0 0 28px;
+  }
+
+  .grow-headline em {
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .grow-subhead {
+    max-width: 560px;
+    color: rgba(255, 255, 255, 0.64);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 36px;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .hero-note {
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .hero-brief {
+    border: 1px solid rgba(245, 166, 35, 0.34);
+    border-radius: 8px;
+    background: rgba(12, 12, 12, 0.82);
+    backdrop-filter: blur(12px);
+    padding: 28px;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+  }
+
+  .brief-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .brief-header span,
+  .brief-label {
+    color: rgba(255, 255, 255, 0.38);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .brief-header strong {
+    color: var(--white);
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  .brief-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 24px 0;
+  }
+
+  .brief-grid div {
+    min-height: 112px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .brief-grid div:nth-child(2n) { border-right: none; }
+  .brief-grid div:nth-last-child(-n + 2) { border-bottom: none; }
+
+  .brief-grid strong {
+    color: var(--accent);
+    font-family: Impact, sans-serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .brief-flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .brief-flow span {
+    border: 1px solid rgba(245, 166, 35, 0.24);
+    border-radius: 999px;
+    color: rgba(245, 166, 35, 0.88);
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-align: center;
+    padding: 8px 6px;
+  }
+
+  /* ── NEW GROW NARRATIVE SECTIONS ─────────────────────────────────── */
+  .intro-premium,
+  .scope-inner,
+  .qualification-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 72px;
+    align-items: start;
+  }
+
+  .intro-copy {
+    max-width: 600px;
+  }
+
+  .section-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 72px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+
+  .section-kicker {
+    color: rgba(255, 255, 255, 0.52);
+    font-size: 0.96rem;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  .workflow-section,
+  .qualification-section {
+    background: #0a0a0a;
+    padding: 112px 0;
+  }
+
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid rgba(245, 166, 35, 0.22);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .workflow-step {
+    min-height: 320px;
+    padding: 28px 24px;
+    background: rgba(255, 255, 255, 0.025);
+    border-right: 1px solid rgba(245, 166, 35, 0.16);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .workflow-step:last-child { border-right: none; }
+
+  .step-index {
+    color: rgba(245, 166, 35, 0.58);
+    font-family: Impact, sans-serif;
+    font-size: 2.4rem;
+    line-height: 1;
+    margin-bottom: auto;
+  }
+
+  .workflow-step h3 {
+    color: var(--white);
+    font-family: Impact, sans-serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    margin: 44px 0 12px;
+  }
+
+  .workflow-step p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.72;
+  }
+
+  .scope-section {
+    background: var(--light);
+    padding: 112px 0;
+  }
+
+  .scope-panel {
+    max-width: 520px;
+  }
+
+  .scope-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .scope-item,
+  .qualification-item {
+    border: 1px solid rgba(17, 17, 17, 0.08);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.28);
+    padding: 22px;
+  }
+
+  .scope-item {
+    display: flex;
+    gap: 14px;
+    min-height: 132px;
+  }
+
+  .scope-item span {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .scope-item p,
+  .qualification-item {
+    color: #333333;
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  .qualification-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .qualification-item {
+    background: rgba(255, 255, 255, 0.035);
+    border-color: rgba(245, 166, 35, 0.22);
+    color: rgba(255, 255, 255, 0.68);
   }
 
   /* ── HERO ───────────────────────────────────────────────────────── */
@@ -607,6 +1051,23 @@
   /* ── RESPONSIVE ─────────────────────────────────────────────────── */
   @media (max-width: 1100px) {
     .for-grid { grid-template-columns: repeat(2, 1fr); }
+    .grow-hero-inner,
+    .section-row {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+    .hero-brief {
+      max-width: 560px;
+    }
+    .workflow-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .workflow-step:nth-child(2n) {
+      border-right: none;
+    }
+    .workflow-step:nth-child(-n + 2) {
+      border-bottom: 1px solid rgba(245, 166, 35, 0.16);
+    }
   }
 
   @media (max-width: 900px) {
@@ -622,9 +1083,59 @@
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
+    .grow-hero {
+      min-height: auto;
+      padding: 132px 0 72px;
+    }
+    .grow-headline {
+      font-size: clamp(46px, 12vw, 72px);
+    }
+    .intro-premium,
+    .scope-inner,
+    .qualification-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .scope-list {
+      grid-template-columns: 1fr;
+    }
   }
 
   @media (max-width: 768px) {
     .pricing-card { max-width: 100%; }
+    .hero-brief {
+      padding: 20px;
+    }
+    .brief-grid {
+      grid-template-columns: 1fr;
+    }
+    .brief-grid div,
+    .brief-grid div:nth-child(2n),
+    .brief-grid div:nth-last-child(-n + 2) {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .brief-grid div:last-child {
+      border-bottom: none;
+    }
+    .brief-flow {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .workflow-grid {
+      grid-template-columns: 1fr;
+    }
+    .workflow-step,
+    .workflow-step:nth-child(2n),
+    .workflow-step:nth-child(-n + 2) {
+      min-height: auto;
+      border-right: none;
+      border-bottom: 1px solid rgba(245, 166, 35, 0.16);
+    }
+    .workflow-step:last-child {
+      border-bottom: none;
+    }
+    .step-index {
+      margin-bottom: 52px;
+    }
   }
 </style>
