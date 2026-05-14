@@ -388,10 +388,10 @@
   .grow-hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/_grow_bg_02.png');
+    background-image: url('/screens/_grow_bg_01.png');
     background-size: cover;
     background-position: center;
-    opacity: 0.24;
+    opacity: 0.34;
     transform: scale(1.02);
   }
 
@@ -399,7 +399,7 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, rgba(10, 10, 10, 0.96) 0%, rgba(10, 10, 10, 0.82) 48%, rgba(10, 10, 10, 0.58) 100%),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.92) 0%, rgba(10, 10, 10, 0.74) 48%, rgba(10, 10, 10, 0.46) 100%),
       radial-gradient(circle at 78% 28%, rgba(245, 166, 35, 0.16), transparent 34%);
   }
 

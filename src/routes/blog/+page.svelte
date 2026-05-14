@@ -145,15 +145,24 @@
   }
 
   .journal-hero {
-    padding: 150px 0 86px;
-    background: #050505;
+    position: relative;
+    min-height: 88vh;
+    padding: 150px 0 96px;
+    background:
+      linear-gradient(90deg, rgba(5, 5, 5, 0.96) 0%, rgba(5, 5, 5, 0.82) 52%, rgba(5, 5, 5, 0.58) 100%),
+      radial-gradient(circle at 78% 26%, rgba(245, 166, 35, 0.16), transparent 35%),
+      url('/screens/_grow_bg_02.png') center / cover no-repeat;
+    overflow: hidden;
   }
 
   .hero-grid {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.48fr);
     gap: 64px;
     align-items: end;
+    min-height: calc(88vh - 246px);
   }
 
   .journal-section {
@@ -530,13 +539,19 @@
 
   @media (max-width: 700px) {
     .container { padding: 0 20px; }
-    .journal-hero { padding: 128px 0 58px; }
+    .journal-hero {
+      min-height: 85vh;
+      padding: 128px 0 68px;
+    }
     .hero-grid,
     .featured-article,
     .journal-cta {
       grid-template-columns: 1fr;
       display: grid;
       gap: 28px;
+    }
+    .hero-grid {
+      min-height: calc(85vh - 196px);
     }
     h1 { font-size: clamp(58px, 17vw, 82px); }
     .journal-section { padding: 42px 0 64px; }
