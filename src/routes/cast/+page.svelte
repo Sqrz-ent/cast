@@ -184,7 +184,7 @@
     background:
       linear-gradient(90deg, rgba(0,0,0,0.76), rgba(0,0,0,0.38) 52%, rgba(0,0,0,0.5)),
       linear-gradient(180deg, rgba(0,0,0,0.04), rgba(5,5,5,0.82) 100%),
-      url('/grow_whatitis.avif') center / cover no-repeat;
+      url('/screens/_grow_bg_02.png') center / cover no-repeat;
   }
 
   .creators-section {

@@ -149,7 +149,7 @@
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <img src="/home-showcase.avif" alt="Sound engineer at mixing desk" class="feature-img section-img" />
+      <img src="/screens/_bg_01.png" alt="Sound engineer at mixing desk" class="feature-img section-img" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
@@ -195,7 +195,7 @@
       </ul>
     </div>
     <div class="feature-visual">
-      <img src="/home-pipeline.avif" alt="Stage and crowd at live show" class="feature-img section-img" />
+      <img src="/screens/_grow_bg_01.png" alt="Stage and crowd at live show" class="feature-img section-img" />
     </div>
   </div>
 </section>

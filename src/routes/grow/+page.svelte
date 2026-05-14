@@ -356,10 +356,10 @@
   .grow-hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/screens/_grow_bg_01.png');
+    background-image: url('/grow_whatitis.avif');
     background-size: cover;
     background-position: center;
-    opacity: 0.34;
+    opacity: 0.42;
     transform: scale(1.02);
   }
 
@@ -367,7 +367,7 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, rgba(10, 10, 10, 0.92) 0%, rgba(10, 10, 10, 0.74) 48%, rgba(10, 10, 10, 0.46) 100%),
+      linear-gradient(90deg, rgba(10, 10, 10, 0.86) 0%, rgba(10, 10, 10, 0.66) 48%, rgba(10, 10, 10, 0.36) 100%),
       radial-gradient(circle at 78% 28%, rgba(245, 166, 35, 0.16), transparent 34%);
   }
 

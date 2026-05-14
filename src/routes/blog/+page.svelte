@@ -151,7 +151,7 @@
     background:
       linear-gradient(90deg, rgba(5, 5, 5, 0.96) 0%, rgba(5, 5, 5, 0.82) 52%, rgba(5, 5, 5, 0.58) 100%),
       radial-gradient(circle at 78% 26%, rgba(245, 166, 35, 0.16), transparent 35%),
-      url('/screens/_grow_bg_02.png') center / cover no-repeat;
+      url('/home-pipeline.avif') center / cover no-repeat;
     overflow: hidden;
   }
 
