@@ -28,10 +28,8 @@
   const scopeItems = [
     'Growth audit and campaign direction',
     'Audience and retargeting structure',
-    'Budget allocation guidance',
     'Profile conversion recommendations',
     'Performance review and decision notes',
-    'Next-cycle refinement roadmap',
   ];
 
   const qualificationItems = [
@@ -69,36 +67,6 @@
       </div>
     </div>
 
-    <aside class="hero-brief" aria-label="Grow program summary">
-      <div class="brief-header">
-        <span>Managed workflow</span>
-        <strong>High-budget growth desk</strong>
-      </div>
-      <div class="brief-grid">
-        <div>
-          <span class="brief-label">Entry budget</span>
-          <strong>$1,000+</strong>
-        </div>
-        <div>
-          <span class="brief-label">Model</span>
-          <strong>Manual</strong>
-        </div>
-        <div>
-          <span class="brief-label">Cadence</span>
-          <strong>Cycles</strong>
-        </div>
-        <div>
-          <span class="brief-label">Surface</span>
-          <strong>SQRZ</strong>
-        </div>
-      </div>
-      <div class="brief-flow">
-        <span>Audit</span>
-        <span>Plan</span>
-        <span>Launch</span>
-        <span>Refine</span>
-      </div>
-    </aside>
   </div>
 </section>
 
@@ -156,14 +124,14 @@
       </p>
     </div>
 
-    <div class="scope-list" aria-label="Grow service scope">
+    <ul class="scope-list" aria-label="Grow service scope">
       {#each scopeItems as item}
-        <div class="scope-item">
+        <li class="scope-item">
           <span>✓</span>
           <p>{item}</p>
-        </div>
+        </li>
       {/each}
-    </div>
+    </ul>
   </div>
 </section>
 
@@ -407,13 +375,12 @@
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.08fr) 420px;
-    gap: 72px;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
   }
 
   .grow-hero-copy {
-    max-width: 720px;
+    max-width: 760px;
   }
 
   .grow-headline {
@@ -452,84 +419,6 @@
     color: rgba(255, 255, 255, 0.38);
     font-size: 0.82rem;
     line-height: 1.5;
-  }
-
-  .hero-brief {
-    border: 1px solid rgba(245, 166, 35, 0.34);
-    border-radius: 8px;
-    background: rgba(12, 12, 12, 0.82);
-    backdrop-filter: blur(12px);
-    padding: 28px;
-    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
-  }
-
-  .brief-header {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .brief-header span,
-  .brief-label {
-    color: rgba(255, 255, 255, 0.38);
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .brief-header strong {
-    color: var(--white);
-    font-size: 1.2rem;
-    font-weight: 500;
-  }
-
-  .brief-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 24px 0;
-  }
-
-  .brief-grid div {
-    min-height: 112px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .brief-grid div:nth-child(2n) { border-right: none; }
-  .brief-grid div:nth-last-child(-n + 2) { border-bottom: none; }
-
-  .brief-grid strong {
-    color: var(--accent);
-    font-family: Impact, sans-serif;
-    font-size: 1.45rem;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-
-  .brief-flow {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-  }
-
-  .brief-flow span {
-    border: 1px solid rgba(245, 166, 35, 0.24);
-    border-radius: 999px;
-    color: rgba(245, 166, 35, 0.88);
-    font-size: 0.68rem;
-    font-weight: 500;
-    text-align: center;
-    padding: 8px 6px;
   }
 
   /* ── NEW GROW NARRATIVE SECTIONS ─────────────────────────────────── */
@@ -621,12 +510,12 @@
   }
 
   .scope-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(17, 17, 17, 0.1);
   }
 
-  .scope-item,
   .qualification-item {
     border: 1px solid rgba(17, 17, 17, 0.08);
     border-radius: 8px;
@@ -636,8 +525,10 @@
 
   .scope-item {
     display: flex;
-    gap: 14px;
-    min-height: 132px;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(17, 17, 17, 0.1);
   }
 
   .scope-item span {
@@ -1056,9 +947,6 @@
       grid-template-columns: 1fr;
       gap: 44px;
     }
-    .hero-brief {
-      max-width: 560px;
-    }
     .workflow-grid {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -1096,31 +984,10 @@
       grid-template-columns: 1fr;
       gap: 32px;
     }
-    .scope-list {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 768px) {
     .pricing-card { max-width: 100%; }
-    .hero-brief {
-      padding: 20px;
-    }
-    .brief-grid {
-      grid-template-columns: 1fr;
-    }
-    .brief-grid div,
-    .brief-grid div:nth-child(2n),
-    .brief-grid div:nth-last-child(-n + 2) {
-      border-right: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .brief-grid div:last-child {
-      border-bottom: none;
-    }
-    .brief-flow {
-      grid-template-columns: repeat(2, 1fr);
-    }
     .workflow-grid {
       grid-template-columns: 1fr;
     }
