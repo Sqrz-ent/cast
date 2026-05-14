@@ -388,7 +388,7 @@
   .grow-hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url('/grow_hero.avif');
+    background-image: url('/_grow_bg_02.png');
     background-size: cover;
     background-position: center;
     opacity: 0.24;
