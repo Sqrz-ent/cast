@@ -64,11 +64,11 @@
 		</p>
 
 		<div class="instructions">
-			<h2>Before you submit</h2>
+			<h2>Teilnahme an der Parade - Sonntag ab 14 Uhr</h2>
 			<ul>
-				<li>Um an der Parade teilzunehmen bitte hier die instrumental hochladen.</li>
+				<li>Um an der Parade teilzunehmen bitte hier Instrumental hochladen.</li>
 				<li>2-3 Songs per Gruppe</li>
-				<li>unter Info bitte Reihenfolge + Titel + Perfomer</li>
+				<li> Reihenfolge + Titel + Perfomer</li>
 				<li>(Beispiel - 01 "Trackname by Artistname" | 2 Rapper + Saxophon ....)</li>
 			</ul>
 		</div>
