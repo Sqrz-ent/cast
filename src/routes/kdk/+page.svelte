@@ -57,20 +57,16 @@
 
 <section class="kdk-shell">
 	<div class="kdk-card">
-		<div class="eyebrow">Private Submission</div>
+		<div class="eyebrow">Teilnahme für Performer</div>
 		<h1>Karneval der Kulturen x StreetUniverCity</h1>
 		<p class="lead">
-			Upload your instrumentals to participate in this year’s KDK with StreetUniverCity.
-		</p>
+			Um an der Parade teilzunehmen bitte hier Instrumental hochladen <br>
+			Sonntag 24.5 - 14 Uhr - Frankfurter Alle
 
 		<div class="instructions">
-			<h2>Teilnahme an der Parade - Sonntag ab 14 Uhr</h2>
-			<ul>
-				<li>Um an der Parade teilzunehmen bitte hier Instrumental hochladen.</li>
-				<li>2-3 Songs per Gruppe</li>
-				<li> Reihenfolge + Titel + Perfomer</li>
-				<li>(Beispiel - 01 "Trackname by Artistname" | 2 Rapper + Saxophon ....)</li>
-			</ul>
+				<ul>2-3 Songs per Gruppe</ul>
+				<ul> Show Notes: Reihenfolge + Titel + Perfomer</ul>
+				<ul>(Beispiel - 01 - "Trackname by Artistname" | 2 Vocals + Saxophon ....)</ul>
 		</div>
 
 		<div class="form-wrap">
