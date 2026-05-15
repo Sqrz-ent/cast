@@ -66,9 +66,10 @@
 		<div class="instructions">
 			<h2>Before you submit</h2>
 			<ul>
-				<li>Use this page only if you were invited to contribute.</li>
-				<li>Prepare your files before starting the upload.</li>
-				<li>Further submission instructions can be added here later.</li>
+				<li>Um an der Parade teilzunehmen bitte hier die instrumental hochladen.</li>
+				<li>2-3 Songs per Gruppe</li>
+				<li>unter Info bitte Reihenfolge + Titel + Perfomer</li>
+				<li>(Beispiel - 01 "Trackname by Artistname" | 2 Rapper + Saxophon ....)</li>
 			</ul>
 		</div>
 
