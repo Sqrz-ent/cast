@@ -59,9 +59,9 @@
 	<div class="kdk-card">
 		<div class="eyebrow">Teilnahme für Performer</div>
 		<h1>Karneval der Kulturen x StreetUniverCity</h1>
-		<p class="lead">
+		<p class="lead"></p>
 			Um an der Parade teilzunehmen bitte hier Instrumental hochladen <br>
-			Sonntag 24.5 - 14 Uhr - Frankfurter Alle
+			Sonntag 24.5 - 14 Uhr - Frankfurter Alle - Wagen 62
 
 		<div class="instructions">
 				<ul>2-3 Songs per Gruppe</ul>
