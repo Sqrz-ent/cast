@@ -21,5 +21,12 @@
 
     <h2>Contact</h2>
     <p>Email: <a href="mailto:info@sqrz.com">info@sqrz.com</a></p>
+
+    <h2>Photos</h2>
+    <p>Will Villa</p>
+    <p>Sascha Bub</p>
+    <p>Luisa</p>
+
+
   </article>
 </LegalLayout>
