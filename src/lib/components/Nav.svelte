@@ -126,6 +126,11 @@
       {/if}
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
       <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
+
+      <!-- Accessibility / display settings — bottom of mobile panel -->
+      <div class="nav-panel-settings">
+        <AccessibilitySettings />
+      </div>
     </div>
   {/if}
 </nav>
@@ -372,6 +377,35 @@
     touch-action: manipulation;
   }
   .nav-panel-signup:hover { opacity: 0.88; }
+
+  /* Mobile settings row — bottom of panel */
+  .nav-panel-settings {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 14px;
+    margin-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Recolor trigger for dark panel background */
+  .nav-panel-settings :global(.settings-trigger) {
+    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.12);
+    background: transparent;
+  }
+  .nav-panel-settings :global(.settings-trigger:hover),
+  .nav-panel-settings :global(.settings-trigger[aria-expanded='true']) {
+    color: rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  /* Open popup upward so it doesn't fall off the bottom of the screen */
+  .nav-panel-settings :global(.settings-popup) {
+    top: auto;
+    bottom: calc(100% + 8px);
+  }
 
   /* Mobile breakpoint */
   @media (max-width: 768px) {
