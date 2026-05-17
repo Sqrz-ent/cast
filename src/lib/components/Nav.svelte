@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { allLocaleCodes, getLocaleFromPathname, localizePath, locales, stripLocalePrefix, type Locale } from '$lib/i18n';
+  import AccessibilitySettings from '$lib/components/AccessibilitySettings.svelte';
 
   let scrolled = $state(false);
   let menuOpen = $state(false);
@@ -75,6 +76,9 @@
           {/each}
         </div>
       {/if}
+      <div class="nav-desktop-only">
+        <AccessibilitySettings />
+      </div>
       <a href="https://dashboard.sqrz.com/login" class="nav-login nav-desktop-only">Login</a>
       <a href={joinUrl} class="nav-signup nav-desktop-only">Sign Up</a>
 
