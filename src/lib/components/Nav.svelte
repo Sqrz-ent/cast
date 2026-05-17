@@ -124,13 +124,12 @@
           {/each}
         </div>
       {/if}
-      <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
-      <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
-
-      <!-- Accessibility / display settings — bottom of mobile panel -->
+      <!-- Accessibility / display settings — above login -->
       <div class="nav-panel-settings">
         <AccessibilitySettings />
       </div>
+      <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
+      <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
     </div>
   {/if}
 </nav>
