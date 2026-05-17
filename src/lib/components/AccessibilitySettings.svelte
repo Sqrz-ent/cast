@@ -23,15 +23,27 @@
   // One stored HTML string per bionic-processed container
   const originalHtmlMap = new Map<Element, string>();
 
-  // Selectors for reading-heavy prose areas (nav/buttons/footer excluded by walkNodes)
-  const PROSE_SELECTORS = '.post-content, .legal-page, .cmp-dive-section, .cmp-callout';
+  /**
+   * Candidate selectors for prose content.
+   * applyBionic() filters these down to outermost-only containers so nothing
+   * is walked twice (e.g. .post-content nested inside a <section>).
+   */
+  const PROSE_SELECTORS =
+    'section, main, .post-content, .legal-page, .cmp-dive-section, .cmp-callout';
+
+  // Tags whose entire DOM subtree should be skipped (nav, footer, buttons…)
+  const SKIP_SUBTREES = new Set([
+    'SCRIPT', 'STYLE', 'NAV', 'FOOTER', 'BUTTON', 'LABEL',
+    'SELECT', 'INPUT', 'TEXTAREA',
+  ]);
+  // Tags where the immediate parent means "don't touch this text node"
+  const SKIP_PARENTS = new Set(['B', 'STRONG', 'CODE', 'PRE', 'SCRIPT', 'STYLE']);
 
   // Language switcher — derived from page store
   const currentLocale = $derived(getLocaleFromPathname($page.url.pathname));
   const barePath = $derived(stripLocalePrefix($page.url.pathname));
 
   function languageHref(locale: (typeof allLocaleCodes)[number]) {
-    // On a blog post, switching language goes to the blog index (no translated slug)
     const targetPath = /^\/blog\/[^/]+/.test(barePath) ? '/blog' : barePath;
     return localizePath(targetPath, locale);
   }
@@ -88,7 +100,16 @@
 
   // ── Bionic reading helpers ────────────────────────────────────────────
   function applyBionic() {
-    document.querySelectorAll<HTMLElement>(PROSE_SELECTORS).forEach((container) => {
+    const all = Array.from(document.querySelectorAll<HTMLElement>(PROSE_SELECTORS));
+
+    // Keep only outermost containers — skip any element that is a descendant
+    // of another container already in the list. This prevents double-walking
+    // when e.g. .post-content is nested inside a <section>.
+    const roots = all.filter(
+      (el) => !all.some((other) => other !== el && other.contains(el))
+    );
+
+    roots.forEach((container) => {
       if (container.getAttribute('data-bionic') === 'true') return;
       originalHtmlMap.set(container, container.innerHTML);
       container.setAttribute('data-bionic', 'true');
@@ -105,14 +126,20 @@
     originalHtmlMap.clear();
   }
 
-  // Walk text nodes and bold the first half of each word.
-  // Skips nav, buttons, code, and already-bolded elements.
-  const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'B', 'STRONG', 'NAV', 'BUTTON', 'LABEL']);
-
+  /**
+   * Recursively walk DOM nodes and bold the first half of each word.
+   * Skips entire subtrees of UI chrome elements (NAV, FOOTER, BUTTON…).
+   * Skips text nodes whose immediate parent is a bold/code/script tag.
+   */
   function walkNodes(node: Node) {
-    if (node.nodeType === Node.TEXT_NODE) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      // Skip entire subtrees of UI chrome — this is the key fix that allows
+      // broad containers like <section> without touching nav or footer text.
+      if (SKIP_SUBTREES.has((node as Element).tagName)) return;
+      Array.from(node.childNodes).forEach(walkNodes);
+    } else if (node.nodeType === Node.TEXT_NODE) {
       const parent = node.parentElement;
-      if (!parent || SKIP_TAGS.has(parent.tagName)) return;
+      if (!parent || SKIP_PARENTS.has(parent.tagName)) return;
       const text = node.textContent ?? '';
       if (!text.trim()) return;
       const html = text.replace(/(\w+)/g, (word) => {
@@ -122,8 +149,6 @@
       const wrapper = document.createElement('span');
       wrapper.innerHTML = html;
       parent.replaceChild(wrapper, node);
-    } else {
-      Array.from(node.childNodes).forEach(walkNodes);
     }
   }
 
@@ -314,10 +339,15 @@
     justify-content: center;
     width: 30px;
     height: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: transparent;
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.45);
+    /*
+      #888888 matches the hardcoded color used by .nav-link and .nav-login
+      in Nav.svelte — visible on both the transparent (light bg) and scrolled
+      (dark bg) nav states. No CSS variable exists for this value in the project.
+    */
+    color: #888888;
     cursor: pointer;
     padding: 0;
     transition: background 0.15s, color 0.15s, border-color 0.15s;
@@ -325,9 +355,9 @@
 
   .settings-trigger:hover,
   .settings-trigger[aria-expanded='true'] {
-    background: rgba(255, 255, 255, 0.09);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.85);
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.2);
+    color: #444444;
   }
 
   /* ── Popup ─────────────────────────────────────────────────────────── */
@@ -508,27 +538,29 @@
     background: rgba(245, 166, 35, 0.08) !important;
   }
 
-  /* ── Global accessibility overrides ───────────────────────────────── */
+  /* ══════════════════════════════════════════════════════════════════════
+     GLOBAL ACCESSIBILITY OVERRIDES
+     ══════════════════════════════════════════════════════════════════════ */
 
-  /* Bionic bold */
+  /* Bionic bold marker */
   :global(.bionic-b) {
     font-weight: 700;
   }
 
-  /* ── Font size — blog (dark) ────────────────────────────────────────── */
+  /* ── Font size ─────────────────────────────────────────────────────── */
+
+  /* Blog post content (dark) */
   :global(.post-content) {
     font-size: var(--a11y-prose-size, 1rem);
   }
 
-  /* ── Font size — legal + compare (light) — only when non-default ──── */
+  /* Legal + compare prose: only override when non-default to preserve
+     the component's carefully designed base sizes */
   :global([data-font-size='small'] .legal-page p),
   :global([data-font-size='small'] .legal-page li),
   :global([data-font-size='small'] .cmp-dive-p),
   :global([data-font-size='small'] .cmp-dive-list li),
-  :global([data-font-size='small'] .cmp-callout) {
-    font-size: var(--a11y-prose-size) !important;
-  }
-
+  :global([data-font-size='small'] .cmp-callout),
   :global([data-font-size='large'] .legal-page p),
   :global([data-font-size='large'] .legal-page li),
   :global([data-font-size='large'] .cmp-dive-p),
@@ -537,7 +569,15 @@
     font-size: var(--a11y-prose-size) !important;
   }
 
-  /* ── High contrast — blog (dark bg, push text to pure white) ────────── */
+  /* Marketing/landing page text elements */
+  :global([data-font-size='small'] section p),
+  :global([data-font-size='small'] section li),
+  :global([data-font-size='large'] section p),
+  :global([data-font-size='large'] section li) {
+    font-size: var(--a11y-prose-size) !important;
+  }
+
+  /* ── High contrast — blog (dark bg → pure white text) ──────────────── */
   :global([data-high-contrast='true'] .post-content) {
     background: #000 !important;
   }
@@ -566,7 +606,7 @@
     opacity: 1 !important;
   }
 
-  /* ── High contrast — legal pages (light bg, push text to pure black) ── */
+  /* ── High contrast — legal pages (light bg → pure black text) ──────── */
   :global([data-high-contrast='true'] .legal-page) {
     background: #ffffff !important;
   }
@@ -589,7 +629,7 @@
     opacity: 1 !important;
   }
 
-  /* ── High contrast — compare deep-dive (light bg, pure black text) ─── */
+  /* ── High contrast — compare deep-dive (light bg → pure black text) ── */
   :global([data-high-contrast='true'] .cmp-dive-section) {
     background: #f0ede8 !important;
   }
@@ -603,6 +643,38 @@
 
   :global([data-high-contrast='true'] .cmp-callout) {
     color: #000000 !important;
+    opacity: 1 !important;
+  }
+
+  /* ── High contrast — marketing sections ────────────────────────────── */
+
+  /* Dark sections (.dark class): boost text to full opacity white */
+  :global([data-high-contrast='true'] section.dark p),
+  :global([data-high-contrast='true'] section.dark li),
+  :global([data-high-contrast='true'] section.dark h1),
+  :global([data-high-contrast='true'] section.dark h2),
+  :global([data-high-contrast='true'] section.dark h3) {
+    color: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  /* Light sections (.light class): push to pure black */
+  :global([data-high-contrast='true'] section.light p),
+  :global([data-high-contrast='true'] section.light li),
+  :global([data-high-contrast='true'] section.light h1),
+  :global([data-high-contrast='true'] section.light h2),
+  :global([data-high-contrast='true'] section.light h3) {
+    color: #000000 !important;
+    opacity: 1 !important;
+  }
+
+  /* Unlabeled sections (no .dark / .light): safe opacity boost only —
+     forces rgba-dimmed text to full opacity regardless of color scheme */
+  :global([data-high-contrast='true'] section:not(.dark):not(.light) p),
+  :global([data-high-contrast='true'] section:not(.dark):not(.light) li),
+  :global([data-high-contrast='true'] section:not(.dark):not(.light) h1),
+  :global([data-high-contrast='true'] section:not(.dark):not(.light) h2),
+  :global([data-high-contrast='true'] section:not(.dark):not(.light) h3) {
     opacity: 1 !important;
   }
 </style>
