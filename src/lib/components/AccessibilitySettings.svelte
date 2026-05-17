@@ -2,6 +2,14 @@
   import { onMount } from 'svelte';
   import { afterNavigate } from '$app/navigation';
   import { tick } from 'svelte';
+  import { page } from '$app/stores';
+  import {
+    allLocaleCodes,
+    getLocaleFromPathname,
+    localizePath,
+    locales,
+    stripLocalePrefix,
+  } from '$lib/i18n';
 
   let open = $state(false);
   let bionicEnabled = $state(false);
@@ -11,7 +19,22 @@
 
   let triggerEl = $state<HTMLButtonElement | null>(null);
   let popupEl = $state<HTMLDivElement | null>(null);
-  let originalHtml: string | null = null;
+
+  // One stored HTML string per bionic-processed container
+  const originalHtmlMap = new Map<Element, string>();
+
+  // Selectors for reading-heavy prose areas (nav/buttons/footer excluded by walkNodes)
+  const PROSE_SELECTORS = '.post-content, .legal-page, .cmp-dive-section, .cmp-callout';
+
+  // Language switcher — derived from page store
+  const currentLocale = $derived(getLocaleFromPathname($page.url.pathname));
+  const barePath = $derived(stripLocalePrefix($page.url.pathname));
+
+  function languageHref(locale: (typeof allLocaleCodes)[number]) {
+    // On a blog post, switching language goes to the blog index (no translated slug)
+    const targetPath = /^\/blog\/[^/]+/.test(barePath) ? '/blog' : barePath;
+    return localizePath(targetPath, locale);
+  }
 
   // ── Load preferences on mount ─────────────────────────────────────────
   onMount(() => {
@@ -32,7 +55,7 @@
   $effect(() => {
     if (!mounted) return;
     localStorage.setItem('sqrz_a11y_fontSize', fontSize);
-    const sizes: Record<string, string> = { small: '0.875rem', default: '1rem', large: '1.1875rem' };
+    const sizes: Record<string, string> = { small: '0.8rem', default: '1rem', large: '1.15rem' };
     document.documentElement.style.setProperty('--a11y-prose-size', sizes[fontSize] ?? '1rem');
     document.documentElement.dataset.fontSize = fontSize;
   });
@@ -55,38 +78,41 @@
     }
   });
 
-  // Re-apply bionic on page navigation
+  // Re-apply bionic after SvelteKit navigation (new page content in DOM)
   afterNavigate(() => {
     if (bionicEnabled) {
-      originalHtml = null;
+      originalHtmlMap.clear();
       tick().then(applyBionic);
     }
   });
 
   // ── Bionic reading helpers ────────────────────────────────────────────
   function applyBionic() {
-    const container = document.querySelector<HTMLElement>('.post-content');
-    if (!container || container.getAttribute('data-bionic') === 'true') return;
-    originalHtml = container.innerHTML;
-    container.setAttribute('data-bionic', 'true');
-    walkNodes(container);
+    document.querySelectorAll<HTMLElement>(PROSE_SELECTORS).forEach((container) => {
+      if (container.getAttribute('data-bionic') === 'true') return;
+      originalHtmlMap.set(container, container.innerHTML);
+      container.setAttribute('data-bionic', 'true');
+      walkNodes(container);
+    });
   }
 
   function removeBionic() {
-    const container = document.querySelector<HTMLElement>('.post-content');
-    if (!container) return;
-    if (originalHtml !== null) {
-      container.innerHTML = originalHtml;
-      originalHtml = null;
-    }
-    container.removeAttribute('data-bionic');
+    document.querySelectorAll<HTMLElement>('[data-bionic="true"]').forEach((container) => {
+      const original = originalHtmlMap.get(container);
+      if (original !== undefined) container.innerHTML = original;
+      container.removeAttribute('data-bionic');
+    });
+    originalHtmlMap.clear();
   }
+
+  // Walk text nodes and bold the first half of each word.
+  // Skips nav, buttons, code, and already-bolded elements.
+  const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'B', 'STRONG', 'NAV', 'BUTTON', 'LABEL']);
 
   function walkNodes(node: Node) {
     if (node.nodeType === Node.TEXT_NODE) {
       const parent = node.parentElement;
-      if (!parent) return;
-      if (['SCRIPT', 'STYLE', 'CODE', 'PRE', 'B', 'STRONG'].includes(parent.tagName)) return;
+      if (!parent || SKIP_TAGS.has(parent.tagName)) return;
       const text = node.textContent ?? '';
       if (!text.trim()) return;
       const html = text.replace(/(\w+)/g, (word) => {
@@ -106,7 +132,7 @@
     open = !open;
     if (open) {
       tick().then(() => {
-        popupEl?.querySelector<HTMLElement>('button:not([disabled])')?.focus();
+        popupEl?.querySelector<HTMLElement>('button:not([disabled]), a[href]')?.focus();
       });
     }
   }
@@ -183,10 +209,21 @@
     >
       <p class="popup-title">Display Settings</p>
 
-      <!-- Language (coming soon) -->
+      <!-- Language switcher -->
       <section class="popup-section">
         <p class="popup-section-label">Language</p>
-        <p class="popup-coming-soon">Coming soon</p>
+        <div class="lang-group" role="group" aria-label="Language">
+          {#each allLocaleCodes as locale}
+            <a
+              href={languageHref(locale)}
+              class="lang-btn"
+              class:lang-active={currentLocale === locale}
+              aria-label={locales[locale].label}
+              aria-current={currentLocale === locale ? 'true' : undefined}
+              onclick={() => (open = false)}
+            >{locales[locale].shortLabel}</a>
+          {/each}
+        </div>
       </section>
 
       <div class="popup-divider" aria-hidden="true"></div>
@@ -337,10 +374,40 @@
     margin-bottom: 8px;
   }
 
-  .popup-coming-soon {
-    font-size: 0.82rem;
-    color: rgba(255, 255, 255, 0.22);
-    font-style: italic;
+  /* ── Language switcher ─────────────────────────────────────────────── */
+  .lang-group {
+    display: flex;
+    gap: 6px;
+  }
+
+  .lang-btn {
+    flex: 1;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: 'DM Sans', ui-sans-serif, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+
+  .lang-btn:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .lang-active {
+    border-color: #F5A623 !important;
+    color: #F5A623 !important;
+    background: rgba(245, 166, 35, 0.08) !important;
   }
 
   /* ── Row layout ────────────────────────────────────────────────────── */
@@ -443,17 +510,34 @@
 
   /* ── Global accessibility overrides ───────────────────────────────── */
 
-  /* Bionic reading bold */
+  /* Bionic bold */
   :global(.bionic-b) {
     font-weight: 700;
   }
 
-  /* Font size applied to article prose only */
+  /* ── Font size — blog (dark) ────────────────────────────────────────── */
   :global(.post-content) {
     font-size: var(--a11y-prose-size, 1rem);
   }
 
-  /* High contrast — scoped to article content */
+  /* ── Font size — legal + compare (light) — only when non-default ──── */
+  :global([data-font-size='small'] .legal-page p),
+  :global([data-font-size='small'] .legal-page li),
+  :global([data-font-size='small'] .cmp-dive-p),
+  :global([data-font-size='small'] .cmp-dive-list li),
+  :global([data-font-size='small'] .cmp-callout) {
+    font-size: var(--a11y-prose-size) !important;
+  }
+
+  :global([data-font-size='large'] .legal-page p),
+  :global([data-font-size='large'] .legal-page li),
+  :global([data-font-size='large'] .cmp-dive-p),
+  :global([data-font-size='large'] .cmp-dive-list li),
+  :global([data-font-size='large'] .cmp-callout) {
+    font-size: var(--a11y-prose-size) !important;
+  }
+
+  /* ── High contrast — blog (dark bg, push text to pure white) ────────── */
   :global([data-high-contrast='true'] .post-content) {
     background: #000 !important;
   }
@@ -479,6 +563,46 @@
   :global([data-high-contrast='true'] .post-content a) {
     color: #F5A623 !important;
     border-color: #F5A623 !important;
+    opacity: 1 !important;
+  }
+
+  /* ── High contrast — legal pages (light bg, push text to pure black) ── */
+  :global([data-high-contrast='true'] .legal-page) {
+    background: #ffffff !important;
+  }
+
+  :global([data-high-contrast='true'] .legal-page p),
+  :global([data-high-contrast='true'] .legal-page li) {
+    color: #000000 !important;
+    opacity: 1 !important;
+  }
+
+  :global([data-high-contrast='true'] .legal-page h2),
+  :global([data-high-contrast='true'] .legal-page h3) {
+    color: #000000 !important;
+    opacity: 1 !important;
+  }
+
+  :global([data-high-contrast='true'] .legal-page a) {
+    color: #0000cc !important;
+    border-color: #0000cc !important;
+    opacity: 1 !important;
+  }
+
+  /* ── High contrast — compare deep-dive (light bg, pure black text) ─── */
+  :global([data-high-contrast='true'] .cmp-dive-section) {
+    background: #f0ede8 !important;
+  }
+
+  :global([data-high-contrast='true'] .cmp-dive-h3),
+  :global([data-high-contrast='true'] .cmp-dive-p),
+  :global([data-high-contrast='true'] .cmp-dive-list li) {
+    color: #000000 !important;
+    opacity: 1 !important;
+  }
+
+  :global([data-high-contrast='true'] .cmp-callout) {
+    color: #000000 !important;
     opacity: 1 !important;
   }
 </style>
