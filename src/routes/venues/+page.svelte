@@ -131,11 +131,15 @@
     window.location.href = '/venues?mode=guest';
   }
 
-  function toggleFavorite(id: string) {
+  async function toggleFavorite(id: string) {
     if (favorites.includes(id)) {
       favorites = favorites.filter(f => f !== id);
     } else {
       favorites = [...favorites, id];
+      // Flag the venue on first favourite — one-way signal for curation
+      venues = venues.map(v => v.id === id ? { ...v, flagged: true } : v);
+      if (selectedVenue?.id === id) selectedVenue = { ...selectedVenue, flagged: true };
+      await supabase.from('venues').update({ flagged: true }).eq('id', id);
     }
     localStorage.setItem('sqrz_venue_favorites', JSON.stringify(favorites));
   }
@@ -585,7 +589,7 @@
                   </a>
                 {/if}
 
-                {#if guestMode}
+                {#if internalMode || guestMode}
                 <button
                   class="action-icon fav-btn"
                   class:favorited={favorites.includes(venue.id)}
@@ -599,7 +603,7 @@
                 </button>
                 {/if}
 
-                {#if internalMode || guestMode}
+                {#if internalMode}
                 <button
                   class="action-icon flag-btn"
                   class:flagged={venue.flagged}
@@ -611,7 +615,9 @@
                     <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
                   </svg>
                 </button>
+                {/if}
 
+                {#if internalMode || guestMode}
                 <button
                   class="action-icon report-btn"
                   onclick={() => reportVenue(venue)}
@@ -826,7 +832,7 @@
             </a>
           {/if}
 
-          {#if guestMode}
+          {#if internalMode || guestMode}
           <button
             class="btn-fav-modal"
             class:active={favorites.includes(selectedVenue.id)}
@@ -839,7 +845,7 @@
           </button>
           {/if}
 
-          {#if internalMode || guestMode}
+          {#if internalMode}
           <button
             class="btn-flag-modal"
             class:active={selectedVenue.flagged}
@@ -850,7 +856,9 @@
             </svg>
             {selectedVenue.flagged ? 'Unflag' : 'Flag'}
           </button>
+          {/if}
 
+          {#if internalMode || guestMode}
           <button
             class="btn-report-modal"
             onclick={() => reportVenue(selectedVenue!)}
