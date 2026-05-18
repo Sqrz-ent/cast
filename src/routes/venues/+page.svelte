@@ -192,7 +192,7 @@
       <select class="country-select" value={countryFilter} onchange={onCountryChange} aria-label="Filter by country">
         <option value="">All countries</option>
         {#each data.locations as loc}
-          <option value={loc.country_code}>{loc.name}</option>
+          <option value={loc.iso_code}>{loc.name}</option>
         {/each}
       </select>
 

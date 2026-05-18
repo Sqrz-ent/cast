@@ -16,14 +16,14 @@ export const load: PageServerLoad = async () => {
       .range(0, PAGE_SIZE - 1),
     supabase
       .from('locations')
-      .select('name, country_code')
+      .select('name, iso_code')
       .eq('is_active', true)
       .order('name', { ascending: true }),
   ]);
 
   return {
     venues: venues ?? [],
-    locations: (locationRows ?? []) as { name: string; country_code: string }[],
+    locations: (locationRows ?? []) as { name: string; iso_code: string }[],
     pageSize: PAGE_SIZE,
   };
 };
