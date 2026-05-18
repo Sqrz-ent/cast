@@ -97,6 +97,47 @@
   let selectedVenue = $state<Venue | null>(null);
 
   const internalMode = $derived(page.url.searchParams.get('mode') === 'internal');
+  const guestMode = $derived(page.url.searchParams.get('mode') === 'guest');
+  const publicMode = $derived(!internalMode && !guestMode);
+
+  // Banner
+  let bannerDismissed = $state(false);
+  let bannerEmail = $state('');
+  let bannerSubmitting = $state(false);
+
+  // Favorites
+  let favorites = $state<string[]>([]);
+
+  $effect(() => {
+    bannerDismissed = !!sessionStorage.getItem('sqrz_venues_banner_dismissed');
+    const stored = localStorage.getItem('sqrz_venue_favorites');
+    favorites = stored ? (JSON.parse(stored) as string[]) : [];
+  });
+
+  function dismissBanner() {
+    sessionStorage.setItem('sqrz_venues_banner_dismissed', '1');
+    bannerDismissed = true;
+  }
+
+  async function submitContributorEmail() {
+    if (!bannerEmail.trim()) return;
+    bannerSubmitting = true;
+    await supabase.from('venue_contributors').upsert(
+      { email: bannerEmail.trim() },
+      { onConflict: 'email', ignoreDuplicates: true }
+    );
+    bannerSubmitting = false;
+    window.location.href = '/venues?mode=guest';
+  }
+
+  function toggleFavorite(id: string) {
+    if (favorites.includes(id)) {
+      favorites = favorites.filter(f => f !== id);
+    } else {
+      favorites = [...favorites, id];
+    }
+    localStorage.setItem('sqrz_venue_favorites', JSON.stringify(favorites));
+  }
 
   let debounceTimer: ReturnType<typeof setTimeout>;
   let cityDebounceTimer: ReturnType<typeof setTimeout>;
@@ -300,6 +341,31 @@
 <section class="venues-section">
   <div class="container">
 
+    <!-- Contributor banner -->
+    {#if publicMode && !bannerDismissed}
+      <div class="contributor-banner">
+        <button class="banner-dismiss" onclick={dismissBanner} aria-label="Dismiss banner">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <p class="banner-title">Help us keep this directory clean</p>
+        <p class="banner-text">This directory has 20,000+ venues across the world. We can't possibly verify all of them alone — help us clean it up! Enter your email to flag irrelevant venues and save your favorites.</p>
+        <form class="banner-form" onsubmit={(e) => { e.preventDefault(); submitContributorEmail(); }}>
+          <input
+            type="email"
+            class="banner-email"
+            bind:value={bannerEmail}
+            placeholder="your@email.com"
+            required
+            aria-label="Email address"
+            autocomplete="email"
+          />
+          <button type="submit" class="banner-submit" disabled={bannerSubmitting}>
+            {bannerSubmitting ? 'Joining…' : 'Join & contribute'}
+          </button>
+        </form>
+      </div>
+    {/if}
+
     <!-- Controls -->
     <div class="controls-row">
       <div class="search-wrap">
@@ -496,7 +562,21 @@
                   </a>
                 {/if}
 
-                {#if internalMode}
+                {#if guestMode}
+                <button
+                  class="action-icon fav-btn"
+                  class:favorited={favorites.includes(venue.id)}
+                  onclick={() => toggleFavorite(venue.id)}
+                  title={favorites.includes(venue.id) ? 'Remove from favorites' : 'Save to favorites'}
+                  aria-label={favorites.includes(venue.id) ? 'Remove from favorites' : 'Save to favorites'}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill={favorites.includes(venue.id) ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+                {/if}
+
+                {#if internalMode || guestMode}
                 <button
                   class="action-icon flag-btn"
                   class:flagged={venue.flagged}
@@ -722,7 +802,20 @@
             </a>
           {/if}
 
-          {#if internalMode}
+          {#if guestMode}
+          <button
+            class="btn-fav-modal"
+            class:active={favorites.includes(selectedVenue.id)}
+            onclick={() => toggleFavorite(selectedVenue!.id)}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill={favorites.includes(selectedVenue.id) ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            {favorites.includes(selectedVenue.id) ? 'Saved' : 'Save'}
+          </button>
+          {/if}
+
+          {#if internalMode || guestMode}
           <button
             class="btn-flag-modal"
             class:active={selectedVenue.flagged}
@@ -1707,6 +1800,114 @@
     border-color: rgba(255,255,255,0.25);
     color: #fff;
     background: rgba(255,255,255,0.06);
+  }
+
+  /* ── CONTRIBUTOR BANNER ───────────────────────────────────────────── */
+  .contributor-banner {
+    position: relative;
+    background: rgba(245,166,35,0.06);
+    border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+
+  .banner-dismiss {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.28);
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+  }
+  .banner-dismiss:hover { color: rgba(255,255,255,0.6); }
+
+  .banner-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #F5A623;
+    margin-bottom: 8px;
+  }
+
+  .banner-text {
+    font-size: 0.87rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.52);
+    line-height: 1.65;
+    max-width: 640px;
+    margin-bottom: 18px;
+  }
+
+  .banner-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .banner-email {
+    flex: 1;
+    min-width: 220px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .banner-email::placeholder { color: rgba(255,255,255,0.28); }
+  .banner-email:focus { border-color: rgba(245,166,35,0.5); }
+
+  .banner-submit {
+    padding: 10px 22px;
+    background: #F5A623;
+    border: none;
+    border-radius: 8px;
+    color: #111;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+  .banner-submit:hover:not(:disabled) { opacity: 0.88; }
+  .banner-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── FAVORITES ──────────────────────────────────────────────────────── */
+  .fav-btn { color: rgba(255,255,255,0.3); }
+  .fav-btn:hover { color: #e05272 !important; border-color: rgba(224,82,114,0.35) !important; background: rgba(224,82,114,0.08) !important; }
+  .fav-btn.favorited { color: #e05272; border-color: rgba(224,82,114,0.4); background: rgba(224,82,114,0.1); }
+
+  .btn-fav-modal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .btn-fav-modal:hover, .btn-fav-modal.active {
+    color: #e05272;
+    border-color: rgba(224,82,114,0.4);
+    background: rgba(224,82,114,0.08);
   }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────────── */
