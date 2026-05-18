@@ -85,6 +85,7 @@
   let cityInput = $state('');
   let cityResults = $state<string[]>([]);
   let cityDropdownOpen = $state(false);
+  let locationTab = $state<'country' | 'city'>('country');
   let sortKey = $state<SortValue>('name_asc');
   let offset = $state<number>(data.venues.length);
   let hasMore = $state(data.venues.length === PAGE_SIZE);
@@ -163,7 +164,19 @@
 
   function onCountryChange(e: Event) {
     countryFilter = (e.target as HTMLSelectElement).value;
+    cityFilter = ''; cityInput = ''; cityResults = []; cityDropdownOpen = false;
     fetchVenues(true);
+  }
+
+  function switchLocationTab(tab: 'country' | 'city') {
+    locationTab = tab;
+    if (tab === 'country') {
+      cityFilter = ''; cityInput = ''; cityResults = []; cityDropdownOpen = false;
+      fetchVenues(true);
+    } else {
+      countryFilter = '';
+      fetchVenues(true);
+    }
   }
 
   async function toggleFlag(venue: Venue) {
@@ -294,44 +307,65 @@
         {/if}
       </div>
 
-      <select class="country-select" value={countryFilter} onchange={onCountryChange} aria-label="Filter by country">
-        <option value="">All countries</option>
-        {#each data.locations as loc}
-          <option value={loc.iso_code}>{loc.name}</option>
-        {/each}
-      </select>
-
-      <!-- City autocomplete -->
-      <div class="city-wrap">
-        <input
-          type="text"
-          class="city-input"
-          class:active={!!cityFilter}
-          value={cityInput}
-          oninput={onCityInput}
-          onblur={onCityBlur}
-          placeholder="City…"
-          aria-label="Filter by city"
-          aria-autocomplete="list"
-          aria-expanded={cityDropdownOpen}
-          autocomplete="off"
-        />
-        {#if cityFilter}
-          <button class="city-clear" onclick={clearCity} aria-label="Clear city filter">✕</button>
-        {/if}
-        {#if cityDropdownOpen}
-          <ul class="city-dropdown" role="listbox">
-            {#each cityResults as city}
-              <li role="option" aria-selected={cityFilter === city}>
-                <button type="button" onmousedown={() => selectCity(city)}>{city}</button>
-              </li>
-            {/each}
-          </ul>
+      <!-- Location filter -->
+      <div class="location-filter">
+        <div class="location-tabs">
+          <button
+            class="loc-tab"
+            class:active={locationTab === 'country'}
+            onclick={() => switchLocationTab('country')}
+          >Country</button>
+          <button
+            class="loc-tab"
+            class:active={locationTab === 'city'}
+            onclick={() => switchLocationTab('city')}
+          >City</button>
+        </div>
+        {#if locationTab === 'country'}
+          <div class="loc-control">
+            <select class="loc-select" class:has-value={!!countryFilter} value={countryFilter} onchange={onCountryChange} aria-label="Filter by country">
+              <option value="">All countries</option>
+              {#each data.locations as loc}
+                <option value={loc.iso_code}>{loc.name}</option>
+              {/each}
+            </select>
+            {#if countryFilter}
+              <button class="loc-clear" onclick={() => { countryFilter = ''; fetchVenues(true); }} aria-label="Clear country filter">✕</button>
+            {/if}
+          </div>
+        {:else}
+          <div class="loc-control city-wrap">
+            <input
+              type="text"
+              class="loc-city-input"
+              class:has-value={!!cityFilter}
+              value={cityInput}
+              oninput={onCityInput}
+              onblur={onCityBlur}
+              placeholder="Type a city…"
+              aria-label="Filter by city"
+              aria-autocomplete="list"
+              aria-expanded={cityDropdownOpen}
+              autocomplete="off"
+            />
+            {#if cityFilter}
+              <button class="loc-clear" onclick={clearCity} aria-label="Clear city filter">✕</button>
+            {/if}
+            {#if cityDropdownOpen}
+              <ul class="city-dropdown" role="listbox">
+                {#each cityResults as city}
+                  <li role="option" aria-selected={cityFilter === city}>
+                    <button type="button" onmousedown={() => selectCity(city)}>{city}</button>
+                  </li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
         {/if}
       </div>
 
       <select
-        class="country-select"
+        class="sort-select"
         value={sortKey}
         onchange={(e) => { sortKey = (e.target as HTMLSelectElement).value as SortValue; fetchVenues(true); }}
         aria-label="Sort venues"
@@ -893,8 +927,9 @@
   }
   .search-clear:hover { color: rgba(255,255,255,0.75); }
 
-  .country-select {
-    padding: 12px 14px;
+  /* ── SORT SELECT (reuses former country-select style) ─────────── */
+  .sort-select {
+    padding: 12px 32px 12px 14px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 10px;
@@ -906,51 +941,114 @@
     transition: border-color 0.15s;
     -webkit-appearance: none;
     appearance: none;
-    padding-right: 32px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
   }
-  .country-select:focus { border-color: rgba(245,166,35,0.5); }
-  .country-select option { background: #1a1a1a; color: #fff; }
+  .sort-select:focus { border-color: rgba(245,166,35,0.5); }
+  .sort-select option { background: #1a1a1a; color: #fff; }
 
-  /* ── CITY AUTOCOMPLETE ─────────────────────────────────────────── */
-  .city-wrap {
-    position: relative;
+  /* ── LOCATION FILTER ───────────────────────────────────────────── */
+  .location-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     flex-shrink: 0;
   }
 
-  .city-input {
-    padding: 12px 32px 12px 14px;
+  .location-tabs {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  .loc-tab {
+    padding: 5px 11px;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: rgba(255,255,255,0.4);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .loc-tab:hover { color: rgba(255,255,255,0.75); }
+  .loc-tab.active {
+    background: rgba(245,166,35,0.15);
+    color: #F5A623;
+  }
+
+  .loc-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .loc-select {
+    padding: 10px 32px 10px 12px;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
+    border-radius: 8px;
     color: rgba(255,255,255,0.75);
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    min-width: 140px;
+  }
+  .loc-select:focus { border-color: rgba(245,166,35,0.5); }
+  .loc-select option { background: #1a1a1a; color: #fff; }
+  .loc-select.has-value { border-color: rgba(245,166,35,0.45); color: #F5A623; padding-right: 44px; }
+
+  .loc-city-input {
+    padding: 10px 32px 10px 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: rgba(255,255,255,0.75);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
     outline: none;
     transition: border-color 0.15s;
-    width: 140px;
+    width: 150px;
   }
-  .city-input::placeholder { color: rgba(255,255,255,0.28); }
-  .city-input:focus { border-color: rgba(245,166,35,0.5); }
-  .city-input.active { border-color: rgba(245,166,35,0.5); color: #F5A623; }
+  .loc-city-input::placeholder { color: rgba(255,255,255,0.28); }
+  .loc-city-input:focus { border-color: rgba(245,166,35,0.5); }
+  .loc-city-input.has-value { border-color: rgba(245,166,35,0.45); color: #F5A623; }
 
-  .city-clear {
+  .loc-clear {
     position: absolute;
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
     border: none;
-    color: rgba(245,166,35,0.7);
-    font-size: 0.72rem;
+    color: rgba(245,166,35,0.65);
+    font-size: 0.7rem;
     cursor: pointer;
     padding: 4px 5px;
     line-height: 1;
     transition: color 0.15s;
+    z-index: 1;
   }
-  .city-clear:hover { color: #F5A623; }
+  .loc-clear:hover { color: #F5A623; }
+
+  .city-wrap { position: relative; }
 
   .city-dropdown {
     position: absolute;
@@ -1615,9 +1713,10 @@
 
     .controls-row { gap: 10px; }
     .search-wrap { max-width: 100%; flex: 1 1 100%; }
-    .country-select { flex: 1; }
-    .city-wrap { flex: 1; }
-    .city-input { width: 100%; }
+    .location-filter { flex: 1 1 auto; }
+    .loc-select { min-width: 0; flex: 1; }
+    .loc-city-input { width: 100%; }
+    .sort-select { flex: 1; }
     .result-count { margin-left: 0; width: 100%; }
 
     .venues-grid { grid-template-columns: 1fr; }
