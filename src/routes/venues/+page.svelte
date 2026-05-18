@@ -313,6 +313,9 @@
                   <span class="photo-initials">{venue.name.charAt(0).toUpperCase()}</span>
                 </div>
               {/if}
+              {#if venue.type}
+                <span class="card-type-pill">{venue.type}</span>
+              {/if}
               {#if venue.flagged}
                 <span class="flagged-badge">Flagged</span>
               {/if}
@@ -321,9 +324,6 @@
             <!-- Body -->
             <div class="card-body">
               <div class="card-meta-row">
-                {#if venue.type}
-                  <span class="type-badge">{venue.type}</span>
-                {/if}
                 {#if venue.country_code}
                   <span class="country-badge">{venue.country_code}</span>
                 {/if}
@@ -944,6 +944,22 @@
     user-select: none;
   }
   .photo-initials.large { font-size: 5rem; }
+
+  .card-type-pill {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    color: rgba(255,255,255,0.9);
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
 
   .flagged-badge {
     position: absolute;
