@@ -55,8 +55,11 @@
   let typeFilter = $state('');
   let offset = $state<number>(data.venues.length);
   let hasMore = $state(data.venues.length === PAGE_SIZE);
+  let filteredCount = $state<number | null>(null);
   let loading = $state(false);
   let loadingMore = $state(false);
+
+  const hasFilter = $derived(!!(query.trim() || countryFilter || typeFilter));
   let selectedVenue = $state<Venue | null>(null);
 
   const internalMode = $derived(page.url.searchParams.get('mode') === 'internal');
@@ -72,7 +75,7 @@
 
     let q = supabase
       .from('venues')
-      .select('id, name, description, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews')
+      .select('id, name, description, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews', { count: 'exact' })
       .eq('reported', false);
 
     if (query.trim()) {
@@ -89,12 +92,13 @@
 
     q = q.order('name', { ascending: true }).range(currentOffset, currentOffset + PAGE_SIZE - 1);
 
-    const { data: rows } = await q;
+    const { data: rows, count } = await q;
     const results = (rows ?? []) as Venue[];
 
     if (reset) {
       venues = results;
       offset = results.length;
+      filteredCount = count;
     } else {
       venues = [...venues, ...results];
       offset = venues.length;
@@ -216,8 +220,10 @@
       <p class="result-count" aria-live="polite">
         {#if loading}
           <span class="count-loading">Loading…</span>
+        {:else if hasFilter}
+          {(filteredCount ?? venues.length).toLocaleString()} {(filteredCount ?? venues.length) === 1 ? 'venue' : 'venues'} found
         {:else}
-          {venues.length}{hasMore ? '+' : ''} {venues.length === 1 ? 'venue' : 'venues'}
+          {data.totalCount.toLocaleString()} venues
         {/if}
       </p>
     </div>
