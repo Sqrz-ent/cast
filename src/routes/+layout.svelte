@@ -54,7 +54,7 @@
 						<li><a href={hrefFor('/')}>SQRZ</a></li>
 						<li><a href={hrefFor('/grow')}>Grow</a></li>
 						<li><a href={hrefFor('/blog')}>Blog</a></li>
-						<li><a href="/studio" data-sveltekit-preload-data="off">Studio</a></li>
+						<li><a href="/venues">Venues</a></li>
 					</ul>
 				</div>
 
