@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
+  import { page } from '$app/state';
 
   type Venue = {
     id: string;
@@ -57,6 +58,8 @@
   let loading = $state(false);
   let loadingMore = $state(false);
   let selectedVenue = $state<Venue | null>(null);
+
+  const internalMode = $derived(page.url.searchParams.get('mode') === 'internal');
 
   let debounceTimer: ReturnType<typeof setTimeout>;
 
@@ -305,7 +308,7 @@
               <button class="btn-more" onclick={() => selectedVenue = venue}>More info</button>
 
               <div class="card-action-group">
-                {#if venue.hubspot_company_id}
+                {#if internalMode && venue.hubspot_company_id}
                   <a
                     href="https://app.hubspot.com/contacts/8081234/record/0-2/{venue.hubspot_company_id}"
                     target="_blank"
@@ -493,7 +496,7 @@
         {/if}
 
         <div class="modal-actions">
-          {#if selectedVenue.hubspot_company_id}
+          {#if internalMode && selectedVenue.hubspot_company_id}
             <a
               href="https://app.hubspot.com/contacts/8081234/record/0-2/{selectedVenue.hubspot_company_id}"
               target="_blank"
