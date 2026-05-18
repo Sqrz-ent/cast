@@ -78,6 +78,7 @@
   ];
 
   let venues = $state<Venue[]>(data.venues);
+  let randomSeed: number = data.randomSeed as number; // stable seed for paginated random order
   let query = $state('');
   let countryFilter = $state('');
   let typeFilter = $state('');
@@ -169,15 +170,26 @@
     if (reset) loading = true;
     else loadingMore = true;
 
-    // No filters active and default sort → random order via RPC
+    // No filters active and default sort → stable seeded random via RPC
     if (!query.trim() && !countryFilter && !typeFilter && !cityFilter && sortKey === 'name_asc') {
-      const { data: rows } = await supabase.rpc('get_random_venues', { row_limit: PAGE_SIZE });
+      if (reset) randomSeed = Math.random() * 2 - 1; // new seed per filter-reset, same seed for pagination
+      const { data: rows } = await supabase.rpc('get_random_venues', {
+        seed: randomSeed,
+        row_limit: PAGE_SIZE,
+        row_offset: currentOffset,
+      });
       const results = (rows ?? []) as Venue[];
-      venues = results;
-      offset = results.length;
-      filteredCount = null;
-      hasMore = false;
-      loading = false;
+      if (reset) {
+        venues = results;
+        offset = results.length;
+        filteredCount = null;
+      } else {
+        venues = [...venues, ...results];
+        offset = venues.length;
+      }
+      hasMore = results.length === PAGE_SIZE;
+      if (reset) loading = false;
+      else loadingMore = false;
       return;
     }
 
