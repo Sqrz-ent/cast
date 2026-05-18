@@ -496,6 +496,7 @@
                   </a>
                 {/if}
 
+                {#if internalMode}
                 <button
                   class="action-icon flag-btn"
                   class:flagged={venue.flagged}
@@ -518,6 +519,7 @@
                     <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                   </svg>
                 </button>
+                {/if}
               </div>
             </div>
 
@@ -720,6 +722,7 @@
             </a>
           {/if}
 
+          {#if internalMode}
           <button
             class="btn-flag-modal"
             class:active={selectedVenue.flagged}
@@ -740,6 +743,7 @@
             </svg>
             Report
           </button>
+          {/if}
         </div>
       </div>
     </div>
