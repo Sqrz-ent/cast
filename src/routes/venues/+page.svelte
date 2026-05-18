@@ -139,6 +139,26 @@
     localStorage.setItem('sqrz_venue_favorites', JSON.stringify(favorites));
   }
 
+  // Infinite scroll
+  let sentinel = $state<HTMLElement | null>(null);
+  let observer: IntersectionObserver | null = null;
+
+  $effect(() => {
+    if (observer) { observer.disconnect(); observer = null; }
+    if (sentinel && hasMore) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !loadingMore && !loading && hasMore) {
+            fetchVenues(false);
+          }
+        },
+        { rootMargin: '300px' }
+      );
+      observer.observe(sentinel);
+    }
+    return () => { observer?.disconnect(); observer = null; };
+  });
+
   let debounceTimer: ReturnType<typeof setTimeout>;
   let cityDebounceTimer: ReturnType<typeof setTimeout>;
 
@@ -607,12 +627,13 @@
         {/each}
       </ul>
 
-      <!-- Load more -->
+      <!-- Infinite scroll sentinel -->
       {#if hasMore}
-        <div class="load-more-row">
-          <button class="btn-load-more" onclick={() => fetchVenues(false)} disabled={loadingMore}>
-            {loadingMore ? 'Loading…' : 'Load more'}
-          </button>
+        <div class="scroll-sentinel" bind:this={sentinel}></div>
+      {/if}
+      {#if loadingMore}
+        <div class="scroll-spinner" aria-label="Loading more venues">
+          <div class="spinner"></div>
         </div>
       {/if}
 
@@ -1477,33 +1498,29 @@
 
   .report-btn:hover { color: #e05252 !important; border-color: rgba(224,82,82,0.35) !important; background: rgba(224,82,82,0.08) !important; }
 
-  /* ── LOAD MORE ────────────────────────────────────────────────────── */
-  .load-more-row {
-    display: flex;
-    justify-content: center;
+  /* ── INFINITE SCROLL ─────────────────────────────────────────────── */
+  .scroll-sentinel {
+    height: 1px;
     margin-top: 40px;
   }
 
-  .btn-load-more {
-    padding: 12px 36px;
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 9px;
-    color: rgba(255,255,255,0.6);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s, background 0.2s;
+  .scroll-spinner {
+    display: flex;
+    justify-content: center;
+    padding: 32px 0 48px;
   }
-  .btn-load-more:hover:not(:disabled) {
-    border-color: rgba(245,166,35,0.45);
-    color: #fff;
-    background: rgba(245,166,35,0.06);
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-top-color: rgba(245,166,35,0.7);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
   }
-  .btn-load-more:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
   /* ── EMPTY STATE ──────────────────────────────────────────────────── */
