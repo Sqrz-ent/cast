@@ -108,7 +108,8 @@
       .eq('reported', false);
 
     if (query.trim()) {
-      q = q.textSearch('search_vector', query.trim(), { type: 'websearch' });
+      const q_str = query.trim();
+      q = q.or(`name.ilike.%${q_str}%,description.ilike.%${q_str}%,subtypes.ilike.%${q_str}%`);
     }
 
     if (countryFilter) {
