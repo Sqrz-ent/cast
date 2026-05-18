@@ -1009,7 +1009,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
-    min-width: 140px;
+    width: 160px;
   }
   .loc-select:focus { border-color: rgba(245,166,35,0.5); }
   .loc-select option { background: #1a1a1a; color: #fff; }
@@ -1025,7 +1025,7 @@
     font-size: 0.85rem;
     outline: none;
     transition: border-color 0.15s;
-    width: 150px;
+    width: 160px;
   }
   .loc-city-input::placeholder { color: rgba(255,255,255,0.28); }
   .loc-city-input:focus { border-color: rgba(245,166,35,0.5); }
