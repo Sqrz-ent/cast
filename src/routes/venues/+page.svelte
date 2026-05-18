@@ -108,8 +108,8 @@
     if (reset) loading = true;
     else loadingMore = true;
 
-    // No filters active → random order via RPC
-    if (!query.trim() && !countryFilter && !typeFilter && !cityFilter) {
+    // No filters active and default sort → random order via RPC
+    if (!query.trim() && !countryFilter && !typeFilter && !cityFilter && sortKey === 'name_asc') {
       const { data: rows } = await supabase.rpc('get_random_venues', { row_limit: PAGE_SIZE });
       const results = (rows ?? []) as Venue[];
       venues = results;
