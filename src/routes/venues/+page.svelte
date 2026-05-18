@@ -81,6 +81,10 @@
   let query = $state('');
   let countryFilter = $state('');
   let typeFilter = $state('');
+  let cityFilter = $state('');
+  let cityInput = $state('');
+  let cityResults = $state<string[]>([]);
+  let cityDropdownOpen = $state(false);
   let sortKey = $state<SortValue>('name_asc');
   let offset = $state<number>(data.venues.length);
   let hasMore = $state(data.venues.length === PAGE_SIZE);
@@ -88,14 +92,15 @@
   let loading = $state(false);
   let loadingMore = $state(false);
 
-  const hasFilter = $derived(!!(query.trim() || countryFilter || typeFilter));
+  const hasFilter = $derived(!!(query.trim() || countryFilter || typeFilter || cityFilter));
   let selectedVenue = $state<Venue | null>(null);
 
   const internalMode = $derived(page.url.searchParams.get('mode') === 'internal');
 
   let debounceTimer: ReturnType<typeof setTimeout>;
+  let cityDebounceTimer: ReturnType<typeof setTimeout>;
 
-  $effect(() => () => clearTimeout(debounceTimer));
+  $effect(() => () => { clearTimeout(debounceTimer); clearTimeout(cityDebounceTimer); });
 
   async function fetchVenues(reset = true) {
     const currentOffset = reset ? 0 : offset;
@@ -118,6 +123,10 @@
 
     if (typeFilter) {
       q = q.ilike('type', `%${typeFilter}%`);
+    }
+
+    if (cityFilter) {
+      q = q.eq('city', cityFilter);
     }
 
     const s = SORT_MAP[sortKey];
@@ -175,8 +184,52 @@
     if (error) await fetchVenues(true);
   }
 
+  async function fetchCitySuggestions(val: string) {
+    if (val.length < 2) { cityResults = []; cityDropdownOpen = false; return; }
+    const { data: rows } = await supabase
+      .from('venues')
+      .select('city')
+      .ilike('city', `%${val}%`)
+      .eq('reported', false)
+      .not('city', 'is', null)
+      .order('city', { ascending: true })
+      .limit(10);
+    const seen = new Set<string>();
+    cityResults = (rows ?? [])
+      .map((r: { city: string | null }) => r.city as string)
+      .filter((c: string) => { if (seen.has(c)) return false; seen.add(c); return true; });
+    cityDropdownOpen = cityResults.length > 0;
+  }
+
+  function onCityInput(e: Event) {
+    cityInput = (e.target as HTMLInputElement).value;
+    if (cityFilter) { cityFilter = ''; fetchVenues(true); }
+    clearTimeout(cityDebounceTimer);
+    cityDebounceTimer = setTimeout(() => fetchCitySuggestions(cityInput), 300);
+  }
+
+  function selectCity(city: string) {
+    cityFilter = city;
+    cityInput = city;
+    cityResults = [];
+    cityDropdownOpen = false;
+    fetchVenues(true);
+  }
+
+  function clearCity() {
+    cityFilter = '';
+    cityInput = '';
+    cityResults = [];
+    cityDropdownOpen = false;
+    fetchVenues(true);
+  }
+
+  function onCityBlur() {
+    setTimeout(() => { cityDropdownOpen = false; }, 150);
+  }
+
   function onKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape') selectedVenue = null;
+    if (e.key === 'Escape') { selectedVenue = null; cityDropdownOpen = false; }
   }
 
   function formatUrl(url: string | null) {
@@ -247,6 +300,35 @@
           <option value={loc.iso_code}>{loc.name}</option>
         {/each}
       </select>
+
+      <!-- City autocomplete -->
+      <div class="city-wrap">
+        <input
+          type="text"
+          class="city-input"
+          class:active={!!cityFilter}
+          value={cityInput}
+          oninput={onCityInput}
+          onblur={onCityBlur}
+          placeholder="City…"
+          aria-label="Filter by city"
+          aria-autocomplete="list"
+          aria-expanded={cityDropdownOpen}
+          autocomplete="off"
+        />
+        {#if cityFilter}
+          <button class="city-clear" onclick={clearCity} aria-label="Clear city filter">✕</button>
+        {/if}
+        {#if cityDropdownOpen}
+          <ul class="city-dropdown" role="listbox">
+            {#each cityResults as city}
+              <li role="option" aria-selected={cityFilter === city}>
+                <button type="button" onmousedown={() => selectCity(city)}>{city}</button>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
 
       <select
         class="country-select"
@@ -831,6 +913,75 @@
   }
   .country-select:focus { border-color: rgba(245,166,35,0.5); }
   .country-select option { background: #1a1a1a; color: #fff; }
+
+  /* ── CITY AUTOCOMPLETE ─────────────────────────────────────────── */
+  .city-wrap {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .city-input {
+    padding: 12px 32px 12px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: rgba(255,255,255,0.75);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 140px;
+  }
+  .city-input::placeholder { color: rgba(255,255,255,0.28); }
+  .city-input:focus { border-color: rgba(245,166,35,0.5); }
+  .city-input.active { border-color: rgba(245,166,35,0.5); color: #F5A623; }
+
+  .city-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(245,166,35,0.7);
+    font-size: 0.72rem;
+    cursor: pointer;
+    padding: 4px 5px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .city-clear:hover { color: #F5A623; }
+
+  .city-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 100%;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    list-style: none;
+    overflow: hidden;
+    z-index: 50;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+
+  .city-dropdown li button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    white-space: nowrap;
+  }
+  .city-dropdown li button:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .city-dropdown li[aria-selected="true"] button { color: #F5A623; }
 
   .result-count {
     color: rgba(255,255,255,0.28);
@@ -1465,6 +1616,8 @@
     .controls-row { gap: 10px; }
     .search-wrap { max-width: 100%; flex: 1 1 100%; }
     .country-select { flex: 1; }
+    .city-wrap { flex: 1; }
+    .city-input { width: 100%; }
     .result-count { margin-left: 0; width: 100%; }
 
     .venues-grid { grid-template-columns: 1fr; }
