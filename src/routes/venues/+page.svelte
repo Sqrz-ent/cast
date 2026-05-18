@@ -22,9 +22,22 @@
 
   const PAGE_SIZE: number = data.pageSize;
 
+  const TYPE_OPTIONS = [
+    { label: 'All', value: '' },
+    { label: 'Live music venue', value: 'Live music venue' },
+    { label: 'Art center', value: 'Art center' },
+    { label: 'Bar', value: 'Bar' },
+    { label: 'Event venue', value: 'Event venue' },
+    { label: 'Night club', value: 'Night club' },
+    { label: 'Cocktail bar', value: 'Cocktail bar' },
+    { label: 'Concert hall', value: 'Concert hall' },
+    { label: 'Performing arts theater', value: 'Performing arts theater' },
+  ];
+
   let venues = $state<Venue[]>(data.venues);
   let query = $state('');
   let countryFilter = $state('');
+  let typeFilter = $state('');
   let offset = $state<number>(data.venues.length);
   let hasMore = $state(data.venues.length === PAGE_SIZE);
   let loading = $state(false);
@@ -51,6 +64,10 @@
 
     if (countryFilter) {
       q = q.eq('country_code', countryFilter);
+    }
+
+    if (typeFilter) {
+      q = q.ilike('type', `%${typeFilter}%`);
     }
 
     q = q.order('name', { ascending: true }).range(currentOffset, currentOffset + PAGE_SIZE - 1);
@@ -174,8 +191,8 @@
 
       <select class="country-select" value={countryFilter} onchange={onCountryChange} aria-label="Filter by country">
         <option value="">All countries</option>
-        {#each data.countryCodes as code}
-          <option value={code}>{code}</option>
+        {#each data.locations as loc}
+          <option value={loc.country_code}>{loc.name}</option>
         {/each}
       </select>
 
@@ -186,6 +203,22 @@
           {venues.length}{hasMore ? '+' : ''} {venues.length === 1 ? 'venue' : 'venues'}
         {/if}
       </p>
+    </div>
+
+    <!-- Type filter -->
+    <div class="type-filter-row" role="group" aria-label="Filter by venue type">
+      {#each TYPE_OPTIONS as opt}
+        <label class="type-radio" class:active={typeFilter === opt.value}>
+          <input
+            type="radio"
+            name="venue-type"
+            value={opt.value}
+            checked={typeFilter === opt.value}
+            onchange={() => { typeFilter = opt.value; fetchVenues(true); }}
+          />
+          {opt.label}
+        </label>
+      {/each}
     </div>
 
     <!-- Grid -->
@@ -315,14 +348,14 @@
       <div class="empty-state">
         <p class="empty-heading">No venues found</p>
         <p class="empty-sub">
-          {#if query || countryFilter}
+          {#if query || countryFilter || typeFilter}
             Try a different search term or filter.
           {:else}
             No venues have been added yet.
           {/if}
         </p>
-        {#if query || countryFilter}
-          <button class="btn-reset" onclick={() => { query = ''; countryFilter = ''; fetchVenues(true); }}>
+        {#if query || countryFilter || typeFilter}
+          <button class="btn-reset" onclick={() => { query = ''; countryFilter = ''; typeFilter = ''; fetchVenues(true); }}>
             Clear filters
           </button>
         {/if}
@@ -534,8 +567,52 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 36px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
+  }
+
+  /* ── TYPE FILTER ──────────────────────────────────────────────────── */
+  .type-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .type-radio {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 999px;
+    color: rgba(255,255,255,0.45);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .type-radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .type-radio:hover {
+    border-color: rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.75);
+  }
+
+  .type-radio.active {
+    border-color: rgba(245,166,35,0.5);
+    color: #F5A623;
+    background: rgba(245,166,35,0.08);
   }
 
   .search-wrap {
