@@ -108,6 +108,18 @@
     if (reset) loading = true;
     else loadingMore = true;
 
+    // No filters active → random order via RPC
+    if (!query.trim() && !countryFilter && !typeFilter && !cityFilter) {
+      const { data: rows } = await supabase.rpc('get_random_venues', { row_limit: PAGE_SIZE });
+      const results = (rows ?? []) as Venue[];
+      venues = results;
+      offset = results.length;
+      filteredCount = null;
+      hasMore = false;
+      loading = false;
+      return;
+    }
+
     let q = supabase
       .from('venues')
       .select('id, name, description, subtypes, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews, phone, email_1, email_2, email_3, street, postal_code, state', { count: 'exact' })
