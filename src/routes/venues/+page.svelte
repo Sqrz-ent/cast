@@ -37,6 +37,26 @@
 
   const PAGE_SIZE: number = data.pageSize;
 
+  const SORT_OPTIONS = [
+    { label: 'Name A–Z',        value: 'name_asc'    },
+    { label: 'Name Z–A',        value: 'name_desc'   },
+    { label: 'Rating high–low', value: 'rating_desc' },
+    { label: 'Rating low–high', value: 'rating_asc'  },
+    { label: 'City A–Z',        value: 'city_asc'    },
+    { label: 'City Z–A',        value: 'city_desc'   },
+  ] as const;
+
+  type SortValue = typeof SORT_OPTIONS[number]['value'];
+
+  const SORT_MAP: Record<SortValue, { column: string; ascending: boolean; nullsFirst: boolean }> = {
+    name_asc:    { column: 'name',   ascending: true,  nullsFirst: true  },
+    name_desc:   { column: 'name',   ascending: false, nullsFirst: true  },
+    rating_desc: { column: 'rating', ascending: false, nullsFirst: false },
+    rating_asc:  { column: 'rating', ascending: true,  nullsFirst: false },
+    city_asc:    { column: 'city',   ascending: true,  nullsFirst: false },
+    city_desc:   { column: 'city',   ascending: false, nullsFirst: false },
+  };
+
   const TYPE_OPTIONS = [
     { label: 'All', value: '' },
     { label: 'Live music venue', value: 'Live music venue' },
@@ -53,6 +73,7 @@
   let query = $state('');
   let countryFilter = $state('');
   let typeFilter = $state('');
+  let sortKey = $state<SortValue>('name_asc');
   let offset = $state<number>(data.venues.length);
   let hasMore = $state(data.venues.length === PAGE_SIZE);
   let filteredCount = $state<number | null>(null);
@@ -90,7 +111,8 @@
       q = q.ilike('type', `%${typeFilter}%`);
     }
 
-    q = q.order('name', { ascending: true }).range(currentOffset, currentOffset + PAGE_SIZE - 1);
+    const s = SORT_MAP[sortKey];
+    q = q.order(s.column, { ascending: s.ascending, nullsFirst: s.nullsFirst }).range(currentOffset, currentOffset + PAGE_SIZE - 1);
 
     const { data: rows, count } = await q;
     const results = (rows ?? []) as Venue[];
@@ -214,6 +236,17 @@
         <option value="">All countries</option>
         {#each data.locations as loc}
           <option value={loc.iso_code}>{loc.name}</option>
+        {/each}
+      </select>
+
+      <select
+        class="country-select"
+        value={sortKey}
+        onchange={(e) => { sortKey = (e.target as HTMLSelectElement).value as SortValue; fetchVenues(true); }}
+        aria-label="Sort venues"
+      >
+        {#each SORT_OPTIONS as opt}
+          <option value={opt.value}>{opt.label}</option>
         {/each}
       </select>
 
