@@ -108,12 +108,34 @@
 
   // Favorites
   let favorites = $state<string[]>([]);
+  let favPanelOpen = $state(false);
+  let favVenues = $state<Venue[]>([]);
+  let favLoading = $state(false);
 
   $effect(() => {
     bannerDismissed = !!sessionStorage.getItem('sqrz_venues_banner_dismissed');
     const stored = localStorage.getItem('sqrz_venue_favorites');
     favorites = stored ? (JSON.parse(stored) as string[]) : [];
   });
+
+  async function openFavPanel() {
+    favPanelOpen = true;
+    if (favorites.length === 0) { favVenues = []; return; }
+    favLoading = true;
+    const { data: rows } = await supabase
+      .from('venues')
+      .select('id, name, type, city, country_code, site, photo')
+      .in('id', favorites);
+    favVenues = (rows ?? []) as Venue[];
+    favLoading = false;
+  }
+
+  function removeFavorite(id: string) {
+    favorites = favorites.filter(f => f !== id);
+    favVenues = favVenues.filter(v => v.id !== id);
+    // Also update heart on the main grid optimistically
+    localStorage.setItem('sqrz_venue_favorites', JSON.stringify(favorites));
+  }
 
   function dismissBanner() {
     sessionStorage.setItem('sqrz_venues_banner_dismissed', '1');
@@ -331,7 +353,7 @@
   }
 
   function onKeydown(e: KeyboardEvent) {
-    if (e.key === 'Escape') { selectedVenue = null; cityDropdownOpen = false; }
+    if (e.key === 'Escape') { selectedVenue = null; cityDropdownOpen = false; favPanelOpen = false; }
   }
 
   function formatUrl(url: string | null) {
@@ -362,6 +384,15 @@
 <!-- ── TOP BAR ────────────────────────────────────────────────────── -->
 <header class="top-bar">
   <a href="https://sqrz.com" class="top-logo">SQRZ</a>
+  {#if guestMode}
+    <button class="btn-my-favs" onclick={openFavPanel}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill={favorites.length > 0 ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+      My Favourites
+      {#if favorites.length > 0}<span class="fav-count">{favorites.length}</span>{/if}
+    </button>
+  {/if}
 </header>
 
 <!-- ── MAIN CONTENT ───────────────────────────────────────────────── -->
@@ -875,6 +906,78 @@
   </div>
 {/if}
 
+<!-- ── FAVOURITES PANEL ───────────────────────────────────────────── -->
+{#if favPanelOpen}
+  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+  <div class="fav-backdrop" onclick={(e) => { if (e.target === e.currentTarget) favPanelOpen = false; }}>
+    <div class="fav-panel" role="dialog" aria-modal="true" aria-label="My Favourites">
+
+      <div class="fav-panel-header">
+        <h2 class="fav-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          My Favourites
+          {#if favorites.length > 0}<span class="fav-panel-count">{favorites.length}</span>{/if}
+        </h2>
+        <button class="fav-panel-close" onclick={() => favPanelOpen = false} aria-label="Close favourites">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      {#if favLoading}
+        <div class="fav-panel-loading">
+          <div class="spinner"></div>
+        </div>
+      {:else if favVenues.length === 0}
+        <div class="fav-panel-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <p>Click ♡ on any venue to save it here.</p>
+        </div>
+      {:else}
+        <ul class="fav-list">
+          {#each favVenues as venue (venue.id)}
+            <li class="fav-item">
+              <div class="fav-item-photo">
+                {#if venue.photo}
+                  <img src={venue.photo} alt={venue.name} loading="lazy" />
+                {:else}
+                  <div class="fav-photo-placeholder">
+                    <span>{venue.name.charAt(0).toUpperCase()}</span>
+                  </div>
+                {/if}
+              </div>
+              <div class="fav-item-body">
+                <p class="fav-item-name">{venue.name}</p>
+                {#if venue.city || venue.country_code}
+                  <p class="fav-item-meta">{[venue.city, venue.country_code].filter(Boolean).join(' · ')}</p>
+                {/if}
+                {#if venue.type}
+                  <p class="fav-item-type">{venue.type}</p>
+                {/if}
+                {#if venue.site}
+                  <a href={ensureAbsolute(venue.site)} target="_blank" rel="noopener noreferrer" class="fav-item-site">
+                    {formatUrl(venue.site)}
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                  </a>
+                {/if}
+              </div>
+              <button class="fav-item-remove" onclick={() => removeFavorite(venue.id)} title="Remove from favourites" aria-label="Remove from favourites">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </button>
+            </li>
+          {/each}
+        </ul>
+      {/if}
+
+    </div>
+  </div>
+{/if}
+
 <style>
   /* ── BASE ────────────────────────────────────────────────────────── */
   :global(*, *::before, *::after) { box-sizing: border-box; margin: 0; padding: 0; }
@@ -902,6 +1005,7 @@
     height: 56px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 40px;
     background: rgba(5,5,5,0.85);
     backdrop-filter: blur(12px);
@@ -915,6 +1019,39 @@
     letter-spacing: 0.06em;
     color: #F5A623;
     text-decoration: none;
+  }
+
+  .btn-my-favs {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    background: rgba(224,82,114,0.1);
+    border: 1px solid rgba(224,82,114,0.3);
+    border-radius: 8px;
+    color: #e05272;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .btn-my-favs:hover { background: rgba(224,82,114,0.18); border-color: rgba(224,82,114,0.5); }
+
+  .fav-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: #e05272;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 999px;
+    line-height: 1;
   }
 
   /* ── SECTION ─────────────────────────────────────────────────────── */
@@ -1897,6 +2034,211 @@
     border-color: rgba(224,82,114,0.4);
     background: rgba(224,82,114,0.08);
   }
+
+  /* ── FAVOURITES PANEL ────────────────────────────────────────────── */
+  .fav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .fav-panel {
+    width: 100%;
+    max-width: 420px;
+    height: 100%;
+    background: #111;
+    border-left: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: -16px 0 48px rgba(0,0,0,0.5);
+  }
+
+  .fav-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+  }
+
+  .fav-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #e05272;
+  }
+
+  .fav-panel-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: rgba(224,82,114,0.2);
+    border: 1px solid rgba(224,82,114,0.35);
+    color: #e05272;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 999px;
+    line-height: 1;
+  }
+
+  .fav-panel-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 7px;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .fav-panel-close:hover { background: rgba(255,255,255,0.07); color: #fff; }
+
+  .fav-panel-loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fav-panel-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: rgba(255,255,255,0.2);
+    padding: 40px 24px;
+  }
+  .fav-panel-empty p {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.35);
+    text-align: center;
+  }
+
+  .fav-list {
+    list-style: none;
+    overflow-y: auto;
+    flex: 1;
+    padding: 12px 0;
+  }
+
+  .fav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px;
+    transition: background 0.12s;
+  }
+  .fav-item:hover { background: rgba(255,255,255,0.03); }
+
+  .fav-item-photo {
+    width: 56px;
+    height: 42px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #1a1a1a;
+  }
+  .fav-item-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fav-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a, #111);
+  }
+  .fav-photo-placeholder span {
+    font-family: Impact, sans-serif;
+    font-size: 1.2rem;
+    color: rgba(245,166,35,0.3);
+  }
+
+  .fav-item-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .fav-item-name {
+    font-family: Impact, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fav-item-meta {
+    font-size: 0.74rem;
+    color: rgba(255,255,255,0.38);
+  }
+
+  .fav-item-type {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: rgba(245,166,35,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .fav-item-site {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.74rem;
+    color: rgba(245,166,35,0.65);
+    text-decoration: none;
+    transition: color 0.12s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  .fav-item-site:hover { color: #F5A623; }
+
+  .fav-item-remove {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: 1px solid rgba(224,82,114,0.25);
+    border-radius: 6px;
+    color: rgba(224,82,114,0.6);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .fav-item-remove:hover { background: rgba(224,82,114,0.1); color: #e05272; border-color: rgba(224,82,114,0.5); }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────────── */
   @media (max-width: 900px) {
