@@ -360,15 +360,6 @@
   <a href="https://sqrz.com" class="top-logo">SQRZ</a>
 </header>
 
-<!-- ── HERO ──────────────────────────────────────────────────────── -->
-<section class="venues-hero">
-  <div class="container">
-    <p class="eyebrow">SQRZ</p>
-    <h1><span>Venues</span></h1>
-    <p class="hero-sub">Browse and search all venues on the SQRZ platform.</p>
-  </div>
-</section>
-
 <!-- ── MAIN CONTENT ───────────────────────────────────────────────── -->
 <section class="venues-section">
   <div class="container">
@@ -918,49 +909,9 @@
     text-decoration: none;
   }
 
-  /* ── HERO ────────────────────────────────────────────────────────── */
-  .venues-hero {
-    padding: 130px 0 64px;
-    background:
-      linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(5,5,5,0.95) 100%),
-      #050505;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .eyebrow {
-    color: #F5A623;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    display: block;
-  }
-
-  .venues-hero h1 {
-    color: #fff;
-    font-family: Impact, sans-serif;
-    font-size: clamp(62px, 8vw, 116px);
-    font-weight: 800;
-    line-height: 0.85;
-    text-transform: uppercase;
-    letter-spacing: 0;
-  }
-
-  .venues-hero h1 span { display: block; }
-
-  .hero-sub {
-    max-width: 480px;
-    margin-top: 24px;
-    color: rgba(255,255,255,0.5);
-    font-size: 0.97rem;
-    font-weight: 300;
-    line-height: 1.7;
-  }
-
   /* ── SECTION ─────────────────────────────────────────────────────── */
   .venues-section {
-    padding: 52px 0 120px;
+    padding: 88px 0 120px; /* 56px fixed nav + 32px breathing room */
     background: #050505;
   }
 
@@ -1948,9 +1899,6 @@
   @media (max-width: 760px) {
     .container { padding: 0 20px; }
     .top-bar { padding: 0 20px; }
-
-    .venues-hero { padding: 100px 0 48px; }
-    .venues-hero h1 { font-size: clamp(50px, 13vw, 72px); }
 
     .controls-row { gap: 10px; }
     .search-wrap { max-width: 100%; flex: 1 1 100%; }
