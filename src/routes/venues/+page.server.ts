@@ -10,7 +10,7 @@ export const load: PageServerLoad = async () => {
   const [{ data: venues }, { data: locationRows }, { count: totalCount }] = await Promise.all([
     supabase
       .from('venues')
-      .select('id, name, description, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews')
+      .select('id, name, description, subtypes, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews, phone, email_1, email_2, email_3, street, postal_code, state')
       .eq('reported', false)
       .order('name', { ascending: true })
       .range(0, PAGE_SIZE - 1),

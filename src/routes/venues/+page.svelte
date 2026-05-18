@@ -23,6 +23,14 @@
     whatsapp: string | null;
     rating: string | null;
     reviews: string | null;
+    subtypes: string | null;
+    phone: string | null;
+    email_1: string | null;
+    email_2: string | null;
+    email_3: string | null;
+    street: string | null;
+    postal_code: string | null;
+    state: string | null;
   };
 
   function formatReviews(s: string | null): string {
@@ -96,7 +104,7 @@
 
     let q = supabase
       .from('venues')
-      .select('id, name, description, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews', { count: 'exact' })
+      .select('id, name, description, subtypes, type, city, country_code, site, photo, hubspot_company_id, flagged, reported, facebook, instagram, linkedin, twitter, youtube, whatsapp, rating, reviews, phone, email_1, email_2, email_3, street, postal_code, state', { count: 'exact' })
       .eq('reported', false);
 
     if (query.trim()) {
@@ -497,6 +505,43 @@
 
         {#if selectedVenue.description}
           <p class="modal-description">{selectedVenue.description}</p>
+        {/if}
+
+        {#if selectedVenue.subtypes || selectedVenue.phone || selectedVenue.email_1 || selectedVenue.email_2 || selectedVenue.email_3 || selectedVenue.street || selectedVenue.postal_code || selectedVenue.state}
+          <dl class="modal-details">
+            {#if selectedVenue.subtypes}
+              <div class="detail-row">
+                <dt>Subtypes</dt>
+                <dd>{selectedVenue.subtypes}</dd>
+              </div>
+            {/if}
+            {#if selectedVenue.phone}
+              <div class="detail-row">
+                <dt>Phone</dt>
+                <dd>{selectedVenue.phone}</dd>
+              </div>
+            {/if}
+            {#if selectedVenue.email_1 || selectedVenue.email_2 || selectedVenue.email_3}
+              <div class="detail-row">
+                <dt>Email</dt>
+                <dd class="stacked">
+                  {#if selectedVenue.email_1}<span>{selectedVenue.email_1}</span>{/if}
+                  {#if selectedVenue.email_2}<span>{selectedVenue.email_2}</span>{/if}
+                  {#if selectedVenue.email_3}<span>{selectedVenue.email_3}</span>{/if}
+                </dd>
+              </div>
+            {/if}
+            {#if selectedVenue.street || selectedVenue.postal_code || selectedVenue.state}
+              <div class="detail-row">
+                <dt>Address</dt>
+                <dd class="stacked">
+                  {#if selectedVenue.street}<span>{selectedVenue.street}</span>{/if}
+                  {#if selectedVenue.postal_code || selectedVenue.city}<span>{[selectedVenue.postal_code, selectedVenue.city].filter(Boolean).join(' ')}</span>{/if}
+                  {#if selectedVenue.state}<span>{selectedVenue.state}</span>{/if}
+                </dd>
+              </div>
+            {/if}
+          </dl>
         {/if}
 
         {#if selectedVenue.facebook || selectedVenue.instagram || selectedVenue.linkedin || selectedVenue.twitter || selectedVenue.youtube || selectedVenue.whatsapp}
@@ -1241,6 +1286,12 @@
   .detail-row dd {
     font-size: 0.88rem;
     color: rgba(255,255,255,0.75);
+  }
+
+  .detail-row dd.stacked {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
 
   .modal-link {
