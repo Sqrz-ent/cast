@@ -433,9 +433,6 @@
               {#if venue.type}
                 <span class="card-type-pill">{venue.type}</span>
               {/if}
-              {#if venue.flagged}
-                <span class="flagged-badge">Flagged</span>
-              {/if}
             </div>
 
             <!-- Body -->
@@ -1199,16 +1196,14 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background: rgba(0,0,0,0.6);
-    color: rgba(255,255,255,0.9);
+    background: rgba(245,166,35,0.9);
+    color: #111;
     font-size: 0.58rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 3px 8px;
     border-radius: 999px;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
   }
 
   .flagged-badge {
