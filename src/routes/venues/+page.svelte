@@ -2,6 +2,7 @@
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
   import { page } from '$app/state';
+  import { fly, fade } from 'svelte/transition';
 
   type Venue = {
     id: string;
@@ -124,7 +125,7 @@
     favLoading = true;
     const { data: rows } = await supabase
       .from('venues')
-      .select('id, name, type, city, country_code, site, photo')
+      .select('id, name, type, city, country_code, site, photo, street, postal_code, state, phone, email_1, email_2, email_3, facebook, instagram, linkedin, twitter, youtube, whatsapp')
       .in('id', favorites);
     favVenues = (rows ?? []) as Venue[];
     favLoading = false;
@@ -133,8 +134,26 @@
   function removeFavorite(id: string) {
     favorites = favorites.filter(f => f !== id);
     favVenues = favVenues.filter(v => v.id !== id);
-    // Also update heart on the main grid optimistically
     localStorage.setItem('sqrz_venue_favorites', JSON.stringify(favorites));
+  }
+
+  function exportCSV() {
+    const headers = ['name','type','city','country','full_address','website','phone','email_1','email_2','email_3','facebook','instagram','linkedin','twitter','youtube','whatsapp'];
+    const esc = (v: string | null | undefined): string => {
+      if (!v) return '';
+      const s = String(v);
+      return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = favVenues.map(v => {
+      const addr = [v.street, [v.postal_code, v.city].filter(Boolean).join(' '), v.state].filter(Boolean).join(', ');
+      return [v.name, v.type, v.city, v.country_code, addr, v.site, v.phone, v.email_1, v.email_2, v.email_3, v.facebook, v.instagram, v.linkedin, v.twitter, v.youtube, v.whatsapp].map(esc).join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'sqrz-venues-export.csv'; a.click();
+    URL.revokeObjectURL(url);
   }
 
   function dismissBanner() {
@@ -909,70 +928,146 @@
 <!-- ── FAVOURITES PANEL ───────────────────────────────────────────── -->
 {#if favPanelOpen}
   <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-  <div class="fav-backdrop" onclick={(e) => { if (e.target === e.currentTarget) favPanelOpen = false; }}>
-    <div class="fav-panel" role="dialog" aria-modal="true" aria-label="My Favourites">
+  <div class="fav-backdrop" transition:fade={{ duration: 200 }} onclick={(e) => { if (e.target === e.currentTarget) favPanelOpen = false; }}>
+    <div class="fav-sheet" transition:fly={{ y: 700, duration: 320 }} role="dialog" aria-modal="true" aria-label="My Favourites">
 
-      <div class="fav-panel-header">
-        <h2 class="fav-panel-title">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-          My Favourites
-          {#if favorites.length > 0}<span class="fav-panel-count">{favorites.length}</span>{/if}
-        </h2>
-        <button class="fav-panel-close" onclick={() => favPanelOpen = false} aria-label="Close favourites">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+      <!-- Sheet header -->
+      <div class="fav-sheet-header">
+        <div class="fav-sheet-title-wrap">
+          <h2 class="fav-sheet-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            My Favourites
+            {#if favorites.length > 0}<span class="fav-sheet-count">{favorites.length}</span>{/if}
+          </h2>
+        </div>
+        <div class="fav-sheet-header-actions">
+          {#if favVenues.length > 0}
+            <button class="btn-export-csv" onclick={exportCSV}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Export CSV
+            </button>
+          {/if}
+          <button class="fav-sheet-close" onclick={() => favPanelOpen = false} aria-label="Close favourites">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
       </div>
 
-      {#if favLoading}
-        <div class="fav-panel-loading">
-          <div class="spinner"></div>
-        </div>
-      {:else if favVenues.length === 0}
-        <div class="fav-panel-empty">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-          <p>Click ♡ on any venue to save it here.</p>
-        </div>
-      {:else}
-        <ul class="fav-list">
-          {#each favVenues as venue (venue.id)}
-            <li class="fav-item">
-              <div class="fav-item-photo">
-                {#if venue.photo}
-                  <img src={venue.photo} alt={venue.name} loading="lazy" />
-                {:else}
-                  <div class="fav-photo-placeholder">
-                    <span>{venue.name.charAt(0).toUpperCase()}</span>
+      <!-- Sheet body -->
+      <div class="fav-sheet-body">
+        {#if favLoading}
+          <div class="fav-sheet-loading">
+            <div class="spinner"></div>
+          </div>
+        {:else if favVenues.length === 0}
+          <div class="fav-sheet-empty">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <p>Click ♡ on any venue to save it here.</p>
+          </div>
+        {:else}
+          <ul class="fav-grid">
+            {#each favVenues as venue (venue.id)}
+              <li class="fav-card">
+
+                <!-- Card photo -->
+                <div class="fav-card-photo">
+                  {#if venue.photo}
+                    <img src={venue.photo} alt={venue.name} loading="lazy" />
+                  {:else}
+                    <div class="fav-card-photo-placeholder">
+                      <span>{venue.name.charAt(0).toUpperCase()}</span>
+                    </div>
+                  {/if}
+                  {#if venue.type}<span class="fav-card-type-pill">{venue.type}</span>{/if}
+                </div>
+
+                <!-- Card body -->
+                <div class="fav-card-body">
+                  <div class="fav-card-top">
+                    <h3 class="fav-card-name">{venue.name}</h3>
+                    <button class="fav-card-remove" onclick={() => removeFavorite(venue.id)} title="Remove from favourites" aria-label="Remove from favourites">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      </svg>
+                    </button>
                   </div>
-                {/if}
-              </div>
-              <div class="fav-item-body">
-                <p class="fav-item-name">{venue.name}</p>
-                {#if venue.city || venue.country_code}
-                  <p class="fav-item-meta">{[venue.city, venue.country_code].filter(Boolean).join(' · ')}</p>
-                {/if}
-                {#if venue.type}
-                  <p class="fav-item-type">{venue.type}</p>
-                {/if}
-                {#if venue.site}
-                  <a href={ensureAbsolute(venue.site)} target="_blank" rel="noopener noreferrer" class="fav-item-site">
-                    {formatUrl(venue.site)}
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                  </a>
-                {/if}
-              </div>
-              <button class="fav-item-remove" onclick={() => removeFavorite(venue.id)} title="Remove from favourites" aria-label="Remove from favourites">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
-              </button>
-            </li>
-          {/each}
-        </ul>
-      {/if}
+
+                  {#if venue.city || venue.country_code}
+                    <p class="fav-card-location">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      {[venue.city, venue.country_code].filter(Boolean).join(', ')}
+                    </p>
+                  {/if}
+
+                  {#if venue.street || venue.postal_code || venue.state}
+                    <p class="fav-card-address">
+                      {[venue.street, [venue.postal_code, venue.city].filter(Boolean).join(' '), venue.state].filter(Boolean).join(', ')}
+                    </p>
+                  {/if}
+
+                  {#if venue.site}
+                    <a href={ensureAbsolute(venue.site)} target="_blank" rel="noopener noreferrer" class="fav-card-site">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      {formatUrl(venue.site)}
+                    </a>
+                  {/if}
+
+                  {#if venue.phone || venue.email_1 || venue.email_2 || venue.email_3}
+                    <div class="fav-card-contact">
+                      {#if venue.phone}<span>{venue.phone}</span>{/if}
+                      {#if venue.email_1}<span>{venue.email_1}</span>{/if}
+                      {#if venue.email_2}<span>{venue.email_2}</span>{/if}
+                      {#if venue.email_3}<span>{venue.email_3}</span>{/if}
+                    </div>
+                  {/if}
+
+                  {#if venue.facebook || venue.instagram || venue.linkedin || venue.twitter || venue.youtube || venue.whatsapp}
+                    <div class="fav-card-socials">
+                      {#if venue.facebook}
+                        <a href={ensureAbsolute(venue.facebook)} target="_blank" rel="noopener noreferrer" class="fav-social-link" title="Facebook" aria-label="Facebook">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        </a>
+                      {/if}
+                      {#if venue.instagram}
+                        <a href={ensureAbsolute(venue.instagram)} target="_blank" rel="noopener noreferrer" class="fav-social-link" title="Instagram" aria-label="Instagram">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        </a>
+                      {/if}
+                      {#if venue.linkedin}
+                        <a href={ensureAbsolute(venue.linkedin)} target="_blank" rel="noopener noreferrer" class="fav-social-link" title="LinkedIn" aria-label="LinkedIn">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        </a>
+                      {/if}
+                      {#if venue.twitter}
+                        <a href={ensureAbsolute(venue.twitter)} target="_blank" rel="noopener noreferrer" class="fav-social-link" title="X / Twitter" aria-label="X / Twitter">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                      {/if}
+                      {#if venue.youtube}
+                        <a href={ensureAbsolute(venue.youtube)} target="_blank" rel="noopener noreferrer" class="fav-social-link" title="YouTube" aria-label="YouTube">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+                        </a>
+                      {/if}
+                      {#if venue.whatsapp}
+                        <a href={ensureAbsolute(venue.whatsapp)} target="_blank" rel="noopener noreferrer" class="fav-social-link" title="WhatsApp" aria-label="WhatsApp">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                        </a>
+                      {/if}
+                    </div>
+                  {/if}
+
+                </div>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
 
     </div>
   </div>
@@ -2040,34 +2135,37 @@
     position: fixed;
     inset: 0;
     z-index: 300;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(3px);
+    background: rgba(0,0,0,0.72);
+    backdrop-filter: blur(4px);
     display: flex;
-    justify-content: flex-end;
+    align-items: flex-end;
   }
 
-  .fav-panel {
+  .fav-sheet {
     width: 100%;
-    max-width: 420px;
-    height: 100%;
-    background: #111;
-    border-left: 1px solid rgba(255,255,255,0.08);
+    height: calc(100vh - 56px);
+    background: #0e0e0e;
+    border-top: 1px solid rgba(255,255,255,0.09);
+    border-radius: 16px 16px 0 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: -16px 0 48px rgba(0,0,0,0.5);
+    box-shadow: 0 -16px 48px rgba(0,0,0,0.6);
   }
 
-  .fav-panel-header {
+  .fav-sheet-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
+    padding: 18px 28px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
     flex-shrink: 0;
+    gap: 16px;
   }
 
-  .fav-panel-title {
+  .fav-sheet-title-wrap { flex: 1; min-width: 0; }
+
+  .fav-sheet-title {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -2075,16 +2173,17 @@
     font-size: 1rem;
     font-weight: 600;
     color: #e05272;
+    white-space: nowrap;
   }
 
-  .fav-panel-count {
+  .fav-sheet-count {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 20px;
     height: 20px;
     padding: 0 6px;
-    background: rgba(224,82,114,0.2);
+    background: rgba(224,82,114,0.18);
     border: 1px solid rgba(224,82,114,0.35);
     color: #e05272;
     font-size: 0.72rem;
@@ -2093,76 +2192,105 @@
     line-height: 1;
   }
 
-  .fav-panel-close {
+  .fav-sheet-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .btn-export-csv {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 8px;
+    color: #F5A623;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .btn-export-csv:hover { background: rgba(245,166,35,0.18); border-color: rgba(245,166,35,0.5); }
+
+  .fav-sheet-close {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     background: none;
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 7px;
+    border-radius: 8px;
     color: rgba(255,255,255,0.45);
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
   }
-  .fav-panel-close:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .fav-sheet-close:hover { background: rgba(255,255,255,0.07); color: #fff; }
 
-  .fav-panel-loading {
+  .fav-sheet-body {
     flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px 40px;
+  }
+
+  .fav-sheet-loading {
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .fav-panel-empty {
-    flex: 1;
+  .fav-sheet-empty {
+    height: 260px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 16px;
-    color: rgba(255,255,255,0.2);
-    padding: 40px 24px;
+    color: rgba(255,255,255,0.18);
   }
-  .fav-panel-empty p {
+  .fav-sheet-empty p {
     font-size: 0.9rem;
     font-weight: 300;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.32);
     text-align: center;
   }
 
-  .fav-list {
+  /* Card grid */
+  .fav-grid {
     list-style: none;
-    overflow-y: auto;
-    flex: 1;
-    padding: 12px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
 
-  .fav-item {
+  .fav-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    overflow: hidden;
     display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 20px;
-    transition: background 0.12s;
+    flex-direction: column;
+    transition: border-color 0.15s;
   }
-  .fav-item:hover { background: rgba(255,255,255,0.03); }
+  .fav-card:hover { border-color: rgba(224,82,114,0.3); }
 
-  .fav-item-photo {
-    width: 56px;
-    height: 42px;
-    border-radius: 6px;
+  .fav-card-photo {
+    aspect-ratio: 16/9;
+    background: #161616;
+    position: relative;
     overflow: hidden;
     flex-shrink: 0;
-    background: #1a1a1a;
   }
-  .fav-item-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .fav-photo-placeholder {
+  .fav-card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .fav-card-photo-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
@@ -2170,75 +2298,133 @@
     justify-content: center;
     background: linear-gradient(135deg, #1a1a1a, #111);
   }
-  .fav-photo-placeholder span {
+  .fav-card-photo-placeholder span {
     font-family: Impact, sans-serif;
-    font-size: 1.2rem;
-    color: rgba(245,166,35,0.3);
+    font-size: 2.5rem;
+    color: rgba(245,166,35,0.2);
   }
 
-  .fav-item-body {
-    flex: 1;
-    min-width: 0;
+  .fav-card-type-pill {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(245,166,35,0.88);
+    color: #111;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 999px;
+  }
+
+  .fav-card-body {
+    padding: 14px 16px 16px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 6px;
+    flex: 1;
   }
 
-  .fav-item-name {
+  .fav-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+
+  .fav-card-name {
     font-family: Impact, sans-serif;
-    font-size: 0.92rem;
+    font-size: 1rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.03em;
     color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.1;
   }
 
-  .fav-item-meta {
+  .fav-card-remove {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: 1px solid rgba(224,82,114,0.25);
+    border-radius: 6px;
+    color: rgba(224,82,114,0.65);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    margin-top: 1px;
+  }
+  .fav-card-remove:hover { background: rgba(224,82,114,0.12); color: #e05272; border-color: rgba(224,82,114,0.5); }
+
+  .fav-card-location {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.45);
+  }
+  .fav-card-location svg { flex-shrink: 0; }
+
+  .fav-card-address {
     font-size: 0.74rem;
-    color: rgba(255,255,255,0.38);
+    color: rgba(255,255,255,0.32);
+    line-height: 1.4;
   }
 
-  .fav-item-type {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: rgba(245,166,35,0.7);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .fav-item-site {
+  .fav-card-site {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    font-size: 0.74rem;
-    color: rgba(245,166,35,0.65);
+    gap: 4px;
+    font-size: 0.76rem;
+    color: rgba(245,166,35,0.7);
     text-decoration: none;
     transition: color 0.12s;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 100%;
   }
-  .fav-item-site:hover { color: #F5A623; }
+  .fav-card-site:hover { color: #F5A623; }
 
-  .fav-item-remove {
-    flex-shrink: 0;
+  .fav-card-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 2px;
+  }
+  .fav-card-contact span {
+    font-size: 0.74rem;
+    color: rgba(255,255,255,0.38);
+  }
+
+  .fav-card-socials {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .fav-social-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 30px;
-    height: 30px;
-    background: none;
-    border: 1px solid rgba(224,82,114,0.25);
+    width: 28px;
+    height: 28px;
     border-radius: 6px;
-    color: rgba(224,82,114,0.6);
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    border: 1px solid rgba(255,255,255,0.09);
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: border-color 0.12s, color 0.12s, background 0.12s;
+    flex-shrink: 0;
   }
-  .fav-item-remove:hover { background: rgba(224,82,114,0.1); color: #e05272; border-color: rgba(224,82,114,0.5); }
+  .fav-social-link:hover { border-color: rgba(255,255,255,0.22); color: #fff; background: rgba(255,255,255,0.05); }
+
+  @media (max-width: 900px) { .fav-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 580px)  { .fav-grid { grid-template-columns: 1fr; } .fav-sheet-body { padding: 16px 16px 32px; } }
 
   /* ── RESPONSIVE ───────────────────────────────────────────────────── */
   @media (max-width: 900px) {
