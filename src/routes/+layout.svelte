@@ -1,5 +1,6 @@
 <script>
 	import Analytics from '$lib/Analytics.svelte';
+	import CookieConsent from '$lib/components/CookieConsent.svelte';
 	import Nav from '$lib/components/Nav.svelte';
 	import { page } from '$app/state';
 	import { getLocaleFromPathname, localizePath } from '$lib/i18n';
@@ -7,11 +8,13 @@
 	let { children } = $props();
 
 	const standaloneRoutes = ['/studio', '/kdk', '/venues'];
+	const customNavRoutes = ['/meet'];
 	const isStandalone = $derived(
 		standaloneRoutes.some(
 			(r) => page.route.id === r || (page.route.id?.startsWith(r + '/') ?? false)
 		)
 	);
+	const hasCustomNav = $derived(customNavRoutes.includes(page.route.id ?? ''));
 	const currentLocale = $derived(getLocaleFromPathname(page.url.pathname));
 
 	function hrefFor(path) {
@@ -29,8 +32,9 @@
 	/>
 </svelte:head>
 
-{#if !isStandalone}<Nav />{/if}
+{#if !isStandalone && !hasCustomNav}<Nav />{/if}
 {@render children()}
+{#if !isStandalone}<CookieConsent />{/if}
 
 <!-- ── FOOTER ────────────────────────────────────────────────────── -->
 {#if !isStandalone}
