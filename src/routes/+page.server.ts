@@ -17,7 +17,7 @@ export const load: PageServerLoad = async () => {
         skills ( name, type )
       )
     `)
-    .eq('featured_activated', true)
+    .eq('is_featured', true)
     .eq('is_published', true)
     .limit(4);
 
