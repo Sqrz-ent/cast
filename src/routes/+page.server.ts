@@ -17,8 +17,9 @@ export const load: PageServerLoad = async () => {
         skills ( name, type )
       )
     `)
-    .in('slug', ['willvilla', 'annahilbert'])
-    .eq('is_published', true);
+    .eq('featured_activated', true)
+    .eq('is_published', true)
+    .limit(4);
 
   type RawProfile = {
     slug: string;
@@ -41,10 +42,5 @@ export const load: PageServerLoad = async () => {
       .slice(0, 3),
   }));
 
-  // Ensure consistent order: willvilla first, annahilbert second
-  const ordered = ['willvilla', 'annahilbert']
-    .map((slug) => featuredProfiles.find((p) => p.slug === slug))
-    .filter(Boolean);
-
-  return { featuredProfiles: ordered };
+  return { featuredProfiles };
 };
