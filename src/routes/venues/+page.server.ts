@@ -13,7 +13,6 @@ export const load: PageServerLoad = async () => {
     supabase
       .from('locations')
       .select('name, iso_code')
-      .eq('is_active', true)
       .order('name', { ascending: true }),
     supabase
       .from('venues')
