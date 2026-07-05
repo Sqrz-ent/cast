@@ -200,26 +200,25 @@
   </div>
 </section>
 
-<!-- ── SECTION 3 — Get Paid ──────────────────────────────────────── -->
+<!-- ── SECTION 3 — Grow ──────────────────────────────────────────── -->
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
       <img src="/home_getpaid.avif" alt="Cruise ship — get paid to perform" class="feature-img section-img" />
     </div>
     <div class="feature-text">
-      <h2 class="section-headline">Get Paid<br><em>Through SQRZ</em></h2>
+      <h2 class="section-headline">Grow Your Reach,<br><em>Easily</em></h2>
       <p class="body-text">
-        Focus on your work, not your invoices. From first request to
-        secured deposit, budget allocation, and team payments — SQRZ
-        handles the operational flow, so you can focus on delivering
-        great work.
+        Focus on your craft, not your outreach. From your first Boost
+        to Pixel-powered retargeting and Grow discovery — SQRZ runs
+        the growth engine, so you can focus on getting booked.
       </p>
       <ul class="feature-list">
         {#each [
-          'Deposits secured before work begins',
-          'Budget allocated across the team',
-          'Payments released on delivery',
-          'No chasing, no awkward conversations',
+          'Boost campaigns put your profile in front of new audiences',
+          'Pixel retargeting brings back your most engaged visitors',
+          'Campaign management made easy, across every platform',
+          'Understand where — and who — your visitors are',
         ] as item}
           <li><span class="check">→</span>{item}</li>
         {/each}
