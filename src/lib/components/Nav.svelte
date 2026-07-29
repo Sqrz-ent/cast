@@ -57,9 +57,10 @@
     <div class="nav-links">
       <a href={hrefFor('/')} class="nav-link" class:active={barePath === '/'}>SQRZ</a>
       <a href={hrefFor('/grow')} class="nav-link" class:active={barePath === '/grow'}>Grow</a>
+      <!-- Hidden per request — keep route + link markup, just don't render in nav.
       <a href={hrefFor('/cast')} class="nav-link" class:active={barePath.startsWith('/cast')}>Cast</a>
       <a href={hrefFor('/blog')} class="nav-link" class:active={barePath.startsWith('/blog')}>Blog</a>
-
+      -->
     </div>
 
     <!-- Right: Auth + Hamburger -->
@@ -76,9 +77,12 @@
           {/each}
         </div>
       {/if}
+      <!-- Hidden per request — bubble opens bionic reading / language / font-size /
+      high-contrast tools. Component + i18n infra untouched, just no trigger rendered.
       <div class="nav-desktop-only">
         <AccessibilitySettings />
       </div>
+      -->
       <a href="https://dashboard.sqrz.com/login" class="nav-login nav-desktop-only">Login</a>
       <a href={joinUrl} class="nav-signup nav-desktop-only">Sign Up</a>
 
@@ -108,9 +112,10 @@
     <div class="nav-panel">
       <a href={hrefFor('/')} class="nav-panel-link" class:active={barePath === '/'} onclick={closeMenu}>SQRZ</a>
       <a href={hrefFor('/grow')} class="nav-panel-link" class:active={barePath === '/grow'} onclick={closeMenu}>Grow</a>
+      <!-- Hidden per request — keep route + link markup, just don't render in nav.
       <a href={hrefFor('/cast')} class="nav-panel-link" class:active={barePath.startsWith('/cast')} onclick={closeMenu}>Cast</a>
       <a href={hrefFor('/blog')} class="nav-panel-link" class:active={barePath.startsWith('/blog')} onclick={closeMenu}>Blog</a>
-
+      -->
       <div class="nav-panel-divider"></div>
       {#if showLanguageSwitcher}
         <div class="language-switcher language-switcher-panel" aria-label="Language">
@@ -124,10 +129,12 @@
           {/each}
         </div>
       {/if}
-      <!-- Accessibility / display settings — above login -->
+      <!-- Accessibility / display settings — above login. Hidden per request, same as
+      the desktop trigger above; component + i18n infra untouched.
       <div class="nav-panel-settings">
         <AccessibilitySettings />
       </div>
+      -->
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
       <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
     </div>

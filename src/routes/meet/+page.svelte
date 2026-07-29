@@ -298,7 +298,9 @@
 		<img src="/sqrz-logo.png" alt="SQRZ" />
 	</a>
 	<div class="meet-nav-actions">
+		<!-- Hidden per request — same accessibility/bionic-reading bubble as main Nav.
 		<AccessibilitySettings />
+		-->
 		<button type="button" class="meet-nav-cta" onclick={scrollToContact}>Meet</button>
 	</div>
 </nav>
