@@ -8,10 +8,7 @@
 	let { children } = $props();
 
 	const standaloneRoutes = ['/studio', '/kdk', '/venues'];
-	// '/' (homepage) renders its own logo-only bar — single-page layout, no
-	// nav links/menu to manage (2026-08-08). Same pattern as '/meet': the page
-	// itself renders a minimal <nav>, so the global Nav is skipped here.
-	const customNavRoutes = ['/meet', '/'];
+	const customNavRoutes = ['/meet'];
 	const isStandalone = $derived(
 		standaloneRoutes.some(
 			(r) => page.route.id === r || (page.route.id?.startsWith(r + '/') ?? false)

@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
-  import { onMount } from 'svelte';
   import type { PageData } from './$types';
   import FeatureSection from '$lib/components/FeatureSection.svelte';
 
@@ -13,12 +13,18 @@
   let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
   let refCode = $state('');
   let debounceTimer;
+  let pricingGrid: HTMLElement | undefined;
+  let activeDot = $state(0);
 
-  // Capture ?ref=CODE from the URL and persist in localStorage — this is the
-  // site's existing dynamic referral-attribution mechanism (predates this
-  // pass). Used as-is for the slug-checker section below instead of a
-  // hardcoded ref=willvilla, per the task's own instruction to prefer a
-  // dynamic mechanism when one already exists.
+  // Set --vh CSS variable for reliable mobile viewport height
+  onMount(() => {
+    const setVh = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    window.addEventListener('resize', setVh);
+    setVh();
+    return () => window.removeEventListener('resize', setVh);
+  });
+
+  // Capture ?ref=CODE from URL and persist in localStorage
   onMount(() => {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
@@ -35,12 +41,12 @@
     `https://dashboard.sqrz.com/join?slug=${username}${refCode ? `&ref=${refCode}` : ''}`
   );
 
-  // Plain join URL (no slug) — used for the pre-check "Claim your link" CTA
+  // Plain join URL (no slug) — used by static CTAs like pricing buttons
   let baseJoinUrl = $derived(
     refCode ? `https://dashboard.sqrz.com/join?ref=${refCode}` : 'https://dashboard.sqrz.com/join'
   );
 
-  // CTA button URL — uses the slug URL once available, otherwise base join URL
+  // CTA button URL — uses slug URL when available, otherwise base join URL
   let ctaUrl = $derived(status === 'available' ? joinUrl : baseJoinUrl);
 
   function onInput(e) {
@@ -52,6 +58,23 @@
     debounceTimer = setTimeout(checkUsername, 500);
   }
 
+  onMount(() => {
+    if (!pricingGrid) return;
+    const cards = Array.from(pricingGrid.querySelectorAll<HTMLElement>('.pricing-card'));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            activeDot = cards.indexOf(entry.target as HTMLElement);
+          }
+        });
+      },
+      { root: pricingGrid, threshold: 0.5 }
+    );
+    cards.forEach(card => observer.observe(card));
+    return () => observer.disconnect();
+  });
+
   async function checkUsername() {
     const { data, error } = await supabase
       .from('profiles')
@@ -60,24 +83,6 @@
       .maybeSingle();
     if (error) { status = 'idle'; return; }
     status = data ? 'taken' : 'available';
-  }
-
-  // ── FAQ (placeholder — see section below) ──────────────────────────
-  // TODO: no FAQ copy for the general homepage existed in the codebase — the
-  // only existing FAQ.svelte content is Grow-service-specific (mentions a
-  // $1,000 ad budget), which both doesn't fit a general-audience homepage
-  // FAQ and would violate "no pricing displayed anywhere" for this page.
-  // These 4 are clearly-marked placeholders; swap in real copy, then drop
-  // the "TODO: " prefixes.
-  const faqs = [
-    { q: 'TODO: What is SQRZ?', a: 'TODO — replace with real answer copy.' },
-    { q: 'TODO: How long does it take to set up my profile?', a: 'TODO — replace with real answer copy.' },
-    { q: 'TODO: Do I need any technical skills?', a: 'TODO — replace with real answer copy.' },
-    { q: 'TODO: Can I use my own domain?', a: 'TODO — replace with real answer copy.' },
-  ];
-  let openFaq = $state<number | null>(null);
-  function toggleFaq(i: number) {
-    openFaq = openFaq === i ? null : i;
   }
 </script>
 
@@ -88,24 +93,66 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 </svelte:head>
 
-<!-- ── LOGO BAR ─────────────────────────────────────────────────────
-     Single-page layout, no page-to-page nav to manage — just a static
-     logo mark for branding, no menu/dropdown. Same treatment as the
-     dashboard's Office page (logo-only top bar). -->
-<nav class="logo-bar" aria-label="SQRZ">
-  <a href="/" class="logo-bar-link" aria-label="SQRZ home">
-    <img src="/sqrz-logo.png" alt="SQRZ" class="logo-bar-img" />
-  </a>
-</nav>
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section class="hero hero-bg">
+  <div class="hero-overlay"></div>
+  <div class="container hero-inner">
 
-<!-- ── SECTION 1 — Explainer: Showcase Your Business ───────────────── -->
-<section class="feature-section light first-section">
+    <div class="hero-text">
+      <p class="eyebrow">Promote.  Book.  Get Paid!</p>
+      <h1 class="display-headline">
+        THE<br><em>LINKINBIO</em><br>
+        <span class="tight-line">THAT GETS YOU</span><br>
+        <em>BOOKED</em>
+      </h1>
+      <!-- Username availability checker -->
+      <div class="username-checker">
+        <div class="username-input-row">
+          <div class="username-input-field">
+            <input
+              type="text"
+              class="username-input"
+              placeholder="yourname"
+              value={username}
+              oninput={onInput}
+              onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
+              maxlength="30"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+            <span class="username-suffix">.sqrz.com</span>
+          </div>
+          <a href={ctaUrl} class="username-cta-btn">Claim your link →</a>
+        </div>
+        <div class="username-feedback" aria-live="polite">
+          {#if status === 'checking'}
+            <span class="status-checking">Checking…</span>
+          {:else if status === 'taken'}
+            <span class="status-taken">Already taken</span>
+          {:else if status === 'available'}
+            <a href={joinUrl} class="status-available">
+              {username}.sqrz.com is available! →
+            </a>
+          {:else if username.length > 0 && username.length < 3}
+            <span class="status-hint">At least 3 characters</span>
+          {/if}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── SECTION 1 — Showcase ─────────────────────────────────────── -->
+<section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
       <img src="/screens/_bg_01.png" alt="Sound engineer at mixing desk" class="feature-img section-img" />
     </div>
     <div class="feature-text">
-      <h2 class="section-headline">Showcase Your<br><em>Business</em></h2>
+      <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
       <p class="body-text">
         Create a powerful SQRZ profile and showcase your portfolio, services,
         and availability — all in one beautiful page designed to convert
@@ -126,38 +173,11 @@
   </div>
 </section>
 
-<!-- ── SECTION 2 — Explainer: Promote Your Offer ───────────────────── -->
+<!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
 <section class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-text">
-      <h2 class="section-headline">Promote Your<br><em>Offer</em></h2>
-      <p class="body-text">
-        Focus on your craft, not your outreach. From your first Boost
-        to Pixel-powered retargeting and Grow discovery — SQRZ runs
-        the growth engine, so you can focus on getting booked.
-      </p>
-      <ul class="feature-list">
-        {#each [
-          'Boost campaigns put your profile in front of new audiences',
-          'Pixel retargeting brings back your most engaged visitors',
-          'Campaign management made easy, across every platform',
-          'Understand where — and who — your visitors are',
-        ] as item}
-          <li><span class="check accent">→</span>{item}</li>
-        {/each}
-      </ul>
-    </div>
-    <div class="feature-visual">
-      <img src="/home_getpaid.avif" alt="Cruise ship — promote your offer" class="feature-img section-img" />
-    </div>
-  </div>
-</section>
-
-<!-- ── SECTION 3 — Explainer: Get Booked ────────────────────────────── -->
-<section class="feature-section light">
-  <div class="container feature-inner">
-    <div class="feature-text">
-      <h2 class="section-headline">Get<br><em>Booked</em></h2>
+      <h2 class="section-headline">Run Your<br><em>Booking Pipeline</em></h2>
       <p class="body-text">
         Clients don't just message you — they enter a structured flow.
         Scope, terms, collaboration, and payment move forward in one
@@ -180,8 +200,36 @@
   </div>
 </section>
 
-<!-- ── SECTION 4 — Meet the Creatives (featured profiles) ───────────────
-     Query already fixed and confirmed working — do not touch. -->
+<!-- ── SECTION 3 — Grow ──────────────────────────────────────────── -->
+<section class="feature-section light">
+  <div class="container feature-inner">
+    <div class="feature-visual">
+      <img src="/home_getpaid.avif" alt="Cruise ship — get paid to perform" class="feature-img section-img" />
+    </div>
+    <div class="feature-text">
+      <h2 class="section-headline">Grow Your Reach,<br><em>Easily</em></h2>
+      <p class="body-text">
+        Focus on your craft, not your outreach. From your first Boost
+        to Pixel-powered retargeting and Grow discovery — SQRZ runs
+        the growth engine, so you can focus on getting booked.
+      </p>
+      <ul class="feature-list">
+        {#each [
+          'Boost campaigns put your profile in front of new audiences',
+          'Pixel retargeting brings back your most engaged visitors',
+          'Campaign management made easy, across every platform',
+          'Understand where — and who — your visitors are',
+        ] as item}
+          <li><span class="check">→</span>{item}</li>
+        {/each}
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
   <div class="container">
     <p class="section-tag">Featured Profiles</p>
@@ -230,72 +278,97 @@
   </div>
 </section>
 
-<!-- ── SECTION 5 — Grow (iOS only) ──────────────────────────────────── -->
+
+<!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
 <FeatureSection />
 
-<!-- ── SECTION 6 — FAQ (placeholder copy, see script) ───────────────── -->
-<section class="faq-section dark">
+
+
+<!-- ── PRICING ───────────────────────────────────────────────────── -->
+<section class="pricing-section dark">
   <div class="container">
-    <p class="section-tag">FAQ</p>
-    <h2 class="section-headline light-text centered">Common<br><em>Questions</em></h2>
-    <div class="faq-list">
-      {#each faqs as faq, i}
-        <div class="faq-item" class:open={openFaq === i}>
-          <button class="faq-question" onclick={() => toggleFaq(i)} aria-expanded={openFaq === i}>
-            <span class="q-text">{faq.q}</span>
-            <span class="faq-arrow" class:rotated={openFaq === i}>›</span>
-          </button>
-          {#if openFaq === i}
-            <div class="faq-answer">
-              <p>{faq.a}</p>
-            </div>
-          {/if}
+    <p class="section-tag">Pricing</p>
+    <h2 class="section-headline light-text centered">Start free.<br><em>Scale when you're ready.</em></h2>
+    <div class="pricing-carousel-wrapper">
+    <div class="pricing-grid" bind:this={pricingGrid}>
+
+      <!-- Free -->
+      <div class="pricing-card">
+        <div class="plan-name">Freelancer</div>
+        <div class="plan-price">
+          <span class="price-amount">Free</span>
         </div>
+        <p class="plan-tagline">Build Your Professional Presence</p>
+        <ul class="plan-features">
+          {#each [
+            'Showcase your professional Profile and offer your services',
+            'Booking pipeline & invoicing - (E-Invoice ready)',
+            'Promote your work with Boost campaigns — $25 per activation',
+            'Do what you love & build your reputation',
+          ] as f}
+            <li><span class="feat-check">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <a href={baseJoinUrl} class="btn-primary btn-full">Join SQRZ</a>
+      </div>
+
+      <!-- Creator -->
+      <div class="pricing-card featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Creator</div>
+        <div class="plan-price">
+          <span class="price-amount">$12</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="plan-tagline">Domain, links, pixels, campaigns</p>
+        <ul class="plan-features">
+          {#each [
+            'Custom domain — own your online identity',
+            'Advanced tracking — see what drives bookings',
+            'Private links, lead capture & pixel tracking',
+            'Drive targeted traffic  - 25$ per Boost campaign',
+          ] as f}
+            <li><span class="feat-check">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <a href={baseJoinUrl} class="btn-accent btn-full">Join SQRZ</a>
+      </div>
+
+      <!-- Boost -->
+      <div class="pricing-card grow-card">
+        <div class="plan-name accent-text">Boost</div>
+        <div class="plan-price">
+          <span class="price-amount">$25</span>
+          <span class="price-period"> per campaign</span>
+        </div>
+        <p class="plan-tagline">Launch a targeted campaign</p>
+        <ul class="plan-features">
+          {#each [
+            'Promote what matters — your work, your offer, your event',
+            'Drive targeted traffic to a dedicated campaign page',
+            'Track visits, engagement, and real inquiries',
+            'Start building your own audience and demand data',
+          ] as f}
+            <li><span class="feat-check accent-text">✓</span>{f}</li>
+          {/each}
+        </ul>
+        <p class="plan-note">* Ad budget not included</p>
+        <a href={baseJoinUrl} class="btn-primary btn-full">Join SQRZ</a>
+      </div>
+
+    </div>
+    </div>
+
+    <!-- Dot indicator (mobile only) -->
+    <div class="pricing-dots">
+      {#each [0, 1, 2] as i}
+        <span class="pricing-dot" class:active={activeDot === i}></span>
       {/each}
     </div>
-  </div>
-</section>
 
-<!-- ── SECTION 7 — Claim your link (slug checker, no pricing) ───────── -->
-<section class="slug-section dark">
-  <div class="container">
-    <p class="section-tag">Claim Your Link</p>
-    <h2 class="section-headline light-text centered">Your Name.<br><em>Your SQRZ.</em></h2>
-
-    <div class="username-checker">
-      <div class="username-input-row">
-        <div class="username-input-field">
-          <input
-            type="text"
-            class="username-input"
-            placeholder="yourname"
-            value={username}
-            oninput={onInput}
-            onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
-            maxlength="30"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-          />
-          <span class="username-suffix">.sqrz.com</span>
-        </div>
-        <a href={ctaUrl} class="username-cta-btn">Claim your link →</a>
-      </div>
-      <div class="username-feedback" aria-live="polite">
-        {#if status === 'checking'}
-          <span class="status-checking">Checking…</span>
-        {:else if status === 'taken'}
-          <span class="status-taken">Already taken</span>
-        {:else if status === 'available'}
-          <a href={joinUrl} class="status-available">
-            {username}.sqrz.com is available! →
-          </a>
-        {:else if username.length > 0 && username.length < 3}
-          <span class="status-hint">At least 3 characters</span>
-        {/if}
-      </div>
-    </div>
+    <p class="grow-cta">
+      We help you set up and manage your campaigns — <a href="/grow" class="grow-cta-link">Learn more about SQRZ Grow →</a>
+    </p>
   </div>
 </section>
 
@@ -335,42 +408,56 @@
     padding: 0 40px;
   }
 
-  /* ── LOGO BAR ───────────────────────────────────────────────────── */
-  .logo-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    height: 64px;
-    display: flex;
-    align-items: center;
-    padding: 0 2rem;
-    background: rgba(8, 8, 8, 0.78);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-  }
-
-  .logo-bar-link {
-    display: inline-flex;
-    align-items: center;
-    width: 44px;
-    height: 44px;
-  }
-
-  .logo-bar-img {
-    width: 36px;
-    height: auto;
-    display: block;
-  }
-
-  /* First section sits directly under the fixed logo bar */
-  .first-section {
-    padding-top: calc(64px + 100px);
-  }
 
   /* ── BUTTONS ────────────────────────────────────────────────────── */
+  .btn-primary {
+    background: var(--accent);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius-btn);
+    padding: 10px 22px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-btn);
+    padding: 10px 22px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.35); color: var(--white); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    border: 1.5px solid rgba(0,0,0,0.2);
+    border-radius: var(--radius-btn);
+    padding: 12px 28px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: rgba(0,0,0,0.5); }
+
   .btn-accent {
     background: transparent;
     color: var(--accent);
@@ -388,7 +475,31 @@
   }
   .btn-accent:hover { background: var(--accent); color: var(--dark); }
 
+  .btn-lg { padding: 14px 32px; font-size: 0.92rem; }
+  .btn-full { width: 100%; text-align: center; margin-top: auto; }
+
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
+  .display-headline {
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: clamp(52px, 7vw, 96px);
+    line-height: 0.80;
+    letter-spacing: 0;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+
+  .display-headline em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .tight-line {
+    display: inline-block;
+    letter-spacing: -0.055em;
+    white-space: nowrap;
+  }
+
   .section-headline {
     font-family: Impact, sans-serif;
     font-weight: 700;
@@ -406,6 +517,16 @@
   .section-headline.light-text { color: var(--white); }
   .section-headline.centered { text-align: center; }
 
+  .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: block;
+  }
+
   .section-tag {
     font-size: 0.7rem;
     font-weight: 500;
@@ -416,6 +537,17 @@
     display: block;
     margin-bottom: 16px;
   }
+  .section-tag.dark-tag { color: var(--accent); }
+
+  .section-number {
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--accent-dim);
+    margin-bottom: -8px;
+  }
+  .section-number.accent { color: rgba(245,166,35,0.2); }
 
   .body-text {
     font-size: 1rem;
@@ -424,13 +556,173 @@
     color: #444444;
     margin-bottom: 28px;
   }
+  .body-text.mid-text { color: var(--mid); }
+
+  /* ── HERO ───────────────────────────────────────────────────────── */
+  .hero {
+    background: #0a0a0a;
+    padding: 164px 0 100px;
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1svh) * 100);
+  }
+
+  .hero-bg {
+    position: relative;
+    background-image: url('/screens/sqrz_home_desktop.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-text {
+    max-width: 600px;
+
+  }
+
+  @media (max-width: 768px) {
+    .hero-bg {
+      background-image: url('/screens/sqrz_live-dashboard_mobile7.png');
+    }
+
+  .hero-text {
+    width: min(80vw, 520px);
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  
+  .display-headline {
+    font-size: clamp(56px, 15vw, 82px);
+    line-height: 0.80;
+    letter-spacing: -0.04em;
+  }
+
+  .tight-line {
+    letter-spacing: -0.065em;
+  }
+
+  
+
+    /* Feature sections: text above, image below on mobile */
+    .feature-inner {
+      display: flex;
+      flex-direction: column;
+    }
+    .feature-visual {
+      order: 1;
+    }
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--mid);
+    line-height: 1.7;
+    margin: 28px 0 40px;
+    max-width: 480px;
+  }
+
+  /* ── FLOATING PROFILE CARDS ─────────────────────────────────────── */
+  .hero-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  @keyframes floatA {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes floatB {
+    0%, 100% { transform: translateY(-4px); }
+    50%       { transform: translateY(4px); }
+  }
+
+  .float-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px;
+    width: 220px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .float-card--a { animation: floatA 4s ease-in-out infinite; }
+  .float-card--b { animation: floatB 4s ease-in-out infinite 0.8s; }
+  .float-card--c { animation: floatA 4s ease-in-out infinite 1.6s; }
+
+  .fc-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .fc-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fc-name {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fc-skill {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 2px;
+  }
+
+  .fc-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .fc-badge--amber  { background: rgba(243,177,48,0.2);  color: #F3B130; }
+  .fc-badge--purple { background: rgba(168,85,247,0.2);  color: #A855F7; }
+  .fc-badge--blue   { background: rgba(56,189,248,0.2);  color: #38BDF8; }
 
   /* ── USERNAME CHECKER ───────────────────────────────────────────── */
   .username-checker {
-    margin-top: 48px;
+    margin-top: 28px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 10px;
   }
 
@@ -442,7 +734,6 @@
     border-radius: 8px;
     overflow: hidden;
     transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
     max-width: 520px;
   }
   .username-input-row:focus-within {
@@ -534,7 +825,9 @@
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
   .feature-section { padding: 100px 0; }
-  .feature-section.light { background: var(--light); }
+  .feature-section.light     { background: var(--light); }
+  .feature-section.dark      { background: var(--dark-2); }
+  .feature-section.warm-dark { background: #D4B896; }
 
   .feature-inner {
     display: grid;
@@ -542,6 +835,9 @@
     gap: 80px;
     align-items: center;
   }
+
+  .feature-inner.reverse { direction: rtl; }
+  .feature-inner.reverse > * { direction: ltr; }
 
   .feature-img {
     height: 440px;
@@ -555,6 +851,11 @@
     height: 100%;
     object-fit: cover;
     border-radius: var(--radius-card);
+  }
+
+  .dark-placeholder {
+    background: rgba(255,255,255,0.04) !important;
+    border-color: rgba(255,255,255,0.08) !important;
   }
 
   .feature-list {
@@ -574,6 +875,8 @@
     line-height: 1.5;
   }
 
+  .feature-list.dark-list li { color: var(--mid); }
+
   .check {
     color: var(--accent);
     font-family: monospace;
@@ -581,6 +884,157 @@
     margin-top: 1px;
   }
   .check.accent { color: var(--accent); }
+
+  /* ── AUDIENCE ───────────────────────────────────────────────────── */
+  .audience-section { background: var(--dark); padding: 100px 0; }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 60px;
+  }
+
+  .audience-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-card);
+    padding: 40px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .audience-card:hover { background: var(--dark-3); }
+
+  .card-accent-line {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .card-title {
+    font-family: Impact, sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .card-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--mid);
+    line-height: 1.75;
+  }
+
+  /* ── HOW IT WORKS ───────────────────────────────────────────────── */
+  .how-section { background: var(--light); padding: 100px 0; }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    margin-top: 64px;
+  }
+
+  .step-number {
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-family: Impact, sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+
+  .step-body {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #555;
+    line-height: 1.8;
+  }
+
+  /* ── WALLET ─────────────────────────────────────────────────────── */
+  .wallet-section { background: var(--dark-2); padding: 100px 0; }
+
+  .wallet-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .wallet-sub {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--mid);
+    line-height: 1.75;
+    margin: 0 0 48px;
+  }
+
+  .wallet-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .wallet-step {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 24px 28px;
+    transition: background 0.2s;
+  }
+  .wallet-step:hover { background: rgba(255,255,255,0.05); }
+
+  .ws-num {
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    min-width: 36px;
+  }
+
+  .ws-title {
+    font-family: Impact, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .ws-body {
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--mid);
+    line-height: 1.7;
+  }
+
+  .wallet-img {
+    height: 500px;
+    border-radius: var(--radius-card);
+    position: sticky;
+    top: 84px;
+  }
 
   /* ── FEATURED PROFILES ──────────────────────────────────────────── */
   .featured-section { background: var(--dark); padding: 100px 0; }
@@ -627,6 +1081,15 @@
     display: flex;
     flex-direction: column;
     gap: 7px;
+  }
+
+  .profile-card--placeholder {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .profile-card--placeholder:hover {
+    transform: none;
+    box-shadow: none;
   }
 
   .profile-name {
@@ -686,121 +1149,298 @@
     text-align: center;
   }
 
-  /* ── FAQ ────────────────────────────────────────────────────────── */
-  .faq-section { background: var(--dark-2); padding: 100px 0 120px; }
+  /* ── PRICING ────────────────────────────────────────────────────── */
+  .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
-  .faq-list {
+  .pricing-dots {
+    display: none;
+  }
+
+  .grow-cta {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .grow-cta-link {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .grow-cta-link:hover { text-decoration: underline; }
+
+  .pricing-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    align-items: start;
-    margin-top: 64px;
-  }
-
-  @media (max-width: 900px) {
-    .faq-list { grid-template-columns: 1fr; }
-  }
-
-  .faq-item {
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-    transition: border-color 0.2s;
-  }
-  .faq-item.open {
-    border-color: rgba(245,166,35,0.3);
-  }
-
-  .faq-question {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    padding: 22px 24px;
-    background: rgba(255,255,255,0.03);
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    transition: background 0.2s;
-    font-family: 'DM Sans', sans-serif;
+    margin-top: 64px;
+    align-items: stretch;
   }
-  .faq-question:hover { background: rgba(255,255,255,0.06); }
-  .faq-item.open .faq-question { background: rgba(245,166,35,0.06); }
 
-  .q-text {
-    font-size: 0.95rem;
+  .pricing-card {
+    background: var(--dark-2);
+    border: 1px solid var(--border-dark);
+    border-radius: var(--radius-card);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    height: 100%;
+  }
+
+  .pricing-card > a.btn-full {
+    margin-top: auto;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--accent);
+    background: var(--dark-3);
+    transform: scale(1.02);
+  }
+
+  .pricing-card.grow-card {
+    border-color: rgba(245,166,35,0.4);
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: var(--dark);
+    font-size: 0.6rem;
     font-weight: 500;
-    color: var(--accent);
-    line-height: 1.4;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 999px;
+    white-space: nowrap;
   }
 
-  .faq-arrow {
+  .plan-name {
+    font-family: Impact, sans-serif;
+    font-weight: 700;
     font-size: 1.4rem;
-    color: rgba(245,166,35,0.5);
-    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--white);
+  }
+  .plan-name.accent-text { color: var(--accent); }
+
+  .plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin: 4px 0;
+  }
+
+  .price-amount {
+    font-family: Impact, sans-serif;
+    font-weight: 800;
+    font-size: 2.8rem;
+    color: var(--white);
     line-height: 1;
-    transition: transform 0.25s ease, color 0.2s;
-    display: inline-block;
-    transform: rotate(90deg);
   }
-  .faq-arrow.rotated {
-    transform: rotate(270deg);
+
+  .price-period {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .plan-tagline {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--mid);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .plan-annual {
+    font-size: 0.75rem;
     color: var(--accent);
+    margin-top: -4px;
   }
 
-  .faq-answer {
-    padding: 0 24px 22px;
-    background: rgba(245,166,35,0.04);
+  .plan-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 8px 0 16px;
+    flex: 1;
   }
 
-  .faq-answer p {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 300;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.8;
-    padding-top: 4px;
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--mid);
+    line-height: 1.5;
   }
 
-  /* ── SLUG CHECKER (final CTA, no pricing) ─────────────────────────── */
-  .slug-section { background: var(--dark); padding: 100px 0 140px; text-align: center; }
+  .feat-check {
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .feat-check.accent-text { color: var(--accent); }
+
+  .plan-note {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: -8px;
+  }
+
+  .accent-text { color: var(--accent); }
+
+  /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
+  .image-placeholder {
+    background: rgba(0,0,0,0.06);
+    border: 1.5px dashed rgba(0,0,0,0.12);
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: flex-end;
+    padding: 16px;
+  }
+
+  .placeholder-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.25);
+  }
+
 
   /* ── RESPONSIVE ─────────────────────────────────────────────────── */
   @media (max-width: 900px) {
-    .feature-inner {
+    .hero-inner,
+    .feature-inner,
+    .feature-inner.reverse {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+    .hero-cards {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    .float-card {
+      width: 160px;
+      padding: 12px;
+      gap: 10px;
+    }
+    .fc-avatar { width: 36px; height: 36px; font-size: 0.78rem; }
+    .fc-name   { font-size: 0.8rem; }
+    .fc-skill  { font-size: 0.68rem; }
+    .feature-img { height: 280px; }
+    .audience-grid,
+    .steps-grid {
       grid-template-columns: 1fr;
     }
-    .feature-img { height: 280px; }
     .featured-grid { grid-template-columns: repeat(2, 1fr); }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
     .container { padding: 0 24px; }
-
-    /* Feature sections: text above, image below on mobile */
-    .feature-inner {
-      display: flex;
-      flex-direction: column;
-    }
-    .feature-visual {
-      order: 1;
-    }
-
+    .hero { padding: 184px 0 80px; }
     .username-input-row { width: 100%; max-width: none; flex-direction: column; margin-left: auto; margin-right: auto; border-radius: 8px; }
     .username-input-field { width: 100%; }
     .username-input { padding: 14px 10px 14px 18px; font-size: 16px; }
     .username-suffix { font-size: 0.82rem; padding-right: 12px; }
     .username-cta-btn { padding: 14px 22px; justify-content: center; font-size: 0.85rem; border-radius: 0; }
-
     .feature-section,
-    .featured-section,
-    .faq-section,
-    .slug-section { padding: 72px 0; }
+    .audience-section,
+    .how-section,
+    .pricing-section,
+    .featured-section { padding: 72px 0; }
 
-    .first-section {
-      padding-top: calc(64px + 48px);
+    .wallet-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .wallet-img {
+      height: 300px;
+      position: static;
+    }
+    .wallet-section { padding: 72px 0; }
+  }
+
+  @media (max-width: 768px) {
+    .pricing-section {
+      width: 100%;
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    /* Zero out the container padding inside the pricing section only */
+    .pricing-section .container {
+      width: 100%;
+      max-width: 100%;
+      padding-left: 0;
+      padding-right: 0;
+      box-sizing: border-box;
+    }
+
+    /* Wrapper clips horizontal overflow without clipping the badge above */
+    .pricing-carousel-wrapper {
+      overflow: hidden;
+    }
+
+    .pricing-grid {
+      display: flex;
+      align-items: stretch;
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 40px 5vw 16px;
+      margin: 8px 0 0;
+      gap: 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .pricing-grid::-webkit-scrollbar { display: none; }
+
+    .pricing-card {
+      scroll-snap-align: center;
+      min-width: 75vw;
+      max-width: 75vw;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      overflow: visible;
+      height: auto;
+    }
+    .pricing-card.featured { transform: none; }
+
+    .pricing-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .pricing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .pricing-dot.active {
+      background: #F3B130;
+      border-color: #F3B130;
     }
   }
 
   @media (max-width: 480px) {
-    .feature-section { padding: 56px 0; }
+    .float-card--c { display: none; }
   }
 </style>
