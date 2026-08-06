@@ -1,10 +1,17 @@
 <script lang="ts">
   let activeTab = $state(0);
 
+  // ── IMAGE SWAP POINT ──────────────────────────────────────────────
+  // Every `img` path below is a placeholder (current tablet-shaped mockups).
+  // Real iPhone screenshots come later — swapping is a one-line change per
+  // tab, just replace the path. The image-wrapper's aspect-ratio (see
+  // .image-wrapper in <style> below) was already changed from a 3:2 tablet
+  // ratio to a portrait phone ratio so a real screenshot drops in without
+  // any layout rework.
   const tabs = [
     {
       label: 'Dashboard',
-      img: '/screens/sqrz_live-dashboard_new.png',
+      img: '/screens/sqrz_live-dashboard_new.png', // TODO: swap for iPhone screenshot
       imgAlt: 'SQRZ live dashboard',
       headline: 'Your Professional\nCommand Center',
       bullets: [
@@ -15,7 +22,7 @@
     },
     {
       label: 'Office',
-      img: '/screens/sqrz_office_new.png',
+      img: '/screens/sqrz_office_new.png', // TODO: swap for iPhone screenshot
       imgAlt: 'SQRZ office',
       headline: 'Run a Structured\nBooking Pipeline',
       bullets: [
@@ -26,7 +33,7 @@
     },
     {
       label: 'Promotion',
-      img: '/screens/sqrz_boost_final.png',
+      img: '/screens/sqrz_boost_final.png', // TODO: swap for iPhone screenshot
       imgAlt: 'SQRZ promotion',
       headline: 'Promote Your Work\nIntelligently',
       bullets: [
@@ -37,7 +44,7 @@
     },
     {
       label: 'Booking Wallet',
-      img: '/screens/sqrz_wallet_final.png',
+      img: '/screens/sqrz_wallet_final.png', // TODO: swap for iPhone screenshot
       imgAlt: 'SQRZ booking wallet',
       headline: 'Payments Tied\nto Delivery',
       bullets: [
@@ -65,8 +72,8 @@
 <section class="feature-tabs-section">
   <div class="ft-container">
 
-    <p class="ft-eyebrow">Built for Professionals</p>
-    <h2 class="ft-heading">Everything you need<br><em>in one platform</em></h2>
+    <p class="ft-eyebrow">iOS Only</p>
+    <h2 class="ft-heading">Everything you need.<br><em>Only on iPhone.</em></h2>
 
     <!-- Tab strip -->
     <div class="tab-strip" role="tablist">
@@ -232,10 +239,15 @@
     pointer-events: auto;
   }
 
-  /* Right: fixed-ratio image wrapper */
+  /* Right: fixed-ratio image wrapper — portrait, sized for an iPhone
+     screenshot (was 3/2, a landscape ratio meant for the old tablet mockups).
+     object-fit: contain below means any screenshot dropped in just needs its
+     `img` path swapped (see the tabs array in <script>), no other change. */
   .image-wrapper {
     position: relative;
-    aspect-ratio: 3/2;
+    aspect-ratio: 9/16;
+    max-width: 340px;
+    margin: 0 auto;
     width: 100%;
   }
   .tab-img {
@@ -341,8 +353,7 @@
       gap: 28px;
     }
     .image-wrapper {
-      width: 120%;
-      margin-left: -10%;
+      max-width: 260px;
     }
     .tab-headline {
       font-size: 1.6rem;
