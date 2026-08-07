@@ -55,8 +55,11 @@
 
     <!-- Center: Links (desktop only) -->
     <div class="nav-links">
+      <!-- "SQRZ" and "Grow" links removed per request (2026-08-08) — nav bar,
+      logo, and every other nav item stay untouched.
       <a href={hrefFor('/')} class="nav-link" class:active={barePath === '/'}>SQRZ</a>
       <a href={hrefFor('/grow')} class="nav-link" class:active={barePath === '/grow'}>Grow</a>
+      -->
       <!-- Hidden per request — keep route + link markup, just don't render in nav.
       <a href={hrefFor('/cast')} class="nav-link" class:active={barePath.startsWith('/cast')}>Cast</a>
       <a href={hrefFor('/blog')} class="nav-link" class:active={barePath.startsWith('/blog')}>Blog</a>
@@ -110,8 +113,11 @@
     <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
     <div class="nav-backdrop" onclick={closeMenu}></div>
     <div class="nav-panel">
+      <!-- "SQRZ" and "Grow" links removed per request (2026-08-08) — nav bar,
+      logo, and every other nav item stay untouched.
       <a href={hrefFor('/')} class="nav-panel-link" class:active={barePath === '/'} onclick={closeMenu}>SQRZ</a>
       <a href={hrefFor('/grow')} class="nav-panel-link" class:active={barePath === '/grow'} onclick={closeMenu}>Grow</a>
+      -->
       <!-- Hidden per request — keep route + link markup, just don't render in nav.
       <a href={hrefFor('/cast')} class="nav-panel-link" class:active={barePath.startsWith('/cast')} onclick={closeMenu}>Cast</a>
       <a href={hrefFor('/blog')} class="nav-panel-link" class:active={barePath.startsWith('/blog')} onclick={closeMenu}>Blog</a>

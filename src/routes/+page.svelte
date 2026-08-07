@@ -1,18 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { createClient } from '@supabase/supabase-js';
-  import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
   import type { PageData } from './$types';
   import FeatureSection from '$lib/components/FeatureSection.svelte';
-
-  const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+  import UsernameChecker from '$lib/components/UsernameChecker.svelte';
 
   let { data }: { data: PageData } = $props();
 
-  let username = $state('');
-  let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
   let refCode = $state('');
-  let debounceTimer;
   let pricingGrid: HTMLElement | undefined;
   let activeDot = $state(0);
 
@@ -24,7 +18,11 @@
     return () => window.removeEventListener('resize', setVh);
   });
 
-  // Capture ?ref=CODE from URL and persist in localStorage
+  // Capture ?ref=CODE from URL and persist in localStorage. Single source of
+  // truth for referral attribution on this page — threaded into both
+  // <UsernameChecker> instances (hero + bottom) as a prop, and used directly
+  // below for the pricing buttons' baseJoinUrl, rather than each re-deriving
+  // it independently.
   onMount(() => {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
@@ -36,27 +34,10 @@
     }
   });
 
-  // Build join URL with ref appended when present
-  let joinUrl = $derived(
-    `https://dashboard.sqrz.com/join?slug=${username}${refCode ? `&ref=${refCode}` : ''}`
-  );
-
   // Plain join URL (no slug) — used by static CTAs like pricing buttons
   let baseJoinUrl = $derived(
     refCode ? `https://dashboard.sqrz.com/join?ref=${refCode}` : 'https://dashboard.sqrz.com/join'
   );
-
-  // CTA button URL — uses slug URL when available, otherwise base join URL
-  let ctaUrl = $derived(status === 'available' ? joinUrl : baseJoinUrl);
-
-  function onInput(e) {
-    username = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
-    status = 'idle';
-    clearTimeout(debounceTimer);
-    if (username.length < 3) return;
-    status = 'checking';
-    debounceTimer = setTimeout(checkUsername, 500);
-  }
 
   onMount(() => {
     if (!pricingGrid) return;
@@ -74,16 +55,6 @@
     cards.forEach(card => observer.observe(card));
     return () => observer.disconnect();
   });
-
-  async function checkUsername() {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('slug')
-      .eq('slug', username)
-      .maybeSingle();
-    if (error) { status = 'idle'; return; }
-    status = data ? 'taken' : 'available';
-  }
 </script>
 
 <svelte:head>
@@ -106,40 +77,7 @@
         <em>BOOKED</em>
       </h1>
       <!-- Username availability checker -->
-      <div class="username-checker">
-        <div class="username-input-row">
-          <div class="username-input-field">
-            <input
-              type="text"
-              class="username-input"
-              placeholder="yourname"
-              value={username}
-              oninput={onInput}
-              onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
-              maxlength="30"
-              autocomplete="off"
-              autocorrect="off"
-              autocapitalize="off"
-              spellcheck="false"
-            />
-            <span class="username-suffix">.sqrz.com</span>
-          </div>
-          <a href={ctaUrl} class="username-cta-btn">Claim your link →</a>
-        </div>
-        <div class="username-feedback" aria-live="polite">
-          {#if status === 'checking'}
-            <span class="status-checking">Checking…</span>
-          {:else if status === 'taken'}
-            <span class="status-taken">Already taken</span>
-          {:else if status === 'available'}
-            <a href={joinUrl} class="status-available">
-              {username}.sqrz.com is available! →
-            </a>
-          {:else if username.length > 0 && username.length < 3}
-            <span class="status-hint">At least 3 characters</span>
-          {/if}
-        </div>
-      </div>
+      <UsernameChecker refCode={refCode} />
     </div>
 
   </div>
@@ -369,6 +307,15 @@
     <p class="grow-cta">
       We help you set up and manage your campaigns — <a href="/grow" class="grow-cta-link">Learn more about SQRZ Grow →</a>
     </p>
+  </div>
+</section>
+
+<!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
+     Second instance of the same hero checker, same component, same
+     refCode prop — not a fork. -->
+<section class="bottom-checker-section dark">
+  <div class="container bottom-checker-inner">
+    <UsernameChecker refCode={refCode} />
   </div>
 </section>
 
@@ -718,110 +665,8 @@
   .fc-badge--purple { background: rgba(168,85,247,0.2);  color: #A855F7; }
   .fc-badge--blue   { background: rgba(56,189,248,0.2);  color: #38BDF8; }
 
-  /* ── USERNAME CHECKER ───────────────────────────────────────────── */
-  .username-checker {
-    margin-top: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .username-input-row {
-    display: flex;
-    align-items: stretch;
-    background: rgba(255,255,255,0.06);
-    border: 2px solid rgba(245,166,35,0.45);
-    border-radius: 8px;
-    overflow: hidden;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    max-width: 520px;
-  }
-  .username-input-row:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(245,166,35,0.22);
-  }
-
-  .username-input-field {
-    flex: 1;
-    display: flex;
-    align-items: stretch;
-    min-width: 0;
-  }
-
-  .username-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    padding: 19px 12px 19px 22px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--white);
-    min-width: 0;
-    touch-action: manipulation;
-  }
-  .username-input::placeholder { color: rgba(255,255,255,0.3); }
-
-  .username-suffix {
-    display: flex;
-    align-items: center;
-    padding: 0 14px 0 0;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 300;
-    color: rgba(255,255,255,0.35);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .username-cta-btn {
-    display: flex;
-    align-items: center;
-    padding: 0 22px;
-    background: var(--accent);
-    color: var(--dark);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-decoration: none;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: background 0.2s, opacity 0.2s;
-    letter-spacing: 0.01em;
-  }
-  .username-cta-btn:hover { opacity: 0.88; }
-
-  .username-feedback {
-    min-height: 20px;
-    padding-left: 4px;
-  }
-
-  .status-checking {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 0.04em;
-  }
-
-  .status-taken {
-    font-size: 0.82rem;
-    color: #e05252;
-    font-weight: 400;
-  }
-
-  .status-available {
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--accent);
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-  .status-available:hover { opacity: 0.8; }
-
-  .status-hint {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.25);
-  }
+  /* .username-* styles moved to UsernameChecker.svelte — the component now
+     owns its own scoped styles, used by both instances on this page. */
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
   .feature-section { padding: 100px 0; }
@@ -1149,6 +994,10 @@
     text-align: center;
   }
 
+  /* ── BOTTOM SLUG CHECKER ───────────────────────────────────────────── */
+  .bottom-checker-section { background: var(--dark); padding: 100px 0 120px; }
+  .bottom-checker-inner { display: flex; justify-content: center; }
+
   /* ── PRICING ────────────────────────────────────────────────────── */
   .pricing-section { background: var(--dark); padding: 100px 0 120px; }
 
@@ -1349,16 +1198,12 @@
     .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
-    .username-input-row { width: 100%; max-width: none; flex-direction: column; margin-left: auto; margin-right: auto; border-radius: 8px; }
-    .username-input-field { width: 100%; }
-    .username-input { padding: 14px 10px 14px 18px; font-size: 16px; }
-    .username-suffix { font-size: 0.82rem; padding-right: 12px; }
-    .username-cta-btn { padding: 14px 22px; justify-content: center; font-size: 0.85rem; border-radius: 0; }
     .feature-section,
     .audience-section,
     .how-section,
     .pricing-section,
-    .featured-section { padding: 72px 0; }
+    .featured-section,
+    .bottom-checker-section { padding: 72px 0; }
 
     .wallet-inner {
       grid-template-columns: 1fr;
