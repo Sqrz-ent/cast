@@ -7,8 +7,6 @@
   let { data }: { data: PageData } = $props();
 
   let refCode = $state('');
-  let pricingGrid: HTMLElement | undefined;
-  let activeDot = $state(0);
 
   // Set --vh CSS variable for reliable mobile viewport height
   onMount(() => {
@@ -20,9 +18,7 @@
 
   // Capture ?ref=CODE from URL and persist in localStorage. Single source of
   // truth for referral attribution on this page — threaded into both
-  // <UsernameChecker> instances (hero + bottom) as a prop, and used directly
-  // below for the pricing buttons' baseJoinUrl, rather than each re-deriving
-  // it independently.
+  // <UsernameChecker> instances (hero + bottom) as a prop.
   onMount(() => {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get('ref');
@@ -32,28 +28,6 @@
     } else {
       refCode = localStorage.getItem('sqrz_ref') ?? '';
     }
-  });
-
-  // Plain join URL (no slug) — used by static CTAs like pricing buttons
-  let baseJoinUrl = $derived(
-    refCode ? `https://dashboard.sqrz.com/join?ref=${refCode}` : 'https://dashboard.sqrz.com/join'
-  );
-
-  onMount(() => {
-    if (!pricingGrid) return;
-    const cards = Array.from(pricingGrid.querySelectorAll<HTMLElement>('.pricing-card'));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            activeDot = cards.indexOf(entry.target as HTMLElement);
-          }
-        });
-      },
-      { root: pricingGrid, threshold: 0.5 }
-    );
-    cards.forEach(card => observer.observe(card));
-    return () => observer.disconnect();
   });
 </script>
 
@@ -222,99 +196,12 @@
 
 
 
-<!-- ── PRICING ───────────────────────────────────────────────────── -->
-<section class="pricing-section dark">
-  <div class="container">
-    <p class="section-tag">Pricing</p>
-    <h2 class="section-headline light-text centered">Start free.<br><em>Scale when you're ready.</em></h2>
-    <div class="pricing-carousel-wrapper">
-    <div class="pricing-grid" bind:this={pricingGrid}>
-
-      <!-- Free -->
-      <div class="pricing-card">
-        <div class="plan-name">Freelancer</div>
-        <div class="plan-price">
-          <span class="price-amount">Free</span>
-        </div>
-        <p class="plan-tagline">Build Your Professional Presence</p>
-        <ul class="plan-features">
-          {#each [
-            'Showcase your professional Profile and offer your services',
-            'Booking pipeline & invoicing - (E-Invoice ready)',
-            'Promote your work with Boost campaigns — $25 per activation',
-            'Do what you love & build your reputation',
-          ] as f}
-            <li><span class="feat-check">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <a href={baseJoinUrl} class="btn-primary btn-full">Join SQRZ</a>
-      </div>
-
-      <!-- Creator -->
-      <div class="pricing-card featured">
-        <div class="plan-badge">Most Popular</div>
-        <div class="plan-name">Creator</div>
-        <div class="plan-price">
-          <span class="price-amount">$12</span>
-          <span class="price-period">/month</span>
-        </div>
-        <p class="plan-tagline">Domain, links, pixels, campaigns</p>
-        <ul class="plan-features">
-          {#each [
-            'Custom domain — own your online identity',
-            'Advanced tracking — see what drives bookings',
-            'Private links, lead capture & pixel tracking',
-            'Drive targeted traffic  - 25$ per Boost campaign',
-          ] as f}
-            <li><span class="feat-check">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <a href={baseJoinUrl} class="btn-accent btn-full">Join SQRZ</a>
-      </div>
-
-      <!-- Boost -->
-      <div class="pricing-card grow-card">
-        <div class="plan-name accent-text">Boost</div>
-        <div class="plan-price">
-          <span class="price-amount">$25</span>
-          <span class="price-period"> per campaign</span>
-        </div>
-        <p class="plan-tagline">Launch a targeted campaign</p>
-        <ul class="plan-features">
-          {#each [
-            'Promote what matters — your work, your offer, your event',
-            'Drive targeted traffic to a dedicated campaign page',
-            'Track visits, engagement, and real inquiries',
-            'Start building your own audience and demand data',
-          ] as f}
-            <li><span class="feat-check accent-text">✓</span>{f}</li>
-          {/each}
-        </ul>
-        <p class="plan-note">* Ad budget not included</p>
-        <a href={baseJoinUrl} class="btn-primary btn-full">Join SQRZ</a>
-      </div>
-
-    </div>
-    </div>
-
-    <!-- Dot indicator (mobile only) -->
-    <div class="pricing-dots">
-      {#each [0, 1, 2] as i}
-        <span class="pricing-dot" class:active={activeDot === i}></span>
-      {/each}
-    </div>
-
-    <p class="grow-cta">
-      We help you set up and manage your campaigns — <a href="/grow" class="grow-cta-link">Learn more about SQRZ Grow →</a>
-    </p>
-  </div>
-</section>
-
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
      Second instance of the same hero checker, same component, same
      refCode prop — not a fork. -->
 <section class="bottom-checker-section dark">
   <div class="container bottom-checker-inner">
+    <h2 class="section-headline light-text centered">Check Your Name<br><em>Now.</em></h2>
     <UsernameChecker refCode={refCode} />
   </div>
 </section>
@@ -357,22 +244,6 @@
 
 
   /* ── BUTTONS ────────────────────────────────────────────────────── */
-  .btn-primary {
-    background: var(--accent);
-    color: var(--dark);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    border: none;
-    border-radius: var(--radius-btn);
-    padding: 10px 22px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity 0.2s, transform 0.15s;
-    display: inline-block;
-  }
-  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-
   .btn-ghost {
     background: transparent;
     color: var(--mid);
@@ -423,7 +294,6 @@
   .btn-accent:hover { background: var(--accent); color: var(--dark); }
 
   .btn-lg { padding: 14px 32px; font-size: 0.92rem; }
-  .btn-full { width: 100%; text-align: center; margin-top: auto; }
 
   /* ── TYPOGRAPHY ─────────────────────────────────────────────────── */
   .display-headline {
@@ -996,156 +866,7 @@
 
   /* ── BOTTOM SLUG CHECKER ───────────────────────────────────────────── */
   .bottom-checker-section { background: var(--dark); padding: 100px 0 120px; }
-  .bottom-checker-inner { display: flex; justify-content: center; }
-
-  /* ── PRICING ────────────────────────────────────────────────────── */
-  .pricing-section { background: var(--dark); padding: 100px 0 120px; }
-
-  .pricing-dots {
-    display: none;
-  }
-
-  .grow-cta {
-    text-align: center;
-    margin-top: 32px;
-    font-size: 14px;
-    color: rgba(255,255,255,0.45);
-  }
-
-  .grow-cta-link {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .grow-cta-link:hover { text-decoration: underline; }
-
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 64px;
-    align-items: stretch;
-  }
-
-  .pricing-card {
-    background: var(--dark-2);
-    border: 1px solid var(--border-dark);
-    border-radius: var(--radius-card);
-    padding: 36px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-    height: 100%;
-  }
-
-  .pricing-card > a.btn-full {
-    margin-top: auto;
-  }
-
-  .pricing-card.featured {
-    border-color: var(--accent);
-    background: var(--dark-3);
-    transform: scale(1.02);
-  }
-
-  .pricing-card.grow-card {
-    border-color: rgba(245,166,35,0.4);
-  }
-
-  .plan-badge {
-    position: absolute;
-    top: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent);
-    color: var(--dark);
-    font-size: 0.6rem;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 4px 14px;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-
-  .plan-name {
-    font-family: Impact, sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--white);
-  }
-  .plan-name.accent-text { color: var(--accent); }
-
-  .plan-price {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    margin: 4px 0;
-  }
-
-  .price-amount {
-    font-family: Impact, sans-serif;
-    font-weight: 800;
-    font-size: 2.8rem;
-    color: var(--white);
-    line-height: 1;
-  }
-
-  .price-period {
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-
-  .plan-tagline {
-    font-size: 0.82rem;
-    font-weight: 400;
-    color: var(--mid);
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding-top: 12px;
-    margin-top: 4px;
-  }
-
-  .plan-annual {
-    font-size: 0.75rem;
-    color: var(--accent);
-    margin-top: -4px;
-  }
-
-  .plan-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 8px 0 16px;
-    flex: 1;
-  }
-
-  .plan-features li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 0.85rem;
-    color: var(--mid);
-    line-height: 1.5;
-  }
-
-  .feat-check {
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-  .feat-check.accent-text { color: var(--accent); }
-
-  .plan-note {
-    font-size: 0.72rem;
-    color: var(--muted);
-    font-style: italic;
-    margin-top: -8px;
-  }
-
-  .accent-text { color: var(--accent); }
+  .bottom-checker-inner { display: flex; flex-direction: column; align-items: center; }
 
   /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
   .image-placeholder {
@@ -1201,7 +922,6 @@
     .feature-section,
     .audience-section,
     .how-section,
-    .pricing-section,
     .featured-section,
     .bottom-checker-section { padding: 72px 0; }
 
@@ -1214,75 +934,6 @@
       position: static;
     }
     .wallet-section { padding: 72px 0; }
-  }
-
-  @media (max-width: 768px) {
-    .pricing-section {
-      width: 100%;
-      max-width: 100%;
-      padding-left: 0;
-      padding-right: 0;
-    }
-
-    /* Zero out the container padding inside the pricing section only */
-    .pricing-section .container {
-      width: 100%;
-      max-width: 100%;
-      padding-left: 0;
-      padding-right: 0;
-      box-sizing: border-box;
-    }
-
-    /* Wrapper clips horizontal overflow without clipping the badge above */
-    .pricing-carousel-wrapper {
-      overflow: hidden;
-    }
-
-    .pricing-grid {
-      display: flex;
-      align-items: stretch;
-      overflow-x: auto;
-      overflow-y: visible;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      padding: 40px 5vw 16px;
-      margin: 8px 0 0;
-      gap: 12px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .pricing-grid::-webkit-scrollbar { display: none; }
-
-    .pricing-card {
-      scroll-snap-align: center;
-      min-width: 75vw;
-      max-width: 75vw;
-      flex-shrink: 0;
-      box-sizing: border-box;
-      overflow: visible;
-      height: auto;
-    }
-    .pricing-card.featured { transform: none; }
-
-    .pricing-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 20px;
-    }
-    .pricing-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      background: transparent;
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .pricing-dot.active {
-      background: #F3B130;
-      border-color: #F3B130;
-    }
   }
 
   @media (max-width: 480px) {
