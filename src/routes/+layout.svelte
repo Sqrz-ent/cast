@@ -51,36 +51,14 @@
 					</p>
 				</div>
 
-				<!-- Platform -->
-				<div class="footer-col">
-					<p class="footer-col-heading">Platform</p>
-					<ul class="footer-links">
-						<li><a href={hrefFor('/')}>SQRZ</a></li>
-						<li><a href={hrefFor('/grow')}>Grow</a></li>
-						<li><a href={hrefFor('/blog')}>Blog</a></li>
-						<li><a href="/venues">Venues</a></li>
-					</ul>
-				</div>
-
-				<!-- Legal -->
-				<div class="footer-col">
+				<!-- Right — Legal (Platform and Compare columns removed) -->
+				<div class="footer-col footer-legal">
 					<p class="footer-col-heading">Legal</p>
 					<ul class="footer-links">
 						<li><a href="/privacy">Privacy Policy</a></li>
 						<li><a href="/impressum">Impressum</a></li>
 						<li><a href="/terms">Terms &amp; Conditions</a></li>
 						<li><a href="/cookies">Cookie Policy</a></li>
-					</ul>
-				</div>
-
-				<!-- Compare — col 1 -->
-				<div class="footer-col">
-					<p class="footer-col-heading">Compare</p>
-					<ul class="footer-links">
-						<li><a href={hrefFor('/compare/sqrz-vs-linktree')}>SQRZ vs Linktree</a></li>
-						<li><a href={hrefFor('/compare/sqrz-vs-komi')}>SQRZ vs Komi</a></li>
-						<li><a href={hrefFor('/compare/sqrz-vs-website')}>SQRZ vs Your Website</a></li>
-						<li><a href={hrefFor('/compare/sqrz-vs-agency')}>SQRZ vs Agency</a></li>
 					</ul>
 				</div>
 			</div>
@@ -112,12 +90,16 @@
 		padding: 80px 0 64px;
 	}
 
+	/* Flex, not grid — with just Brand + Legal left, a grid would leave the
+	   two empty tracks Platform/Compare used to occupy. space-between pushes
+	   Legal to the right edge instead of sitting next to Brand or centering. */
 	.footer-container {
 		max-width: 1160px;
 		margin: 0 auto;
 		padding: 0 40px;
-		display: grid;
-		grid-template-columns: 2fr 1fr 1fr 1fr;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
 		gap: 48px;
 	}
 
@@ -192,37 +174,20 @@
 		visibility: hidden;
 	}
 
-	/* Responsive */
-	@media (max-width: 1024px) {
-		.footer-container {
-			grid-template-columns: 2fr 1fr 1fr;
-			gap: 40px;
-		}
-	}
-
+	/* Responsive — only two flex items now (Brand, Legal), so a single stack
+	   breakpoint is enough; the old 1024px/480px column-count steps no longer
+	   apply now that this isn't a grid. */
 	@media (max-width: 860px) {
 		.footer-container {
-			grid-template-columns: 1fr 1fr;
+			flex-direction: column;
 			gap: 40px;
 			padding: 0 24px;
-		}
-		.footer-brand {
-			grid-column: 1 / -1;
-		}
-		.footer-col-heading-spacer {
-			display: none;
 		}
 		.footer-top {
 			padding: 60px 0 48px;
 		}
 		.footer-bottom {
 			padding: 20px 24px;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.footer-container {
-			grid-template-columns: 1fr;
 		}
 	}
 </style>
