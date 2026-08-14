@@ -1,33 +1,83 @@
 <script lang="ts">
   // Slug availability checker — used twice on the homepage (hero + bottom of
-  // page, below pricing). One component, one implementation; `refCode` is
-  // threaded in as a prop from the page's existing ?ref=/localStorage capture
-  // rather than re-captured here, so both instances always agree with the
-  // rest of the page on attribution.
+  // page, below pricing). One component, one implementation.
+  //
+  // Beta gatekeeping (2026-08-14): self-serve signup is intentionally
+  // unreachable from the marketing page — an "available" slug no longer
+  // redirects to dashboard.sqrz.com/join. Instead it opens a popup that
+  // captures interest (slug + a field or two about ad budget) into
+  // beta_interest_submissions. Referral capture (sqrz_ref / ?ref=) is
+  // dropped from this flow entirely — it has nothing left to attach to.
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
 
   const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 
-  let { refCode = '' }: { refCode?: string } = $props();
-
   let username = $state('');
   let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
   let debounceTimer: ReturnType<typeof setTimeout>;
 
-  // Build join URL with ref appended when present
-  let joinUrl = $derived(
-    `https://dashboard.sqrz.com/join?slug=${username}${refCode ? `&ref=${refCode}` : ''}`
-  );
+  // ── Interest popup ──────────────────────────────────────────────────────
+  // Field set is TBD beyond the ad-budget question — this list is the only
+  // thing to touch when more fields are added. `column` = writes straight to
+  // a real beta_interest_submissions column; omit it and the value lands in
+  // the `extra` jsonb catch-all under `key` instead, so new fields don't need
+  // a migration before they can be captured.
+  type InterestField = {
+    key: string;
+    label: string;
+    placeholder?: string;
+    required?: boolean;
+    column?: 'ad_budget';
+  };
+  const interestFields: InterestField[] = [
+    {
+      key: 'ad_budget',
+      label: 'Monthly advertising budget',
+      placeholder: 'e.g. $1,000/mo',
+      required: true,
+      column: 'ad_budget'
+    }
+  ];
 
-  // CTA button URL — uses slug URL once available, otherwise base join URL
-  let ctaUrl = $derived(
-    status === 'available'
-      ? joinUrl
-      : refCode
-        ? `https://dashboard.sqrz.com/join?ref=${refCode}`
-        : 'https://dashboard.sqrz.com/join'
-  );
+  let showPopup = $state(false);
+  let claimedSlug = $state('');
+  let fieldValues = $state<Record<string, string>>({});
+  let popupState = $state('form'); // 'form' | 'submitting' | 'success' | 'error'
+
+  function openPopup() {
+    claimedSlug = username;
+    fieldValues = Object.fromEntries(interestFields.map((f) => [f.key, '']));
+    popupState = 'form';
+    showPopup = true;
+  }
+
+  function closePopup() {
+    showPopup = false;
+    if (popupState === 'success') {
+      // Nothing left to claim self-serve — don't leave the checker sitting on
+      // "available" once interest has been captured.
+      username = '';
+      status = 'idle';
+    }
+  }
+
+  async function submitInterest(e: SubmitEvent) {
+    e.preventDefault();
+    popupState = 'submitting';
+
+    const row: Record<string, unknown> = { slug: claimedSlug };
+    const extra: Record<string, string> = {};
+    for (const field of interestFields) {
+      const value = fieldValues[field.key] ?? '';
+      if (field.column) row[field.column] = value || null;
+      else if (value) extra[field.key] = value;
+    }
+    if (Object.keys(extra).length) row.extra = extra;
+
+    const { error } = await supabase.from('beta_interest_submissions').insert(row);
+    popupState = error ? 'error' : 'success';
+  }
 
   function onInput(e) {
     username = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
@@ -58,7 +108,7 @@
         placeholder="yourname"
         value={username}
         oninput={onInput}
-        onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') window.location.href = joinUrl; }}
+        onkeydown={(e) => { if (e.key === 'Enter' && status === 'available') openPopup(); }}
         maxlength="30"
         autocomplete="off"
         autocorrect="off"
@@ -67,7 +117,9 @@
       />
       <span class="username-suffix">.sqrz.com</span>
     </div>
-    <a href={ctaUrl} class="username-cta-btn">Claim your link →</a>
+    <button type="button" class="username-cta-btn" disabled={status !== 'available'} onclick={openPopup}>
+      Claim your link →
+    </button>
   </div>
   <div class="username-feedback" aria-live="polite">
     {#if status === 'checking'}
@@ -75,14 +127,52 @@
     {:else if status === 'taken'}
       <span class="status-taken">Already taken</span>
     {:else if status === 'available'}
-      <a href={joinUrl} class="status-available">
+      <button type="button" class="status-available" onclick={openPopup}>
         {username}.sqrz.com is available! →
-      </a>
+      </button>
     {:else if username.length > 0 && username.length < 3}
       <span class="status-hint">At least 3 characters</span>
     {/if}
   </div>
 </div>
+
+{#if showPopup}
+  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+  <div class="popup-backdrop" onclick={closePopup}></div>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="popup-title">
+    <button type="button" class="popup-close" aria-label="Close" onclick={closePopup}>✕</button>
+
+    {#if popupState === 'success'}
+      <p class="popup-slug">{claimedSlug}.sqrz.com</p>
+      <h2 id="popup-title" class="popup-title">You're on the list</h2>
+      <p class="popup-body">We'll be in touch about locking in your link.</p>
+      <button type="button" class="popup-submit" onclick={closePopup}>Close</button>
+    {:else}
+      <p class="popup-slug">{claimedSlug}.sqrz.com is available</p>
+      <h2 id="popup-title" class="popup-title">Tell us a bit more</h2>
+      <form onsubmit={submitInterest}>
+        {#each interestFields as field (field.key)}
+          <label class="popup-field">
+            <span class="popup-field-label">{field.label}</span>
+            <input
+              type="text"
+              class="popup-field-input"
+              placeholder={field.placeholder}
+              required={field.required}
+              bind:value={fieldValues[field.key]}
+            />
+          </label>
+        {/each}
+        {#if popupState === 'error'}
+          <p class="popup-error">Something went wrong — please try again.</p>
+        {/if}
+        <button type="submit" class="popup-submit" disabled={popupState === 'submitting'}>
+          {popupState === 'submitting' ? 'Submitting…' : 'Submit'}
+        </button>
+      </form>
+    {/if}
+  </div>
+{/if}
 
 <style>
   .username-checker {
@@ -155,8 +245,11 @@
     flex-shrink: 0;
     transition: background 0.2s, opacity 0.2s;
     letter-spacing: 0.01em;
+    border: none;
+    cursor: pointer;
   }
   .username-cta-btn:hover { opacity: 0.88; }
+  .username-cta-btn:disabled { opacity: 0.4; cursor: default; }
 
   .username-feedback {
     min-height: 20px;
@@ -181,6 +274,11 @@
     color: var(--accent);
     text-decoration: none;
     transition: opacity 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
   }
   .status-available:hover { opacity: 0.8; }
 
@@ -196,4 +294,116 @@
     .username-suffix { font-size: 0.82rem; padding-right: 12px; }
     .username-cta-btn { padding: 14px 22px; justify-content: center; font-size: 0.85rem; border-radius: 0; }
   }
+
+  /* ── Popup ────────────────────────────────────────────────────────── */
+  .popup-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+  }
+
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 201;
+    width: 90%;
+    max-width: 420px;
+    background: #141414;
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 12px;
+    padding: 32px 28px 28px;
+    box-sizing: border-box;
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 6px;
+    line-height: 1;
+  }
+  .popup-close:hover { color: rgba(255,255,255,0.8); }
+
+  .popup-slug {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 6px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .popup-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--white);
+    margin: 0 0 8px;
+  }
+
+  .popup-body {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    margin: 0 0 4px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .popup-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  .popup-field-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.55);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .popup-field-input {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .popup-field-input:focus { border-color: var(--accent); }
+  .popup-field-input::placeholder { color: rgba(255,255,255,0.25); }
+
+  .popup-error {
+    font-size: 0.8rem;
+    color: #e05252;
+    margin: 14px 0 0;
+  }
+
+  .popup-submit {
+    display: block;
+    width: 100%;
+    margin-top: 22px;
+    padding: 13px;
+    background: var(--accent);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .popup-submit:hover { opacity: 0.88; }
+  .popup-submit:disabled { opacity: 0.5; cursor: default; }
 </style>

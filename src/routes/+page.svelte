@@ -6,8 +6,6 @@
 
   let { data }: { data: PageData } = $props();
 
-  let refCode = $state('');
-
   // Set --vh CSS variable for reliable mobile viewport height
   onMount(() => {
     const setVh = () => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
@@ -16,19 +14,8 @@
     return () => window.removeEventListener('resize', setVh);
   });
 
-  // Capture ?ref=CODE from URL and persist in localStorage. Single source of
-  // truth for referral attribution on this page — threaded into both
-  // <UsernameChecker> instances (hero + bottom) as a prop.
-  onMount(() => {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
-    if (ref) {
-      refCode = ref;
-      localStorage.setItem('sqrz_ref', ref);
-    } else {
-      refCode = localStorage.getItem('sqrz_ref') ?? '';
-    }
-  });
+  // sqrz_ref/?ref= capture removed (2026-08-14) — it existed solely to feed
+  // <UsernameChecker>'s referral param, which no longer redirects anywhere.
 </script>
 
 <svelte:head>
@@ -51,7 +38,7 @@
         <em>BOOKED</em>
       </h1>
       <!-- Username availability checker -->
-      <UsernameChecker refCode={refCode} />
+      <UsernameChecker />
     </div>
 
   </div>
@@ -197,12 +184,11 @@
 
 
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
-     Second instance of the same hero checker, same component, same
-     refCode prop — not a fork. -->
+     Second instance of the same hero checker, same component — not a fork. -->
 <section class="bottom-checker-section dark">
   <div class="container bottom-checker-inner">
     <h2 class="section-headline light-text centered">Check Your Name<br><em>Now.</em></h2>
-    <UsernameChecker refCode={refCode} />
+    <UsernameChecker />
   </div>
 </section>
 
