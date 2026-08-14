@@ -36,13 +36,18 @@
     },
   ];
 
-  let { half = null } = $props();
+  // items: optional override for allFaqs above, so other pages (e.g. the
+  // homepage FAQ section) can reuse this component's accordion + styling
+  // with their own Q&A content instead of /grow's. Omit it to keep the
+  // original /grow behavior exactly as it was.
+  let { half = null, items = null } = $props();
 
-  const faqs = $derived(
-    half === 'first' ? allFaqs.slice(0, 4) :
-    half === 'last'  ? allFaqs.slice(4) :
-    allFaqs
-  );
+  const faqs = $derived.by(() => {
+    const source = items ?? allFaqs;
+    if (half === 'first') return source.slice(0, 4);
+    if (half === 'last') return source.slice(4);
+    return source;
+  });
 
   let openIndex = $state(null);
 

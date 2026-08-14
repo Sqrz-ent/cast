@@ -4,8 +4,31 @@
   import UsernameChecker from '$lib/components/UsernameChecker.svelte';
   import PhoneFrame from '$lib/components/PhoneFrame.svelte';
   import ExplainerTabBar from '$lib/components/ExplainerTabBar.svelte';
+  import FAQ from '$lib/components/FAQ.svelte';
 
   let { data }: { data: PageData } = $props();
+
+  // TODO(copy): placeholder Q&A — replace with real homepage FAQ copy before
+  // launch. Reuses FAQ.svelte (built for /grow) via its `items` prop rather
+  // than /grow's own hardcoded questions.
+  const homeFaqs = [
+    {
+      q: 'Placeholder question one — replace before launch?',
+      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+    },
+    {
+      q: 'Placeholder question two — replace before launch?',
+      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+    },
+    {
+      q: 'Placeholder question three — replace before launch?',
+      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+    },
+    {
+      q: 'Placeholder question four — replace before launch?',
+      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+    },
+  ];
 
   // Set --vh CSS variable for reliable mobile viewport height
   onMount(() => {
@@ -167,6 +190,10 @@
   </div>
 </section>
 
+<!-- ── FAQ ──────────────────────────────────────────────────────────
+     Reuses FAQ.svelte (built for /grow) via its `items` prop — see the
+     TODO on homeFaqs above, placeholder copy until real Q&A is written. -->
+<FAQ items={homeFaqs} />
 
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
      Second instance of the same hero checker, same component — not a fork. -->
