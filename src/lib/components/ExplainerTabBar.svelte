@@ -16,8 +16,19 @@
   let visible = $state(false);
   let activeId = $state<string>(tabs[0].id);
 
+  // #explainer-wrap now scrolls horizontally (scroll-snap carousel, see
+  // +page.svelte) — jumping to a section means scrolling the wrap
+  // sideways, not scrolling the page down to it. Computed via
+  // getBoundingClientRect deltas rather than el.offsetLeft, since offsetLeft
+  // is relative to the nearest *positioned* ancestor (not necessarily the
+  // wrap) and scrollIntoView's block/inline options proved less predictable
+  // cross-browser inside a nested horizontal scroller.
   function scrollToSection(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const wrap = document.getElementById('explainer-wrap');
+    const el = document.getElementById(id);
+    if (!wrap || !el) return;
+    const delta = el.getBoundingClientRect().left - wrap.getBoundingClientRect().left;
+    wrap.scrollTo({ left: wrap.scrollLeft + delta, behavior: 'smooth' });
   }
 
   onMount(() => {
@@ -25,27 +36,32 @@
     if (!wrap) return;
 
     // Bar visibility: on screen only while the 4-section block itself is on
-    // screen. The -2px rootMargin matters: the hero above it is set to
-    // exactly 100vh, so at initial load #explainer-wrap's top edge exactly
-    // touches the viewport's bottom edge with zero-area overlap — Chromium's
-    // IntersectionObserver reports that hairline touch as isIntersecting:true
-    // at threshold 0, which flashed the bar on over the hero before any
-    // scrolling happened. Shrinking the root by 2px requires real overlap.
+    // screen — vertical intersection against the page viewport, unrelated to
+    // the block's own internal horizontal scrolling. The -2px rootMargin
+    // matters: the hero above it is set to exactly 100vh, so at initial load
+    // #explainer-wrap's top edge exactly touches the viewport's bottom edge
+    // with zero-area overlap — Chromium's IntersectionObserver reports that
+    // hairline touch as isIntersecting:true at threshold 0, which flashed
+    // the bar on over the hero before any scrolling happened. Shrinking the
+    // root by 2px requires real overlap.
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => { visible = entry.isIntersecting; },
       { threshold: 0, rootMargin: '-2px 0px -2px 0px' }
     );
     visibilityObserver.observe(wrap);
 
-    // Active-tab scroll-spy: whichever section is crossing the viewport's
-    // middle band wins — standard "-45% top/bottom" scroll-spy margin trick.
+    // Active-tab scroll-spy: horizontal now — root is the carousel itself
+    // (not the page viewport), and the -45% margins shrink the left/right
+    // edges instead of top/bottom, so whichever slide is centered in the
+    // carousel's visible width wins as the user swipes/scrolls sideways
+    // through it or taps a tab.
     const spyObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) activeId = entry.target.id;
         }
       },
-      { rootMargin: '-45% 0px -45% 0px', threshold: 0 }
+      { root: wrap, rootMargin: '0px -45% 0px -45%', threshold: 0 }
     );
     tabs.forEach((tab) => {
       const el = document.getElementById(tab.id);

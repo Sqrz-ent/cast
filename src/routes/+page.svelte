@@ -47,9 +47,14 @@
 
 <!-- ── EXPLAINER SECTIONS (Showcase / Pipeline / Grow / Notifications) ─────
      2026-08-14 "let the phone do the explaining" pass, extended same day
-     to a 4th section + a sticky scoped tab bar (ExplainerTabBar.svelte).
-     Wrapper div id is the IntersectionObserver boundary the tab bar uses
-     to know when it's on screen — keep the id if this block is restructured. -->
+     to a 4th section + a sticky scoped tab bar (ExplainerTabBar.svelte), then
+     again same day to a horizontal scroll-snap carousel (see #explainer-wrap
+     CSS below) — swipe/scroll sideways through the 4 sections instead of
+     scrolling down past them. Wrapper div id is doing double duty for
+     ExplainerTabBar: it's the IntersectionObserver boundary for bar
+     visibility (vertical, against the page) AND the scrollable element the
+     bar scrolls horizontally + scroll-spies on tap/swipe. Keep the id if
+     this block is restructured. -->
 <div id="explainer-wrap">
 
 <!-- ── SECTION 1 — Showcase ───────────────────────────────────────── -->
@@ -505,12 +510,39 @@
      owns its own scoped styles, used by both instances on this page. */
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
-  /* scroll-margin-top keeps anchor jumps (from ExplainerTabBar or a direct
-     #hash link) from landing under the fixed top Nav (64px + breathing room). */
+  /* scroll-margin-top keeps anchor jumps (from a direct #hash link) from
+     landing under the fixed top Nav (64px + breathing room) — no longer used
+     by ExplainerTabBar itself (that now scrolls #explainer-wrap horizontally,
+     see below), left in case something else links to #showcase etc. directly. */
   .feature-section { padding: 100px 0; scroll-margin-top: 84px; }
   .feature-section.light     { background: var(--light); }
   .feature-section.dark      { background: var(--dark-2); }
   .feature-section.warm-dark { background: #D4B896; }
+
+  /* Horizontal scroll-snap carousel (2026-08-14) — #explainer-wrap holds the
+     4 explainer sections side by side instead of stacked; each is one
+     full-width "page" you swipe/scroll sideways between, like swiping
+     between app screens (reinforces the same "preview of the app" feel as
+     the bottom tab bar). Scoped to just this block — the page's vertical
+     flow around it (Hero → this block → Meet the Creatives) is untouched.
+     Height isn't hardcoded: flex's default align-items:stretch sizes every
+     slide to the tallest one, same as when they were stacked vertically. */
+  #explainer-wrap {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+  #explainer-wrap::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+  #explainer-wrap > .feature-section {
+    flex: 0 0 100%;
+    width: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
 
   .feature-inner {
     display: grid;
