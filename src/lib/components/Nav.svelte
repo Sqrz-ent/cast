@@ -86,8 +86,14 @@
         <AccessibilitySettings />
       </div>
       -->
+      <!-- Login/Sign Up removed from nav per request (2026-08-14) — steering
+      traffic to the iOS app instead of web signup. /login and /join stay live
+      and reachable directly; this is a nav-surfacing change only, not a route
+      removal. joinUrl/hrefFor logic above and the anchors themselves are kept
+      commented (not deleted) in case this needs to come back.
       <a href="https://dashboard.sqrz.com/login" class="nav-login nav-desktop-only">Login</a>
       <a href={joinUrl} class="nav-signup nav-desktop-only">Sign Up</a>
+      -->
 
       <!-- Hamburger / Close (mobile only) -->
       <button
@@ -141,8 +147,11 @@
         <AccessibilitySettings />
       </div>
       -->
+      <!-- Login/Sign Up removed from nav per request (2026-08-14) — see the
+      matching desktop comment above.
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
       <a href={joinUrl} class="nav-panel-signup" onclick={closeMenu}>Sign Up</a>
+      -->
     </div>
   {/if}
 </nav>
