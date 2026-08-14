@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
-  import FeatureSection from '$lib/components/FeatureSection.svelte';
   import UsernameChecker from '$lib/components/UsernameChecker.svelte';
+  import PhoneFrame from '$lib/components/PhoneFrame.svelte';
+  import ExplainerTabBar from '$lib/components/ExplainerTabBar.svelte';
 
   let { data }: { data: PageData } = $props();
 
@@ -44,89 +45,73 @@
   </div>
 </section>
 
-<!-- ── SECTION 1 — Showcase ─────────────────────────────────────── -->
-<section class="feature-section light">
+<!-- ── EXPLAINER SECTIONS (Showcase / Pipeline / Grow / Notifications) ─────
+     2026-08-14 "let the phone do the explaining" pass, extended same day
+     to a 4th section + a sticky scoped tab bar (ExplainerTabBar.svelte).
+     Wrapper div id is the IntersectionObserver boundary the tab bar uses
+     to know when it's on screen — keep the id if this block is restructured. -->
+<div id="explainer-wrap">
+
+<!-- ── SECTION 1 — Showcase ───────────────────────────────────────── -->
+<section id="showcase" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <img src="/screens/_bg_01.png" alt="Sound engineer at mixing desk" class="feature-img section-img" />
+      <PhoneFrame label="Profile Screen" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
-      <p class="body-text">
-        Create a powerful SQRZ profile and showcase your portfolio, services,
-        and availability — all in one beautiful page designed to convert
-        visitors into long-term clients. No website builder, no plugins,
-        no maintenance.
-      </p>
-      <ul class="feature-list">
-        {#each [
-          'Portfolio, services & availability in one place',
-          'Designed to convert visitors into clients',
-          'Live in minutes — no tech skills required',
-          'Your own domain, your own brand',
-        ] as item}
-          <li><span class="check">→</span>{item}</li>
-        {/each}
-      </ul>
+      <p class="section-tagline">One profile. Every gig starts here.</p>
     </div>
   </div>
 </section>
 
 <!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
-<section class="feature-section light">
+<section id="pipeline" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-text">
       <h2 class="section-headline">Run Your<br><em>Booking Pipeline</em></h2>
-      <p class="body-text">
-        Clients don't just message you — they enter a structured flow.
-        Scope, terms, collaboration, and payment move forward in one
-        clear system.
-      </p>
-      <ul class="feature-list">
-        {#each [
-          'Structured booking requests — no back-and-forth',
-          'Defined scope and terms before any commitment',
-          'Collaboration handled inside one workflow',
-          'Payments move with the project',
-        ] as item}
-          <li><span class="check accent">→</span>{item}</li>
-        {/each}
-      </ul>
+      <p class="section-tagline">Bookings that move themselves forward.</p>
     </div>
     <div class="feature-visual">
-      <img src="/screens/_grow_bg_01.png" alt="Stage and crowd at live show" class="feature-img section-img" />
+      <PhoneFrame label="Bookings Screen" />
     </div>
   </div>
 </section>
 
 <!-- ── SECTION 3 — Grow ──────────────────────────────────────────── -->
-<section class="feature-section light">
+<section id="grow" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <img src="/home_getpaid.avif" alt="Cruise ship — get paid to perform" class="feature-img section-img" />
+      <PhoneFrame label="Grow Screen" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Grow Your Reach,<br><em>Easily</em></h2>
-      <p class="body-text">
-        Focus on your craft, not your outreach. From your first Boost
-        to Pixel-powered retargeting and Grow discovery — SQRZ runs
-        the growth engine, so you can focus on getting booked.
-      </p>
-      <ul class="feature-list">
-        {#each [
-          'Boost campaigns put your profile in front of new audiences',
-          'Pixel retargeting brings back your most engaged visitors',
-          'Campaign management made easy, across every platform',
-          'Understand where — and who — your visitors are',
-        ] as item}
-          <li><span class="check">→</span>{item}</li>
-        {/each}
-      </ul>
+      <p class="section-tagline">Get seen. Get booked. Automatically.</p>
     </div>
   </div>
 </section>
 
+<!-- ── SECTION 4 — Notifications ────────────────────────────────────
+     Added 2026-08-14 alongside the tab bar. Picked over a Leads/chat or
+     a second Grow-campaigns section because both of those are already
+     covered (Pipeline + Grow above) — push alerts are the one shipped,
+     genuinely uncovered feature, and the mockup itself doubles as the
+     clearest "this is a real app" visual of the four. -->
+<section id="notifications" class="feature-section light">
+  <div class="container feature-inner">
+    <div class="feature-text">
+      <h2 class="section-headline">Know The Moment<br><em>It Happens</em></h2>
+      <p class="section-tagline">Push alerts for leads, messages, and campaign updates.</p>
+    </div>
+    <div class="feature-visual">
+      <PhoneFrame label="Notifications Screen" />
+    </div>
+  </div>
+</section>
 
+</div>
+
+<ExplainerTabBar />
 
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">
@@ -176,11 +161,6 @@
     </div>
   </div>
 </section>
-
-
-<!-- ── FEATURE TABS ────────────────────────────────────────────────── -->
-<FeatureSection />
-
 
 
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
@@ -525,7 +505,9 @@
      owns its own scoped styles, used by both instances on this page. */
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
-  .feature-section { padding: 100px 0; }
+  /* scroll-margin-top keeps anchor jumps (from ExplainerTabBar or a direct
+     #hash link) from landing under the fixed top Nav (64px + breathing room). */
+  .feature-section { padding: 100px 0; scroll-margin-top: 84px; }
   .feature-section.light     { background: var(--light); }
   .feature-section.dark      { background: var(--dark-2); }
   .feature-section.warm-dark { background: #D4B896; }
@@ -540,51 +522,17 @@
   .feature-inner.reverse { direction: rtl; }
   .feature-inner.reverse > * { direction: ltr; }
 
-  .feature-img {
-    height: 440px;
-    border-radius: var(--radius-card);
-    width: 100%;
-  }
-
-  .section-img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius-card);
-  }
-
-  .dark-placeholder {
-    background: rgba(255,255,255,0.04) !important;
-    border-color: rgba(255,255,255,0.08) !important;
-  }
-
-  .feature-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 8px;
-  }
-
-  .feature-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 0.9rem;
-    color: #444444;
+  /* One-line tagline replacing the old paragraph+bullet-list copy in the
+     three explainer sections (2026-08-14 "let the phone do the explaining"
+     pass) — the phone frame carries the rest. */
+  .section-tagline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
     line-height: 1.5;
+    color: #444444;
+    margin: 0;
   }
-
-  .feature-list.dark-list li { color: var(--mid); }
-
-  .check {
-    color: var(--accent);
-    font-family: monospace;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-  .check.accent { color: var(--accent); }
 
   /* ── AUDIENCE ───────────────────────────────────────────────────── */
   .audience-section { background: var(--dark); padding: 100px 0; }
@@ -895,7 +843,6 @@
     .fc-avatar { width: 36px; height: 36px; font-size: 0.78rem; }
     .fc-name   { font-size: 0.8rem; }
     .fc-skill  { font-size: 0.68rem; }
-    .feature-img { height: 280px; }
     .audience-grid,
     .steps-grid {
       grid-template-columns: 1fr;
