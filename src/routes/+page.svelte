@@ -55,7 +55,7 @@
   <div class="container hero-inner">
 
     <div class="hero-text">
-      <p class="eyebrow">Promote.  Book.  Get Paid!</p>
+      <p class="eyebrow">Advertise Smarter. Book More.</p>
       <h1 class="display-headline">
         THE<br><em>LINKINBIO</em><br>
         <span class="tight-line">THAT GETS YOU</span><br>
@@ -193,7 +193,7 @@
 <!-- ── FAQ ──────────────────────────────────────────────────────────
      Reuses FAQ.svelte (built for /grow) via its `items` prop — see the
      TODO on homeFaqs above, placeholder copy until real Q&A is written. -->
-<FAQ items={homeFaqs} />
+<FAQ items={homeFaqs} light />
 
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
      Second instance of the same hero checker, same component — not a fork. -->

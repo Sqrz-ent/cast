@@ -40,7 +40,12 @@
   // homepage FAQ section) can reuse this component's accordion + styling
   // with their own Q&A content instead of /grow's. Omit it to keep the
   // original /grow behavior exactly as it was.
-  let { half = null, items = null } = $props();
+  //
+  // light: optional cream/dark-text theme (2026-08-14, added for the
+  // homepage FAQ instance to match its popup/tab bar). Default false keeps
+  // /grow's original dark theme exactly as it was — /grow wasn't part of
+  // that ask and its FAQ content is real, live copy, not placeholder.
+  let { half = null, items = null, light = false } = $props();
 
   const faqs = $derived.by(() => {
     const source = items ?? allFaqs;
@@ -56,7 +61,7 @@
   }
 </script>
 
-<section class="faq-section">
+<section class="faq-section" class:light>
   <div class="container">
     <p class="section-tag">FAQ</p>
     <h2 class="section-headline centered">Common<br><em>questions</em></h2>
@@ -83,6 +88,12 @@
     background: #1a1a1a;
     padding: 100px 0 120px;
   }
+  /* light theme (2026-08-14, homepage only — see the `light` prop comment
+     in <script>): cream bg (dashboard's --bg #f5f0eb) + dark-text variants
+     for everything that was styled white/light-on-dark. Orange-based rules
+     below (.q-text, .faq-arrow, .faq-item.open, .faq-answer bg) are left
+     alone — they already read fine on either background. */
+  .faq-section.light { background: #f5f0eb; }
 
   .container {
     max-width: 1160px;
@@ -113,6 +124,7 @@
   }
   .section-headline.centered { text-align: center; }
   .section-headline em { font-style: normal; color: #F5A623; }
+  .faq-section.light .section-headline { color: #111111; }
 
   .faq-list {
     display: grid;
@@ -134,6 +146,10 @@
   .faq-item.open {
     border-color: rgba(245,166,35,0.3);
   }
+  /* :not(.open) on these three — .faq-item.open / .faq-item.open .faq-question
+     already carry the orange accent treatment (same specificity, and would
+     otherwise be overridden by source order since these rules come later). */
+  .faq-section.light .faq-item:not(.open) { border-color: rgba(17,17,17,0.08); }
 
   .faq-question {
     width: 100%;
@@ -150,6 +166,8 @@
   }
   .faq-question:hover { background: rgba(255,255,255,0.06); }
   .faq-item.open .faq-question { background: rgba(245,166,35,0.06); }
+  .faq-section.light .faq-item:not(.open) .faq-question { background: rgba(17,17,17,0.03); }
+  .faq-section.light .faq-item:not(.open) .faq-question:hover { background: rgba(17,17,17,0.06); }
 
   .q-text {
     font-family: 'DM Sans', sans-serif;
@@ -186,6 +204,7 @@
     line-height: 1.8;
     padding-top: 4px;
   }
+  .faq-section.light .faq-answer p { color: rgba(17,17,17,0.65); }
 
   @media (max-width: 720px) {
     .container { padding: 0 24px; }

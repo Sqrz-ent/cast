@@ -16,6 +16,14 @@
   let visible = $state(false);
   let activeId = $state<string>(tabs[0].id);
 
+  // 2026-08-14: was "visible whenever any part of #explainer-wrap is on
+  // screen," which meant the bar lingered until the very last pixel of the
+  // block scrolled off — tuned down to "visible only while at least this
+  // much of the block's own height is still in view," so it hides once
+  // ~75% has scrolled past rather than ~100%. Tune this one number to
+  // adjust how early/late it disappears.
+  const VISIBILITY_RATIO_THRESHOLD = 0.25;
+
   // #explainer-wrap now scrolls horizontally (scroll-snap carousel, see
   // +page.svelte) — jumping to a section means scrolling the wrap
   // sideways, not scrolling the page down to it. Computed via
@@ -35,18 +43,22 @@
     const wrap = document.getElementById('explainer-wrap');
     if (!wrap) return;
 
-    // Bar visibility: on screen only while the 4-section block itself is on
-    // screen — vertical intersection against the page viewport, unrelated to
-    // the block's own internal horizontal scrolling. The -2px rootMargin
-    // matters: the hero above it is set to exactly 100vh, so at initial load
-    // #explainer-wrap's top edge exactly touches the viewport's bottom edge
-    // with zero-area overlap — Chromium's IntersectionObserver reports that
-    // hairline touch as isIntersecting:true at threshold 0, which flashed
-    // the bar on over the hero before any scrolling happened. Shrinking the
-    // root by 2px requires real overlap.
+    // Bar visibility: on screen only while at least VISIBILITY_RATIO_THRESHOLD
+    // of the 4-section block's own height is still on screen — vertical
+    // intersection against the page viewport, unrelated to the block's own
+    // internal horizontal scrolling. intersectionRatio (not isIntersecting)
+    // is what makes this relative to the block's own height rather than any
+    // nonzero overlap. The -2px rootMargin matters: the hero above it is set
+    // to exactly 100vh, so at initial load #explainer-wrap's top edge exactly
+    // touches the viewport's bottom edge with zero-area overlap — Chromium's
+    // IntersectionObserver reports that hairline touch as isIntersecting:true
+    // at threshold 0, which flashed the bar on over the hero before any
+    // scrolling happened. Shrinking the root by 2px requires real overlap
+    // (kept even though the ratio threshold below would likely absorb this
+    // same edge case on its own — cheap insurance, not load-bearing anymore).
     const visibilityObserver = new IntersectionObserver(
-      ([entry]) => { visible = entry.isIntersecting; },
-      { threshold: 0, rootMargin: '-2px 0px -2px 0px' }
+      ([entry]) => { visible = entry.intersectionRatio >= VISIBILITY_RATIO_THRESHOLD; },
+      { threshold: [0, VISIBILITY_RATIO_THRESHOLD, 1], rootMargin: '-2px 0px -2px 0px' }
     );
     visibilityObserver.observe(wrap);
 
@@ -117,10 +129,19 @@
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
     pointer-events: none;
-    background: rgba(17, 17, 17, 0.82);
+    /* Cream bg (2026-08-14) means this can no longer rely on being dark
+       against whatever it floats over — the 4 sections it's scoped to are
+       all cream themselves. rgb(255,253,249) is sqrz-dashboard's --surface
+       token (vs --bg #f5f0eb used for the popup/page background elsewhere)
+       — the same surface-vs-background distinction dashboard already draws
+       for elevated UI, reused here rather than inventing a new tint. Bumped
+       opacity + a dark hairline + upward shadow (was a light hairline on a
+       dark bar, inverted for a light one) re-establish the floating look. */
+    background: rgba(255, 253, 249, 0.92);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(17, 17, 17, 0.08);
+    box-shadow: 0 -8px 24px rgba(17, 17, 17, 0.08);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
@@ -147,7 +168,7 @@
     gap: 3px;
     background: transparent;
     border: none;
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(17, 17, 17, 0.45);
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
     -webkit-tap-highlight-color: transparent;

@@ -320,7 +320,7 @@
     z-index: 201;
     width: 90%;
     max-width: 420px;
-    background: #141414;
+    background: #f5f0eb;
     border: 1px solid rgba(245,166,35,0.3);
     border-radius: 12px;
     padding: 32px 28px 28px;
@@ -353,13 +353,13 @@
     font-family: 'DM Sans', sans-serif;
     font-size: 1.3rem;
     font-weight: 600;
-    color: var(--white);
+    color: var(--dark);
     margin: 0 0 8px;
   }
 
   .popup-body {
     font-size: 0.9rem;
-    color: rgba(255,255,255,0.6);
+    color: rgba(17,17,17,0.65);
     margin: 0 0 4px;
     font-family: 'DM Sans', sans-serif;
   }
@@ -374,7 +374,7 @@
   .popup-field-label {
     font-size: 0.78rem;
     font-weight: 500;
-    color: rgba(255,255,255,0.55);
+    color: rgba(17,17,17,0.6);
     font-family: 'DM Sans', sans-serif;
   }
 
@@ -385,12 +385,12 @@
     padding: 12px 14px;
     font-size: 0.95rem;
     font-family: 'DM Sans', sans-serif;
-    color: var(--white);
+    color: var(--dark);
     outline: none;
     transition: border-color 0.2s;
   }
   .popup-field-input:focus { border-color: var(--accent); }
-  .popup-field-input::placeholder { color: rgba(255,255,255,0.25); }
+  .popup-field-input::placeholder { color: rgba(17,17,17,0.35); }
   .popup-field-input:disabled {
     color: var(--accent);
     font-weight: 600;
