@@ -134,7 +134,7 @@
     color: #111111;
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
-    padding: 96px 0 120px;
+    padding: 32px 0 120px;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -262,7 +262,7 @@
   }
 
   @media (max-width: 640px) {
-    .compare-index { padding: 80px 0 90px; }
+    .compare-index { padding: 16px 0 90px; }
     .index-container { width: calc(100% - 48px); }
     .hero-band { padding: 54px 0 58px; }
     .hero-grid { grid-template-columns: 1fr; gap: 26px; }

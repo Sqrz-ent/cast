@@ -349,7 +349,7 @@
   /* ── HERO ───────────────────────────────────────────────────────── */
   .hero {
     background: #0a0a0a;
-    padding: 164px 0 100px;
+    padding: 100px 0 100px;
     min-height: 100vh;
     min-height: calc(var(--vh, 1svh) * 100);
   }
@@ -510,11 +510,7 @@
      owns its own scoped styles, used by both instances on this page. */
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
-  /* scroll-margin-top keeps anchor jumps (from a direct #hash link) from
-     landing under the fixed top Nav (64px + breathing room) — no longer used
-     by ExplainerTabBar itself (that now scrolls #explainer-wrap horizontally,
-     see below), left in case something else links to #showcase etc. directly. */
-  .feature-section { padding: 100px 0; scroll-margin-top: 84px; }
+  .feature-section { padding: 100px 0; }
   .feature-section.light     { background: var(--light); }
   .feature-section.dark      { background: var(--dark-2); }
   .feature-section.warm-dark { background: #D4B896; }
@@ -880,10 +876,8 @@
       grid-template-columns: 1fr;
     }
     .featured-grid { grid-template-columns: repeat(2, 1fr); }
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
     .container { padding: 0 24px; }
-    .hero { padding: 184px 0 80px; }
+    .hero { padding: 120px 0 80px; }
     .feature-section,
     .audience-section,
     .how-section,

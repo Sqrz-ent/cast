@@ -1,7 +1,6 @@
 <script>
 	import Analytics from '$lib/Analytics.svelte';
 	import CookieConsent from '$lib/components/CookieConsent.svelte';
-	import Nav from '$lib/components/Nav.svelte';
 	import { page } from '$app/state';
 	import { getLocaleFromPathname, localizePath } from '$lib/i18n';
 
@@ -32,7 +31,6 @@
 	/>
 </svelte:head>
 
-{#if !isStandalone && !hasCustomNav}<Nav />{/if}
 {@render children()}
 {#if !isStandalone}<CookieConsent />{/if}
 

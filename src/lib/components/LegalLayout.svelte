@@ -38,7 +38,7 @@
 
   /* ── MAIN ─────────────────────────────────────────────────────── */
   main {
-    padding: 80px 0 100px;
+    padding: 16px 0 100px;
     min-height: 100vh;
     background: #f5f0eb;
   }
@@ -139,10 +139,8 @@
 
   /* ── RESPONSIVE ───────────────────────────────────────────────── */
   @media (max-width: 900px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
     .container { padding: 0 24px; }
     .footer-container { padding: 0 24px; }
-    main { padding: 100px 0 72px; }
+    main { padding: 36px 0 72px; }
   }
 </style>

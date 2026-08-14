@@ -90,7 +90,7 @@
     color: #111111;
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
-    padding: 96px 0 120px;
+    padding: 32px 0 120px;
   }
 
   .c-container {
@@ -221,7 +221,7 @@
 
   /* ── MOBILE ─────────────────────────────────────────────────────── */
   @media (max-width: 640px) {
-    .compare-page { padding: 80px 0 90px; }
+    .compare-page { padding: 16px 0 90px; }
     .c-container { width: calc(100% - 48px); }
     .c-hero { padding: 54px 0 58px; }
     .c-hero-grid { grid-template-columns: 1fr; gap: 28px; }

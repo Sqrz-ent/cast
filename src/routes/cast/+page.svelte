@@ -180,7 +180,7 @@
   }
 
   .creators-hero {
-    padding: 156px 0 86px;
+    padding: 92px 0 86px;
     background:
       linear-gradient(90deg, rgba(0,0,0,0.76), rgba(0,0,0,0.38) 52%, rgba(0,0,0,0.5)),
       linear-gradient(180deg, rgba(0,0,0,0.04), rgba(5,5,5,0.82) 100%),
@@ -575,7 +575,7 @@
 
   @media (max-width: 760px) {
     .creators-hero {
-      padding: 128px 0 54px;
+      padding: 64px 0 54px;
     }
 
     .container {

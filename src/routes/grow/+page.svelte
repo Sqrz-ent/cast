@@ -348,7 +348,7 @@
   .grow-hero {
     position: relative;
     min-height: 88vh;
-    padding: 148px 0 88px;
+    padding: 84px 0 88px;
     background: #0a0a0a;
     overflow: hidden;
   }
@@ -967,13 +967,11 @@
     .wallet-img { height: 280px; position: static; }
     .pillars-grid { grid-template-columns: 1fr; }
     .for-grid { grid-template-columns: 1fr; }
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
     .container { padding: 0 24px; }
     .hero { padding: 184px 0 80px; }
     .grow-hero {
       min-height: auto;
-      padding: 132px 0 72px;
+      padding: 68px 0 72px;
     }
     .grow-headline {
       font-size: clamp(46px, 12vw, 72px);
