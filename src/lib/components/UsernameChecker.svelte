@@ -85,9 +85,15 @@
     if (error) { status = 'idle'; return; }
     status = data ? 'taken' : 'available';
   }
+
+  // light: optional cream/dark-text theme (2026-08-14), same pattern as
+  // FAQ.svelte's `light` prop — this component renders twice on the
+  // homepage (dark hero, and the bottom CTA section which is moving to
+  // cream). Default false keeps the hero instance exactly as it was.
+  let { light = false } = $props();
 </script>
 
-<div class="username-checker">
+<div class="username-checker" class:light>
   <div class="username-input-row">
     <div class="username-input-field">
       <input
@@ -205,6 +211,12 @@
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(245,166,35,0.22);
   }
+  /* light theme (2026-08-14, bottom CTA section only — see the `light` prop
+     comment above): dark-text variants for everything that was styled
+     white/light-on-dark. Border/focus ring and the CTA button are already
+     orange-based (button text is var(--dark) on an orange fill) and read
+     fine on either background, left alone. */
+  .username-checker.light .username-input-row { background: rgba(17,17,17,0.03); }
 
   .username-input-field {
     flex: 1;
@@ -227,6 +239,8 @@
     touch-action: manipulation;
   }
   .username-input::placeholder { color: rgba(255,255,255,0.3); }
+  .username-checker.light .username-input { color: var(--dark); }
+  .username-checker.light .username-input::placeholder { color: rgba(17,17,17,0.35); }
 
   .username-suffix {
     display: flex;
@@ -239,6 +253,7 @@
     white-space: nowrap;
     flex-shrink: 0;
   }
+  .username-checker.light .username-suffix { color: rgba(17,17,17,0.4); }
 
   .username-cta-btn {
     display: flex;
@@ -270,6 +285,7 @@
     color: rgba(255,255,255,0.3);
     letter-spacing: 0.04em;
   }
+  .username-checker.light .status-checking { color: rgba(17,17,17,0.4); }
 
   .status-taken {
     font-size: 0.82rem;
@@ -295,6 +311,7 @@
     font-size: 0.78rem;
     color: rgba(255,255,255,0.25);
   }
+  .username-checker.light .status-hint { color: rgba(17,17,17,0.35); }
 
   @media (max-width: 768px) {
     .username-input-row { width: 100%; max-width: none; flex-direction: column; margin-left: auto; margin-right: auto; border-radius: 8px; }

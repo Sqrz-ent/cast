@@ -4,29 +4,30 @@
   import UsernameChecker from '$lib/components/UsernameChecker.svelte';
   import PhoneFrame from '$lib/components/PhoneFrame.svelte';
   import ExplainerTabBar from '$lib/components/ExplainerTabBar.svelte';
+  import ExplainerArrows from '$lib/components/ExplainerArrows.svelte';
   import FAQ from '$lib/components/FAQ.svelte';
 
   let { data }: { data: PageData } = $props();
 
-  // TODO(copy): placeholder Q&A — replace with real homepage FAQ copy before
-  // launch. Reuses FAQ.svelte (built for /grow) via its `items` prop rather
-  // than /grow's own hardcoded questions.
+  // Finalized 2026-08-14, replacing the earlier placeholder set. Reuses
+  // FAQ.svelte (built for /grow) via its `items` prop rather than /grow's
+  // own hardcoded questions.
   const homeFaqs = [
     {
-      q: 'Placeholder question one — replace before launch?',
-      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+      q: 'How is SQRZ different from other LinkInBio providers?',
+      a: "It's more than a link-in-bio — it's a growth tool, a booking companion, and a marketing agency in your pocket.",
     },
     {
-      q: 'Placeholder question two — replace before launch?',
-      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+      q: 'What are the costs?',
+      a: 'No subscriptions. You only pay a variable commission (15–30%) on the advertising budget for campaigns you actually run.',
     },
     {
-      q: 'Placeholder question three — replace before launch?',
-      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+      q: 'Why iOS only?',
+      a: "SQRZ isn't just a link-in-bio — it's your digital storefront. Get leads, chat with clients, and manage your growth on the fly. That belongs in your pocket, not on a desk.",
     },
     {
-      q: 'Placeholder question four — replace before launch?',
-      a: 'Placeholder answer. TODO: replace with real homepage FAQ copy before launch.',
+      q: "Why can't I find SQRZ on the App Store?",
+      a: "We're currently in private beta — only invited users can join right now, via TestFlight rather than a public App Store listing. Claim your link below and we'll be in touch.",
     },
   ];
 
@@ -78,17 +79,19 @@
      visibility (vertical, against the page) AND the scrollable element the
      bar scrolls horizontally + scroll-spies on tap/swipe. Keep the id if
      this block is restructured. -->
+<div class="explainer-carousel">
 <div id="explainer-wrap">
 
 <!-- ── SECTION 1 — Showcase ───────────────────────────────────────── -->
 <section id="showcase" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <PhoneFrame label="Profile Screen" />
+      <PhoneFrame src="/images/studio/01_Showcase.png" alt="SQRZ profile screen" label="Profile Screen" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
       <p class="section-tagline">One profile. Every gig starts here.</p>
+      <p class="body-text">One link says everything a booker needs to know about you. No more digging through Instagram DMs or hunting down a rate card — just a clean, professional page that does the selling before you ever reply.</p>
     </div>
   </div>
 </section>
@@ -99,9 +102,10 @@
     <div class="feature-text">
       <h2 class="section-headline">Run Your<br><em>Booking Pipeline</em></h2>
       <p class="section-tagline">Bookings that move themselves forward.</p>
+      <p class="body-text">Every inquiry — a web form, a fan message, a venue reaching out — lands in one place instead of scattered across five apps. Reply, keep it active, or archive it once it's handled, so nothing quietly falls through the cracks.</p>
     </div>
     <div class="feature-visual">
-      <PhoneFrame label="Bookings Screen" />
+      <PhoneFrame src="/images/studio/02_Bookings.png" alt="SQRZ bookings screen" label="Bookings Screen" />
     </div>
   </div>
 </section>
@@ -110,11 +114,12 @@
 <section id="grow" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <PhoneFrame label="Grow Screen" />
+      <PhoneFrame src="/images/studio/03_Grow.png" alt="SQRZ Grow campaigns screen" label="Grow Screen" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Grow Your Reach,<br><em>Easily</em></h2>
       <p class="section-tagline">Get seen. Get booked. Automatically.</p>
+      <p class="body-text">Put a budget behind your profile and watch exactly who's finding it, and where they're coming from. Real numbers instead of guesswork, so you can tell what's actually bringing in bookings.</p>
     </div>
   </div>
 </section>
@@ -130,13 +135,16 @@
     <div class="feature-text">
       <h2 class="section-headline">Know The Moment<br><em>It Happens</em></h2>
       <p class="section-tagline">Push alerts for leads, messages, and campaign updates.</p>
+      <p class="body-text">The moment a lead comes in or a campaign changes status, you're the first to know — not the next time you happen to open the app. Stay ahead of the business side without babysitting a dashboard all day.</p>
     </div>
     <div class="feature-visual">
-      <PhoneFrame label="Notifications Screen" />
+      <PhoneFrame src="/images/studio/04_Notifications.png" alt="SQRZ notifications screen" label="Notifications Screen" />
     </div>
   </div>
 </section>
 
+</div>
+<ExplainerArrows />
 </div>
 
 <ExplainerTabBar />
@@ -191,16 +199,22 @@
 </section>
 
 <!-- ── FAQ ──────────────────────────────────────────────────────────
-     Reuses FAQ.svelte (built for /grow) via its `items` prop — see the
-     TODO on homeFaqs above, placeholder copy until real Q&A is written. -->
+     Reuses FAQ.svelte (built for /grow) via its `items` prop — see homeFaqs
+     above (finalized copy, 2026-08-14). -->
 <FAQ items={homeFaqs} light />
 
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
-     Second instance of the same hero checker, same component — not a fork. -->
-<section class="bottom-checker-section dark">
+     Second instance of the same hero checker, same component — not a fork.
+     Cream/full-viewport treatment (2026-08-14) — see .bottom-checker-section
+     below. Dropped the `dark` class (there was never a compound
+     .bottom-checker-section.dark rule backing it — inert, and actively
+     misleading now) and `light-text` off the headline (default
+     .section-headline color is already dark, same as every other
+     already-cream section on this page — no override needed). -->
+<section class="bottom-checker-section">
   <div class="container bottom-checker-inner">
-    <h2 class="section-headline light-text centered">Check Your Name<br><em>Now.</em></h2>
-    <UsernameChecker />
+    <h2 class="section-headline centered">Claim Your<br><em>SQRZ Link</em></h2>
+    <UsernameChecker light />
   </div>
 </section>
 
@@ -369,6 +383,7 @@
     font-weight: 300;
     line-height: 1.8;
     color: #444444;
+    margin-top: 12px;
     margin-bottom: 28px;
   }
   .body-text.mid-text { color: var(--mid); }
@@ -550,6 +565,19 @@
      flow around it (Hero → this block → Meet the Creatives) is untouched.
      Height isn't hardcoded: flex's default align-items:stretch sizes every
      slide to the tallest one, same as when they were stacked vertically. */
+  /* .explainer-carousel wraps #explainer-wrap solely so ExplainerArrows has
+     a non-scrolling positioned ancestor to anchor to. Learned the hard way:
+     position:absolute children of #explainer-wrap itself still scroll
+     along with its horizontal content (removing an element from flex
+     layout doesn't exempt it from its own containing block's scroll
+     offset) — confirmed via a real click-through, the left arrow ended up
+     thousands of pixels off-screen after scrolling a few sections in. This
+     outer wrapper never scrolls itself (only its #explainer-wrap child
+     does), so the arrows correctly stay fixed at the visual edges. */
+  .explainer-carousel {
+    position: relative;
+  }
+
   #explainer-wrap {
     display: flex;
     overflow-x: auto;
@@ -854,7 +882,23 @@
   }
 
   /* ── BOTTOM SLUG CHECKER ───────────────────────────────────────────── */
-  .bottom-checker-section { background: var(--dark); padding: 100px 0 120px; }
+  /* Full-viewport cream close, same vertical rhythm as .hero (2026-08-14):
+     same min-height:100vh / --vh pair (the --vh custom property is already
+     set on documentElement by this page's onMount, for the same reliable-
+     mobile-viewport-height reason the hero uses it), same cream #f5f0eb
+     already established for the popup/tab bar/FAQ — reused verbatim, not a
+     new color. justify-content:center vertically centers the content block
+     within that full height; .bottom-checker-inner's own flex handles
+     centering the headline/checker within that block, unchanged. */
+  .bottom-checker-section {
+    background: #f5f0eb;
+    padding: 100px 0 120px;
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1svh) * 100);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
   .bottom-checker-inner { display: flex; flex-direction: column; align-items: center; }
 
   /* ── IMAGE PLACEHOLDERS ─────────────────────────────────────────── */
