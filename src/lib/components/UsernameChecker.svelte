@@ -5,49 +5,33 @@
   // Beta gatekeeping (2026-08-14): self-serve signup is intentionally
   // unreachable from the marketing page — an "available" slug no longer
   // redirects to dashboard.sqrz.com/join. Instead it opens a popup that
-  // captures interest (slug + a field or two about ad budget) into
-  // beta_interest_submissions. Referral capture (sqrz_ref / ?ref=) is
-  // dropped from this flow entirely — it has nothing left to attach to.
+  // explains SQRZ is iOS-only/invite-beta right now and captures a beta
+  // request (slug + email + advertising budget), submitted to the
+  // hubspot-beta-slug-request edge function — which syncs a HubSpot contact
+  // and reserves the slug in beta_slug_holds. Referral capture (sqrz_ref /
+  // ?ref=) is dropped from this flow entirely — it has nothing left to
+  // attach to. Supersedes the same-day beta_interest_submissions version
+  // (that table is left in place, unreferenced).
   import { createClient } from '@supabase/supabase-js';
   import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY } from '$env/static/public';
 
   const supabase = createClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_PUBLISHABLE_KEY);
+  const REQUEST_ENDPOINT = `${PUBLIC_SUPABASE_URL}/functions/v1/hubspot-beta-slug-request`;
 
   let username = $state('');
   let status = $state('idle'); // 'idle' | 'checking' | 'available' | 'taken'
   let debounceTimer: ReturnType<typeof setTimeout>;
 
-  // ── Interest popup ──────────────────────────────────────────────────────
-  // Field set is TBD beyond the ad-budget question — this list is the only
-  // thing to touch when more fields are added. `column` = writes straight to
-  // a real beta_interest_submissions column; omit it and the value lands in
-  // the `extra` jsonb catch-all under `key` instead, so new fields don't need
-  // a migration before they can be captured.
-  type InterestField = {
-    key: string;
-    label: string;
-    placeholder?: string;
-    required?: boolean;
-    column?: 'ad_budget';
-  };
-  const interestFields: InterestField[] = [
-    {
-      key: 'ad_budget',
-      label: 'Monthly advertising budget',
-      placeholder: 'e.g. $1,000/mo',
-      required: true,
-      column: 'ad_budget'
-    }
-  ];
-
   let showPopup = $state(false);
   let claimedSlug = $state('');
-  let fieldValues = $state<Record<string, string>>({});
-  let popupState = $state('form'); // 'form' | 'submitting' | 'success' | 'error'
+  let email = $state('');
+  let adBudget = $state('');
+  let popupState = $state('form'); // 'form' | 'submitting' | 'success' | 'slug_taken' | 'error'
 
   function openPopup() {
     claimedSlug = username;
-    fieldValues = Object.fromEntries(interestFields.map((f) => [f.key, '']));
+    email = '';
+    adBudget = '';
     popupState = 'form';
     showPopup = true;
   }
@@ -56,27 +40,31 @@
     showPopup = false;
     if (popupState === 'success') {
       // Nothing left to claim self-serve — don't leave the checker sitting on
-      // "available" once interest has been captured.
+      // "available" once a request has been captured.
       username = '';
       status = 'idle';
     }
   }
 
-  async function submitInterest(e: SubmitEvent) {
+  async function submitRequest(e: SubmitEvent) {
     e.preventDefault();
     popupState = 'submitting';
 
-    const row: Record<string, unknown> = { slug: claimedSlug };
-    const extra: Record<string, string> = {};
-    for (const field of interestFields) {
-      const value = fieldValues[field.key] ?? '';
-      if (field.column) row[field.column] = value || null;
-      else if (value) extra[field.key] = value;
+    try {
+      const res = await fetch(REQUEST_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          apikey: PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+          Authorization: `Bearer ${PUBLIC_SUPABASE_PUBLISHABLE_KEY}`
+        },
+        body: JSON.stringify({ slug: claimedSlug, email, ad_budget: adBudget })
+      });
+      const data = await res.json();
+      popupState = data.ok ? 'success' : data.code === 'slug_taken' ? 'slug_taken' : 'error';
+    } catch {
+      popupState = 'error';
     }
-    if (Object.keys(extra).length) row.extra = extra;
-
-    const { error } = await supabase.from('beta_interest_submissions').insert(row);
-    popupState = error ? 'error' : 'success';
   }
 
   function onInput(e) {
@@ -145,29 +133,50 @@
     {#if popupState === 'success'}
       <p class="popup-slug">{claimedSlug}.sqrz.com</p>
       <h2 id="popup-title" class="popup-title">You're on the list</h2>
-      <p class="popup-body">We'll be in touch about locking in your link.</p>
+      <p class="popup-body">We'll email your TestFlight invite if we can get you in.</p>
       <button type="button" class="popup-submit" onclick={closePopup}>Close</button>
     {:else}
-      <p class="popup-slug">{claimedSlug}.sqrz.com is available</p>
-      <h2 id="popup-title" class="popup-title">Tell us a bit more</h2>
-      <form onsubmit={submitInterest}>
-        {#each interestFields as field (field.key)}
-          <label class="popup-field">
-            <span class="popup-field-label">{field.label}</span>
-            <input
-              type="text"
-              class="popup-field-input"
-              placeholder={field.placeholder}
-              required={field.required}
-              bind:value={fieldValues[field.key]}
-            />
-          </label>
-        {/each}
-        {#if popupState === 'error'}
+      <h2 id="popup-title" class="popup-title">SQRZ is iOS-only, in private beta</h2>
+      <p class="popup-body">
+        There's no public app-store listing yet — access is by invite, sent by
+        email as a TestFlight link. Tell us a bit and we'll be in touch.
+      </p>
+      <form onsubmit={submitRequest}>
+        <label class="popup-field">
+          <span class="popup-field-label">Slug</span>
+          <input
+            type="text"
+            class="popup-field-input"
+            value={`${claimedSlug}.sqrz.com`}
+            disabled
+          />
+        </label>
+        <label class="popup-field">
+          <span class="popup-field-label">Email</span>
+          <input
+            type="email"
+            class="popup-field-input"
+            placeholder="you@example.com"
+            required
+            bind:value={email}
+          />
+        </label>
+        <label class="popup-field">
+          <span class="popup-field-label">Monthly advertising budget</span>
+          <input
+            type="text"
+            class="popup-field-input"
+            placeholder="e.g. $1,000/mo"
+            bind:value={adBudget}
+          />
+        </label>
+        {#if popupState === 'slug_taken'}
+          <p class="popup-error">This name is already reserved — try a different one.</p>
+        {:else if popupState === 'error'}
           <p class="popup-error">Something went wrong — please try again.</p>
         {/if}
         <button type="submit" class="popup-submit" disabled={popupState === 'submitting'}>
-          {popupState === 'submitting' ? 'Submitting…' : 'Submit'}
+          {popupState === 'submitting' ? 'Submitting…' : 'Request access'}
         </button>
       </form>
     {/if}
@@ -382,6 +391,12 @@
   }
   .popup-field-input:focus { border-color: var(--accent); }
   .popup-field-input::placeholder { color: rgba(255,255,255,0.25); }
+  .popup-field-input:disabled {
+    color: var(--accent);
+    font-weight: 600;
+    opacity: 0.85;
+    cursor: default;
+  }
 
   .popup-error {
     font-size: 0.8rem;
