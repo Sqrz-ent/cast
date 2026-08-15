@@ -71,14 +71,19 @@
 
 <!-- ── EXPLAINER SECTIONS (Showcase / Pipeline / Grow / Notifications) ─────
      2026-08-14 "let the phone do the explaining" pass, extended same day
-     to a 4th section + a sticky scoped tab bar (ExplainerTabBar.svelte), then
+     to a 4th section + a scoped tab bar (ExplainerTabBar.svelte), then
      again same day to a horizontal scroll-snap carousel (see #explainer-wrap
      CSS below) — swipe/scroll sideways through the 4 sections instead of
-     scrolling down past them. Wrapper div id is doing double duty for
-     ExplainerTabBar: it's the IntersectionObserver boundary for bar
-     visibility (vertical, against the page) AND the scrollable element the
-     bar scrolls horizontally + scroll-spies on tap/swipe. Keep the id if
-     this block is restructured. -->
+     scrolling down past them. Tab bar was un-floated the same day too — it's
+     the last child of .explainer-carousel now (normal document flow, sits
+     at the carousel's bottom edge, scrolls with the page like the rest of
+     this block) rather than position: fixed over the viewport, so it no
+     longer needs its own visibility IntersectionObserver — it just appears
+     and disappears with its parent section like everything else on the
+     page. #explainer-wrap id is still doing double duty for
+     ExplainerTabBar: it's the scrollable element the bar scrolls
+     horizontally + scroll-spies on tap/swipe (unrelated to the bar's own
+     vertical position now). Keep the id if this block is restructured. -->
 <div class="explainer-carousel">
 <div id="explainer-wrap">
 
@@ -145,9 +150,8 @@
 
 </div>
 <ExplainerArrows />
-</div>
-
 <ExplainerTabBar />
+</div>
 
 <!-- ── FEATURED PROFILES ─────────────────────────────────────────── -->
 <section class="featured-section dark">

@@ -1,9 +1,14 @@
 <script lang="ts">
-  // Sticky bottom tab bar scoped to the 4 explainer sections (2026-08-14).
-  // Styled to read as an iOS tab bar on purpose — it's meant to look like a
-  // preview of the app, not just describe one. Appears only while the
-  // #explainer-wrap block (see +page.svelte) is on screen; hidden the rest
-  // of the time via IntersectionObserver, not scroll-position math.
+  // Bottom tab bar scoped to the 4 explainer sections (2026-08-14). Styled
+  // to read as an iOS tab bar on purpose — it's meant to look like a
+  // preview of the app, not just describe one. Un-floated the same day
+  // (was position: fixed with its own show/hide-on-scroll
+  // IntersectionObserver) — it's a normal-flow element now, the last child
+  // of .explainer-carousel (see +page.svelte), so it sits at the bottom
+  // edge of the 4-section block and scrolls with the page like everything
+  // else. Reads as a section-local indicator (carousel dots, not global
+  // nav) — no visibility logic needed anymore, since a normal-flow
+  // element naturally appears/disappears with its parent.
   import { onMount } from 'svelte';
 
   const tabs = [
@@ -13,18 +18,9 @@
     { id: 'notifications', label: 'Alerts', icon: 'bell' }
   ] as const;
 
-  let visible = $state(false);
   let activeId = $state<string>(tabs[0].id);
 
-  // 2026-08-14: was "visible whenever any part of #explainer-wrap is on
-  // screen," which meant the bar lingered until the very last pixel of the
-  // block scrolled off — tuned down to "visible only while at least this
-  // much of the block's own height is still in view," so it hides once
-  // ~75% has scrolled past rather than ~100%. Tune this one number to
-  // adjust how early/late it disappears.
-  const VISIBILITY_RATIO_THRESHOLD = 0.25;
-
-  // #explainer-wrap now scrolls horizontally (scroll-snap carousel, see
+  // #explainer-wrap scrolls horizontally (scroll-snap carousel, see
   // +page.svelte) — jumping to a section means scrolling the wrap
   // sideways, not scrolling the page down to it. Computed via
   // getBoundingClientRect deltas rather than el.offsetLeft, since offsetLeft
@@ -43,30 +39,11 @@
     const wrap = document.getElementById('explainer-wrap');
     if (!wrap) return;
 
-    // Bar visibility: on screen only while at least VISIBILITY_RATIO_THRESHOLD
-    // of the 4-section block's own height is still on screen — vertical
-    // intersection against the page viewport, unrelated to the block's own
-    // internal horizontal scrolling. intersectionRatio (not isIntersecting)
-    // is what makes this relative to the block's own height rather than any
-    // nonzero overlap. The -2px rootMargin matters: the hero above it is set
-    // to exactly 100vh, so at initial load #explainer-wrap's top edge exactly
-    // touches the viewport's bottom edge with zero-area overlap — Chromium's
-    // IntersectionObserver reports that hairline touch as isIntersecting:true
-    // at threshold 0, which flashed the bar on over the hero before any
-    // scrolling happened. Shrinking the root by 2px requires real overlap
-    // (kept even though the ratio threshold below would likely absorb this
-    // same edge case on its own — cheap insurance, not load-bearing anymore).
-    const visibilityObserver = new IntersectionObserver(
-      ([entry]) => { visible = entry.intersectionRatio >= VISIBILITY_RATIO_THRESHOLD; },
-      { threshold: [0, VISIBILITY_RATIO_THRESHOLD, 1], rootMargin: '-2px 0px -2px 0px' }
-    );
-    visibilityObserver.observe(wrap);
-
-    // Active-tab scroll-spy: horizontal now — root is the carousel itself
-    // (not the page viewport), and the -45% margins shrink the left/right
-    // edges instead of top/bottom, so whichever slide is centered in the
-    // carousel's visible width wins as the user swipes/scrolls sideways
-    // through it or taps a tab.
+    // Active-tab scroll-spy: root is the carousel itself (not the page
+    // viewport), and the -45% margins shrink the left/right edges instead
+    // of top/bottom, so whichever slide is centered in the carousel's
+    // visible width wins as the user swipes/scrolls sideways through it or
+    // taps a tab.
     const spyObserver = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -81,13 +58,12 @@
     });
 
     return () => {
-      visibilityObserver.disconnect();
       spyObserver.disconnect();
     };
   });
 </script>
 
-<nav class="explainer-tabbar" class:visible aria-label="Jump to feature section" aria-hidden={!visible}>
+<nav class="explainer-tabbar" aria-label="Jump to feature section">
   <div class="tabbar-inner">
     {#each tabs as tab (tab.id)}
       <button
@@ -95,7 +71,6 @@
         class="tab-item"
         class:active={activeId === tab.id}
         onclick={() => scrollToSection(tab.id)}
-        tabindex={visible ? 0 : -1}
       >
         <span class="tab-icon">
           {#if tab.icon === 'profile'}
@@ -120,35 +95,25 @@
      the opposite pattern from the rest of this file (max-width overrides) —
      this component is the one the brief called out to build phone-first. */
   .explainer-tabbar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 90;
-    transform: translateY(100%);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    pointer-events: none;
-    /* Cream bg (2026-08-14) means this can no longer rely on being dark
-       against whatever it floats over — the 4 sections it's scoped to are
-       all cream themselves. rgb(255,253,249) is sqrz-dashboard's --surface
-       token (vs --bg #f5f0eb used for the popup/page background elsewhere)
-       — the same surface-vs-background distinction dashboard already draws
-       for elevated UI, reused here rather than inventing a new tint. Bumped
-       opacity + a dark hairline + upward shadow (was a light hairline on a
-       dark bar, inverted for a light one) re-establish the floating look. */
+    /* Un-floated (2026-08-14, same day as the rest of this component) —
+       normal document flow, last child of .explainer-carousel (see
+       +page.svelte), so it sits at the bottom edge of the 4-section block
+       and scrolls with the page instead of pinning to the viewport. Reads
+       as a section-local indicator now (carousel dots), not global nav —
+       no position/transform/z-index/pointer-events needed, and no
+       safe-area padding either (that was for sitting flush against the
+       device's physical bottom edge, which a normal-flow element never
+       does). Cream bg means this can't rely on being dark against
+       whatever it sits over — the 4 sections it's scoped to are all cream
+       themselves. rgb(255,253,249) is sqrz-dashboard's --surface token
+       (vs --bg #f5f0eb used for the popup/page background elsewhere) —
+       the same surface-vs-background distinction dashboard already draws
+       for elevated UI, reused here rather than inventing a new tint. */
     background: rgba(255, 253, 249, 0.92);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-top: 1px solid rgba(17, 17, 17, 0.08);
     box-shadow: 0 -8px 24px rgba(17, 17, 17, 0.08);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  .explainer-tabbar.visible {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
   }
 
   .tabbar-inner {
