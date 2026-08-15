@@ -35,28 +35,35 @@
     aspect-ratio: 9 / 19.5;
     background: #0a0a0a;
     border-radius: 46px;
-    padding: 12px;
     box-sizing: border-box;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+    /* Defense in depth: even if a future sizing mismatch recurs (see
+       .phone-screen below), content can't visually escape past the
+       rounded bezel. */
+    overflow: hidden;
   }
 
   .phone-screen {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    /* Confirmed via real Mac Safari's Web Inspector: a normal-flow child's
+       height: 100% doesn't reliably resolve against a parent sized by
+       aspect-ratio in Safari — .phone-frame's content box measured
+       276×626, but .phone-screen's height: 100% computed to 662px, a 36px
+       overflow that escaped the frame's rounded silhouette (only
+       .phone-frame had no overflow: hidden of its own at the time).
+       Chromium/Playwright-WebKit never hit this because Playwright's
+       bundled WebKit doesn't reproduce it — real Safari-only.
+       position: absolute + inset sidesteps that percentage-height
+       resolution path entirely instead of working around its symptom.
+       inset: 12px (not 0) — .phone-frame used to express this same 12px
+       bezel via its own padding, which is now dead for an
+       absolutely-positioned child (padding box, not content box, is an
+       absolute child's containing block) and was removed; this is the
+       one place that measurement now lives. */
+    position: absolute;
+    inset: 12px;
     border-radius: 34px;
     overflow: hidden;
     background: #111;
-    /* Forces this clip onto its own compositing layer. Without it, iOS
-       Safari can briefly fail to reapply the overflow:hidden/border-radius
-       clip on this element while #explainer-wrap (its -webkit-overflow-
-       scrolling: touch ancestor, see +page.svelte) is mid-scroll-transition
-       — a known WebKit bug where an unpromoted rounded overflow:hidden
-       descendant desyncs from its accelerated-scroll ancestor's own repaint
-       cycle, self-correcting once scrolling settles. Confirmed correct at
-       rest in every browser/viewport tested; this targets the transient,
-       device-only failure mode that static checks can't catch. */
-    transform: translateZ(0);
   }
 
   .phone-screenshot {
