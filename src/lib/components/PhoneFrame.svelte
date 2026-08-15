@@ -47,6 +47,16 @@
     border-radius: 34px;
     overflow: hidden;
     background: #111;
+    /* Forces this clip onto its own compositing layer. Without it, iOS
+       Safari can briefly fail to reapply the overflow:hidden/border-radius
+       clip on this element while #explainer-wrap (its -webkit-overflow-
+       scrolling: touch ancestor, see +page.svelte) is mid-scroll-transition
+       — a known WebKit bug where an unpromoted rounded overflow:hidden
+       descendant desyncs from its accelerated-scroll ancestor's own repaint
+       cycle, self-correcting once scrolling settles. Confirmed correct at
+       rest in every browser/viewport tested; this targets the transient,
+       device-only failure mode that static checks can't catch. */
+    transform: translateZ(0);
   }
 
   .phone-screenshot {
