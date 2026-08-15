@@ -142,10 +142,10 @@
       <p class="popup-body">We'll email your TestFlight invite if we can get you in.</p>
       <button type="button" class="popup-submit" onclick={closePopup}>Close</button>
     {:else}
-      <h2 id="popup-title" class="popup-title">SQRZ is iOS-only, in private beta</h2>
+      <h2 id="popup-title" class="popup-title">SQRZ iOS is invite-only</h2>
       <p class="popup-body">
-        There's no public app-store listing yet — access is by invite, sent by
-        email as a TestFlight link. Tell us a bit and we'll be in touch.
+        Please let us know about your advertising budget and you'll get
+        invited as soon as possible.
       </p>
       <form onsubmit={submitRequest}>
         <label class="popup-field">
