@@ -144,7 +144,8 @@
   <div class="container feature-inner">
     <div class="feature-text">
       <h2 class="section-headline">Never miss<br><em>a lead.</em></h2>
-      <p class="section-tagline">Your office fits in your pocket now. Stay connected to every lead and campaign wherever you are, and spend your time on the stage, not the screen.</p>
+      <p class="section-tagline">Always connected, always updated.</p>
+      <p class="body-text">Your office fits in your pocket now. Stay connected to every lead and campaign wherever you are, and spend your time on the stage, not the screen.</p>
     </div>
     <div class="feature-visual">
       <PhoneFrame src="/images/studio/04_Notifications.png" alt="SQRZ notifications screen" label="Notifications Screen" />
