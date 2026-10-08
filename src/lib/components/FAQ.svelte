@@ -45,7 +45,11 @@
   // homepage FAQ instance to match its popup/tab bar). Default false keeps
   // /grow's original dark theme exactly as it was — /grow wasn't part of
   // that ask and its FAQ content is real, live copy, not placeholder.
-  let { half = null, items = null, light = false } = $props();
+  //
+  // singleColumn: optional single, centered column instead of the default
+  // 2-column grid (added for the homepage FAQ instance). Default false keeps
+  // /grow's original 2-column layout exactly as it was.
+  let { half = null, items = null, light = false, singleColumn = false } = $props();
 
   const faqs = $derived.by(() => {
     const source = items ?? allFaqs;
@@ -65,7 +69,7 @@
   <div class="container">
     <p class="section-tag">FAQ</p>
     <h2 class="section-headline centered">Common<br><em>questions</em></h2>
-    <div class="faq-list">
+    <div class="faq-list" class:single-column={singleColumn}>
       {#each faqs as faq, i}
         <div class="faq-item" class:open={openIndex === i}>
           <button class="faq-question" onclick={() => toggle(i)} aria-expanded={openIndex === i}>
@@ -135,6 +139,17 @@
 
   @media (max-width: 900px) {
     .faq-list { grid-template-columns: 1fr; }
+  }
+
+  /* singleColumn (homepage only — see prop comment in <script>): same
+     comfortable reading width as the homepage's hero text block (.hero-text,
+     max-width: 600px), centered. On mobile this is already narrower than
+     the viewport so it's a no-op there — the existing 900px breakpoint
+     above already collapses to 1 column at that width too. */
+  .faq-list.single-column {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin: 0 auto;
   }
 
   .faq-item {

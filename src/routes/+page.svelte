@@ -12,18 +12,23 @@
   // Finalized 2026-08-14, replacing the earlier placeholder set. Reuses
   // FAQ.svelte (built for /grow) via its `items` prop rather than /grow's
   // own hardcoded questions.
+  // Order matches the single-column FAQ layout's required reading order
+  // (left-column questions first, then right-column questions) — in the
+  // 2-column grid this array used to feed, row-major auto-placement puts
+  // index 0 and 2 in the left column and 1 and 3 in the right column, so
+  // this array is ordered [0, 2, 1, 3] relative to the original pairing.
   const homeFaqs = [
     {
       q: 'How is SQRZ different from other LinkInBio providers?',
       a: "It's more than a link-in-bio — it's a growth tool, a booking companion, and a marketing agency in your pocket.",
     },
     {
-      q: 'What are the costs?',
-      a: 'No subscriptions. You only pay a variable commission (15–30%) on the advertising budget for campaigns you actually run.',
-    },
-    {
       q: 'Why iOS only?',
       a: "SQRZ isn't just a link-in-bio — it's your digital storefront. Get leads, chat with clients, and manage your growth on the fly. That belongs in your pocket, not on a desk.",
+    },
+    {
+      q: 'What are the costs?',
+      a: 'No subscriptions. You only pay a variable commission (15–30%) on the advertising budget for campaigns you actually run.',
     },
     {
       q: "Why can't I find SQRZ on the App Store?",
@@ -122,9 +127,9 @@
       <PhoneFrame src="/images/studio/03_Grow.png" alt="SQRZ Grow campaigns screen" label="Grow Screen" />
     </div>
     <div class="feature-text">
-      <h2 class="section-headline">Grow Your Reach,<br><em>Easily</em></h2>
-      <p class="section-tagline">Get seen. Get booked. Automatically.</p>
-      <p class="body-text">Put a budget behind your profile and watch exactly who's finding it, and where they're coming from. Real numbers instead of guesswork, so you can tell what's actually bringing in bookings.</p>
+      <h2 class="section-headline">Run ads.<br><em>Get booked.</em></h2>
+      <p class="section-tagline">Advertising, without the agency.</p>
+      <p class="body-text">Set a budget and we put your profile in front of the right people on Meta, Google, Spotify, and even ChatGPT, with more channels as they open up. You see exactly who's finding you and where they're coming from. Real numbers instead of guesswork.</p>
     </div>
   </div>
 </section>
@@ -205,7 +210,7 @@
 <!-- ── FAQ ──────────────────────────────────────────────────────────
      Reuses FAQ.svelte (built for /grow) via its `items` prop — see homeFaqs
      above (finalized copy, 2026-08-14). -->
-<FAQ items={homeFaqs} light />
+<FAQ items={homeFaqs} light singleColumn />
 
 <!-- ── BOTTOM SLUG CHECKER ───────────────────────────────────────────
      Second instance of the same hero checker, same component — not a fork.
