@@ -143,8 +143,8 @@
 <section id="notifications" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-text">
-      <h2 class="section-headline">Know The Moment<br><em>It Happens</em></h2>
-      <p class="section-tagline">Push alerts for leads, messages, and campaign updates.</p>
+      <h2 class="section-headline">Never miss<br><em>a lead.</em></h2>
+      <p class="section-tagline">Your office fits in your pocket now. Stay connected to every lead and campaign wherever you are, and spend your time on the stage, not the screen.</p>
       <p class="body-text">The moment a lead comes in or a campaign changes status, you're the first to know — not the next time you happen to open the app. Stay ahead of the business side without babysitting a dashboard all day.</p>
     </div>
     <div class="feature-visual">
