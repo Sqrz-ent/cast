@@ -31,6 +31,25 @@
     position: relative;
     width: 100%;
     max-width: 300px;
+    /* 2026-10 — caps the aspect-ratio box by viewport height too (not just
+       max-width), so it scales down on a short viewport (the explainer
+       carousel on +page.svelte now constrains its slides to one dvh,
+       see .explainer-carousel there) instead of being clipped by that
+       section's overflow:hidden safety net. aspect-ratio recomputes BOTH
+       dimensions together to satisfy whichever constraint binds (width or
+       height), so this never crops the image — it's a plain, well-
+       supported interaction with max-height, distinct from the
+       percentage-height-against-an-aspect-ratio-ANCESTOR bug noted on
+       .phone-screen below (a different code path: this is a direct
+       max-height constraint on the ratio box itself, not a child
+       resolving a percentage against it). The ~140px buffer is a rough
+       allowance for the tab bar + this section's own (now-shrinkable)
+       padding — generous on purpose, so normal viewports are unaffected
+       and only genuinely short ones trigger it. No-op whenever
+       max-width: 300px is already the binding constraint, i.e. on every
+       normal desktop/mobile viewport — same look as before. */
+    max-height: calc(100vh - 140px);
+    max-height: calc(100dvh - 140px);
     margin: 0 auto;
     aspect-ratio: 9 / 19.5;
     background: #0a0a0a;

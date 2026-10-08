@@ -561,7 +561,23 @@
      owns its own scoped styles, used by both instances on this page. */
 
   /* ── FEATURE SECTIONS ───────────────────────────────────────────── */
-  .feature-section { padding: 100px 0; }
+  /* Fixed 100px top/bottom padding, replaced by a clamp (2026-10 "fit one
+     viewport" pass, see .explainer-carousel below) — shrinks on short
+     viewports instead of eating into the now-constrained section height,
+     same 100px ceiling as before on anything tall enough to afford it. */
+  .feature-section {
+    padding: clamp(16px, 5vh, 100px) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Safety net only, not the primary fit mechanism (see .phone-frame's
+       max-height below) — keeps this block scrollbar-free even in a
+       pathological viewport size. .container's own width/centering is
+       unaffected: column-direction flex's default align-items:stretch
+       keeps its single .container child full-width, same as its old
+       block-level behavior. */
+    overflow: hidden;
+  }
   .feature-section.light     { background: var(--light); }
   .feature-section.dark      { background: var(--dark-2); }
   .feature-section.warm-dark { background: #D4B896; }
@@ -572,8 +588,9 @@
      between app screens (reinforces the same "preview of the app" feel as
      the bottom tab bar). Scoped to just this block — the page's vertical
      flow around it (Hero → this block → Meet the Creatives) is untouched.
-     Height isn't hardcoded: flex's default align-items:stretch sizes every
-     slide to the tallest one, same as when they were stacked vertically. */
+     Height isn't hardcoded on the slides themselves: flex's default
+     align-items:stretch sizes every slide to #explainer-wrap's own height
+     (see below), same as when they were stacked vertically. */
   /* .explainer-carousel wraps #explainer-wrap solely so ExplainerArrows has
      a non-scrolling positioned ancestor to anchor to. Learned the hard way:
      position:absolute children of #explainer-wrap itself still scroll
@@ -583,12 +600,33 @@
      thousands of pixels off-screen after scrolling a few sections in. This
      outer wrapper never scrolls itself (only its #explainer-wrap child
      does), so the arrows correctly stay fixed at the visual edges. */
+  /* 2026-10 "fit one viewport" pass — the carousel + its tab bar used to
+     size naturally (slide content height + tab bar height stacked in
+     normal flow), which on most viewports pushed the tab bar below the
+     fold: you had to scroll the page down past a slide to reach the menu
+     that was supposed to sit right under it. Now a fixed-height flex
+     column: #explainer-wrap (the slides) takes the remaining space after
+     ExplainerTabBar's own natural height, so slide + menu always fit
+     together in one view, no page scroll through this block needed.
+     100dvh wins over the 100vh fallback in the same declaration (later
+     wins, same specificity) in any browser that supports it — dvh tracks
+     Safari's actual visible viewport as its collapsible toolbar shows/
+     hides, so the tab bar is never pushed behind it; 100vh (historically
+     "the viewport with the toolbar retracted") is only the fallback for
+     browsers without dvh support. */
   .explainer-carousel {
     position: relative;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   #explainer-wrap {
     display: flex;
+    flex: 1;
+    min-height: 0;
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
@@ -600,6 +638,7 @@
   #explainer-wrap > .feature-section {
     flex: 0 0 100%;
     width: 100%;
+    min-height: 0;
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
