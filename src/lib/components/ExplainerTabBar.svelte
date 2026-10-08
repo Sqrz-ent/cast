@@ -12,10 +12,10 @@
   import { onMount } from 'svelte';
 
   const tabs = [
+    { id: 'grow', label: 'Grow', icon: 'chart' },
     { id: 'showcase', label: 'Showcase', icon: 'profile' },
     { id: 'pipeline', label: 'Bookings', icon: 'inbox' },
-    { id: 'grow', label: 'Grow', icon: 'chart' },
-    { id: 'notifications', label: 'Alerts', icon: 'bell' }
+    { id: 'notifications', label: 'Updates', icon: 'bell' }
   ] as const;
 
   let activeId = $state<string>(tabs[0].id);

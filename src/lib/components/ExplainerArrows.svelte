@@ -9,7 +9,7 @@
   // component state for a single marketing page.
   import { onMount } from 'svelte';
 
-  const sectionIds = ['showcase', 'pipeline', 'grow', 'notifications'] as const;
+  const sectionIds = ['grow', 'showcase', 'pipeline', 'notifications'] as const;
 
   let visible = $state(false);
   let currentIndex = $state(0);

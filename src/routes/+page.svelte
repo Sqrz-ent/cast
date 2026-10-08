@@ -92,35 +92,7 @@
 <div class="explainer-carousel">
 <div id="explainer-wrap">
 
-<!-- ── SECTION 1 — Showcase ───────────────────────────────────────── -->
-<section id="showcase" class="feature-section light">
-  <div class="container feature-inner">
-    <div class="feature-visual">
-      <PhoneFrame src="/images/studio/01_Showcase.png" alt="SQRZ profile screen" label="Profile Screen" />
-    </div>
-    <div class="feature-text">
-      <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
-      <p class="section-tagline">One profile. Every gig starts here.</p>
-      <p class="body-text">One link says everything a booker needs to know about you. No more digging through Instagram DMs or hunting down a rate card — just a clean, professional page that does the selling before you ever reply.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── SECTION 2 — Pipeline ──────────────────────────────────────── -->
-<section id="pipeline" class="feature-section light">
-  <div class="container feature-inner">
-    <div class="feature-text">
-      <h2 class="section-headline">Run Your<br><em>Booking Pipeline</em></h2>
-      <p class="section-tagline">Bookings that move themselves forward.</p>
-      <p class="body-text">Every inquiry — a web form, a fan message, a venue reaching out — lands in one place instead of scattered across five apps. Reply, keep it active, or archive it once it's handled, so nothing quietly falls through the cracks.</p>
-    </div>
-    <div class="feature-visual">
-      <PhoneFrame src="/images/studio/02_Bookings.png" alt="SQRZ bookings screen" label="Bookings Screen" />
-    </div>
-  </div>
-</section>
-
-<!-- ── SECTION 3 — Grow ──────────────────────────────────────────── -->
+<!-- ── SECTION 1 — Grow ──────────────────────────────────────────── -->
 <section id="grow" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
@@ -134,7 +106,35 @@
   </div>
 </section>
 
-<!-- ── SECTION 4 — Notifications ────────────────────────────────────
+<!-- ── SECTION 2 — Showcase ───────────────────────────────────────── -->
+<section id="showcase" class="feature-section light">
+  <div class="container feature-inner reverse">
+    <div class="feature-visual">
+      <PhoneFrame src="/images/studio/01_Showcase.png" alt="SQRZ profile screen" label="Profile Screen" />
+    </div>
+    <div class="feature-text">
+      <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
+      <p class="section-tagline">One profile. Every gig starts here.</p>
+      <p class="body-text">One link says everything a booker needs to know about you. No more digging through Instagram DMs or hunting down a rate card — just a clean, professional page that does the selling before you ever reply.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 3 — Pipeline (Bookings) ──────────────────────────────── -->
+<section id="pipeline" class="feature-section light">
+  <div class="container feature-inner reverse">
+    <div class="feature-text">
+      <h2 class="section-headline">Run Your<br><em>Booking Pipeline</em></h2>
+      <p class="section-tagline">Bookings that move themselves forward.</p>
+      <p class="body-text">Every inquiry — a web form, a fan message, a venue reaching out — lands in one place instead of scattered across five apps. Reply, keep it active, or archive it once it's handled, so nothing quietly falls through the cracks.</p>
+    </div>
+    <div class="feature-visual">
+      <PhoneFrame src="/images/studio/02_Bookings.png" alt="SQRZ bookings screen" label="Bookings Screen" />
+    </div>
+  </div>
+</section>
+
+<!-- ── SECTION 4 — Notifications (Updates) ───────────────────────────
      Added 2026-08-14 alongside the tab bar. Picked over a Leads/chat or
      a second Grow-campaigns section because both of those are already
      covered (Pipeline + Grow above) — push alerts are the one shipped,
