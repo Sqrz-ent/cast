@@ -61,7 +61,7 @@
   <div class="container hero-inner">
 
     <div class="hero-text">
-      <p class="eyebrow">Advertise Smarter. Book More.</p>
+      <p class="eyebrow">Promotion That Runs Itself.</p>
       <h1 class="display-headline">
         THE<br><em>LINKINBIO</em><br>
         <span class="tight-line">THAT GETS YOU</span><br>
