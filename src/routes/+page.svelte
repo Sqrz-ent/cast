@@ -20,19 +20,19 @@
   const homeFaqs = [
     {
       q: 'How is SQRZ different from other LinkInBio providers?',
-      a: "It's more than a link-in-bio — it's a growth tool, a booking companion, and a marketing agency in your pocket.",
+      a: 'Most tools give you a profile and leave the promotion up to you. SQRZ does the promotion: set a budget, and we put your profile in front of the right people on Meta, Google, Spotify, ChatGPT, and more. No ad managers to learn, no guesswork.',
     },
     {
-      q: 'Why iOS only?',
-      a: "SQRZ isn't just a link-in-bio — it's your digital storefront. Get leads, chat with clients, and manage your growth on the fly. That belongs in your pocket, not on a desk.",
+      q: 'Why is SQRZ an app and not a website?',
+      a: 'Because the best moment to promote is right when something happens. Just played a great set, dropped a new track, or landed a last-minute slot? Promote it on the spot, straight from your phone. We built SQRZ for iPhone to put advertising as close to you as your camera roll.',
     },
     {
-      q: 'What are the costs?',
-      a: 'No subscriptions. You only pay a variable commission (15–30%) on the advertising budget for campaigns you actually run.',
+      q: 'How does pricing work?',
+      a: "You decide how much you want to spend. That advertising budget is what you pay, and our commission is already included in it. You're also not on your own: real people on our team guide you through setting up and fine-tuning your campaigns.",
     },
     {
-      q: "Why can't I find SQRZ on the App Store?",
-      a: "We're currently in private beta — only invited users can join right now, via TestFlight rather than a public App Store listing. Claim your link below and we'll be in touch.",
+      q: 'Why is SQRZ invite only?',
+      a: "We'd rather do great work for the right artists than average work for everyone. We focus on people who are serious about promoting themselves and have a real advertising budget, so every campaign gets the attention it deserves. Quality over quantity.",
     },
   ];
 
