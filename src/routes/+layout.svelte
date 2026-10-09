@@ -58,12 +58,12 @@
 					</p>
 				</div>
 
-				<!-- Right — Legal (Platform and Compare columns removed) -->
+				<!-- Right — Legal links (Platform and Compare columns removed;
+				     the "Legal" heading removed 2026-10) -->
 				<div class="footer-col footer-legal">
-					<p class="footer-col-heading">Legal</p>
 					<ul class="footer-links">
+						<li><a href={hrefFor('/blog')}>Blog</a></li>
 						<li><a href="/privacy">Privacy Policy</a></li>
-						<li><a href="/impressum">Impressum</a></li>
 						<li><a href="/terms">Terms &amp; Conditions</a></li>
 						<li><a href="/cookies">Cookie Policy</a></li>
 					</ul>
@@ -135,16 +135,6 @@
 		font-weight: 300;
 		color: rgba(255, 255, 255, 0.28);
 		line-height: 1.8;
-	}
-
-	/* Nav columns */
-	.footer-col-heading {
-		font-size: 0.62rem;
-		font-weight: 500;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-		color: #f5a623;
-		margin-bottom: 20px;
 	}
 
 	.footer-links {
