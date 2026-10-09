@@ -4,8 +4,6 @@
   export let data;
 
   const posts = data.posts ?? [];
-  const featuredPost = posts[0];
-  const remainingPosts = posts.slice(1);
   const topics = ['All', 'Getting booked', 'Audience', 'Pricing', 'Growth', 'Platforms'];
   const locale = normalizeLocale(data.locale);
   const pathPrefix = locales[locale].pathPrefix;
@@ -49,34 +47,6 @@
           <button class:active={index === 0} type="button">{topic}</button>
         {/each}
       </div>
-
-      {#if featuredPost}
-        <a href="{pathPrefix}/blog/{featuredPost.slug}" class="featured-article">
-          <div class="featured-meta">
-            <span>Featured article</span>
-            <time datetime={featuredPost.date}>{formatDate(featuredPost.date)}</time>
-          </div>
-          <div class="featured-body">
-            <h2>{featuredPost.title}</h2>
-            <p>{featuredPost.description}</p>
-          </div>
-          <div class="featured-footer">
-            {#if featuredPost.author}
-              <div class="author-banner">
-                <div class="author-avatar" aria-hidden="true">{initials(featuredPost.author ?? '')}</div>
-                <span class="author-name">{featuredPost.author}</span>
-              </div>
-            {/if}
-            <span class="read-link">Read article →</span>
-          </div>
-        </a>
-      {:else}
-        <div class="empty-editorial">
-          <p class="eyebrow">Publishing soon</p>
-          <h2>Field notes are being prepared.</h2>
-          <p>The first SQRZ articles will appear here as the journal opens up.</p>
-        </div>
-      {/if}
     </div>
   </section>
 
@@ -87,45 +57,44 @@
       <h2>Strategy for the independent professional.</h2>
     </header>
 
-    <div class="grid">
-      {#each remainingPosts as post}
-        <article class="card">
-          <div class="card-meta">
-            <span>Article</span>
-            <time datetime={post.date}>{formatDate(post.date)}</time>
-          </div>
-          <div class="card-body">
-            <h2 class="card-title">
-              <a href="{pathPrefix}/blog/{post.slug}" class="card-link">{post.title}</a>
-            </h2>
-            <p class="card-excerpt">{post.description}</p>
-          </div>
-          <footer class="card-footer">
-            <time class="card-date" datetime={post.date}>{formatDate(post.date)}</time>
-            {#if post.authorSlug}
-              <a
-                href="https://sqrz.com/{post.authorSlug}"
-                class="author-banner"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div class="author-avatar" aria-hidden="true">{initials(post.author ?? '')}</div>
-                <span class="author-name">{post.author}</span>
-              </a>
-            {/if}
-          </footer>
-        </article>
-      {/each}
-    </div>
-
-    <div class="journal-cta">
-      <div>
-        <p class="eyebrow">Build the profile these articles are written for</p>
-        <h2>Turn attention into booking intent.</h2>
-        <p>Create a SQRZ profile that gives clients one place to understand, request, and book your work.</p>
+    {#if posts.length}
+      <div class="grid">
+        {#each posts as post}
+          <article class="card">
+            <div class="card-meta">
+              <span>Article</span>
+              <time datetime={post.date}>{formatDate(post.date)}</time>
+            </div>
+            <div class="card-body">
+              <h2 class="card-title">
+                <a href="{pathPrefix}/blog/{post.slug}" class="card-link">{post.title}</a>
+              </h2>
+              <p class="card-excerpt">{post.description}</p>
+            </div>
+            <footer class="card-footer">
+              <time class="card-date" datetime={post.date}>{formatDate(post.date)}</time>
+              {#if post.authorSlug}
+                <a
+                  href="https://sqrz.com/{post.authorSlug}"
+                  class="author-banner"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div class="author-avatar" aria-hidden="true">{initials(post.author ?? '')}</div>
+                  <span class="author-name">{post.author}</span>
+                </a>
+              {/if}
+            </footer>
+          </article>
+        {/each}
       </div>
-      <a href="https://dashboard.sqrz.com/join">Create profile →</a>
-    </div>
+    {:else}
+      <div class="empty-editorial">
+        <p class="eyebrow">Publishing soon</p>
+        <h2>Field notes are being prepared.</h2>
+        <p>The first SQRZ articles will appear here as the journal opens up.</p>
+      </div>
+    {/if}
   </div>
   </section>
 </main>
@@ -212,7 +181,6 @@
   }
 
   .page-header h2,
-  .journal-cta h2,
   .empty-editorial h2 {
     color: #111111;
     font-family: Impact, sans-serif;
@@ -255,36 +223,6 @@
     color: #F5A623;
   }
 
-  .featured-article {
-    display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.42fr);
-    gap: 34px;
-    min-height: 380px;
-    padding: 34px;
-    border: 1px solid rgba(245,166,35,0.22);
-    border-radius: 8px;
-    background:
-      linear-gradient(135deg, rgba(245,166,35,0.14), rgba(255,255,255,0.035));
-    color: inherit;
-    text-decoration: none;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-
-  .featured-article:hover {
-    transform: translateY(-4px);
-    border-color: rgba(245,166,35,0.5);
-  }
-
-  .featured-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    grid-column: 1 / -1;
-    align-self: start;
-  }
-
-  .featured-meta span,
-  .featured-meta time,
   .card-meta span,
   .card-meta time {
     color: rgba(255,255,255,0.6);
@@ -295,44 +233,6 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-  }
-
-  .featured-body {
-    align-self: end;
-  }
-
-  .featured-body h2 {
-    max-width: 780px;
-    color: #ffffff;
-    font-family: Impact, sans-serif;
-    font-size: clamp(42px, 6vw, 82px);
-    font-weight: 800;
-    line-height: 0.92;
-    letter-spacing: 0;
-    text-transform: uppercase;
-  }
-
-  .featured-body p {
-    max-width: 620px;
-    margin-top: 22px;
-    color: rgba(255,255,255,0.6);
-    font-size: 1rem;
-    font-weight: 300;
-    line-height: 1.7;
-  }
-
-  .featured-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    align-items: flex-start;
-    gap: 18px;
-  }
-
-  .read-link {
-    color: #F5A623;
-    font-size: 0.9rem;
-    font-weight: 800;
   }
 
   .empty-editorial {
@@ -462,10 +362,6 @@
     z-index: 1;
   }
 
-  .featured-article .author-name {
-    color: #ffffff;
-  }
-
   .author-avatar {
     width: 28px;
     height: 28px;
@@ -495,41 +391,6 @@
     color: #F5A623;
   }
 
-  .journal-cta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    margin-top: 72px;
-    padding: 34px;
-    border-radius: 8px;
-    border: 1px solid rgba(17,17,17,0.08);
-    background: rgba(255,255,255,0.32);
-  }
-
-  .journal-cta p:not(.eyebrow) {
-    max-width: 520px;
-    margin-top: 16px;
-    color: #555555;
-    line-height: 1.7;
-    font-weight: 300;
-  }
-
-  .journal-cta a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 0 22px;
-    border-radius: 8px;
-    background: #F5A623;
-    color: #111111;
-    font-size: 0.9rem;
-    font-weight: 800;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
   /* ── RESPONSIVE ───────────────────────────────────────────────── */
   @media (max-width: 980px) {
     .grid {
@@ -543,14 +404,10 @@
       min-height: 85vh;
       padding: 64px 0 68px;
     }
-    .hero-grid,
-    .featured-article,
-    .journal-cta {
+    .hero-grid {
       grid-template-columns: 1fr;
       display: grid;
       gap: 28px;
-    }
-    .hero-grid {
       min-height: calc(85vh - 196px);
     }
     h1 { font-size: clamp(58px, 17vw, 82px); }
@@ -558,9 +415,6 @@
     .archive-section { padding: 72px 0; }
     .grid { grid-template-columns: 1fr; }
     .page-header { margin-bottom: 28px; }
-    .featured-article { padding: 24px; min-height: auto; }
-    .featured-body h2 { font-size: clamp(36px, 10vw, 52px); }
-    .journal-cta { padding: 24px; align-items: start; }
     .topic-row {
       overflow-x: auto;
       flex-wrap: nowrap;
