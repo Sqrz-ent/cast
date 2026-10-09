@@ -13,13 +13,6 @@
 	const meetingUrl = 'https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call?embed=true';
 	const emailUrl = 'mailto:will@sqrz.com?subject=Meeting%20about%20a%20system%20build';
 
-	const principles = [
-		'Start from the real operational pain, not the tool stack',
-		'Design the first click and the final handoff together',
-		'Make tracking useful without losing trust',
-		'Build systems that can be operated after launch'
-	];
-
 	let marketingAllowed = $state(false);
 	let schedulerLoaded = $state(false);
 
@@ -251,14 +244,6 @@
 		</div>
 	</section>
 
-	<section class="principles-section">
-		<div class="container principles-grid">
-			{#each principles as principle}
-				<div class="principle">{principle}</div>
-			{/each}
-		</div>
-	</section>
-
 	<section class="contact-section" id="contact">
 		<div class="container contact-grid">
 			<div class="contact-copy">
@@ -464,7 +449,6 @@
 
 	.mobile-demo-section,
 	.story-section,
-	.principles-section,
 	.contact-section {
 		padding: 96px 0;
 	}
@@ -689,25 +673,6 @@
 		color: rgba(0, 0, 0, 0.72);
 	}
 
-	.principles-grid {
-		display: grid;
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-		gap: 12px;
-	}
-
-	.principle {
-		min-height: 168px;
-		display: flex;
-		align-items: end;
-		padding: 18px;
-		border: 1px solid rgba(245, 166, 35, 0.2);
-		border-radius: 8px;
-		background: rgba(245, 166, 35, 0.08);
-		color: rgba(255, 255, 255, 0.82);
-		font-size: 1.02rem;
-		line-height: 1.35;
-	}
-
 	.contact-section {
 		padding-bottom: 120px;
 	}
@@ -804,10 +769,6 @@
 		.contact-copy {
 			position: static;
 		}
-
-		.principles-grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
 	}
 
 	@media (max-width: 560px) {
@@ -837,13 +798,8 @@
 
 		.mobile-demo-section,
 		.story-section,
-		.principles-section,
 		.contact-section {
 			padding: 68px 0;
-		}
-
-		.principles-grid {
-			grid-template-columns: 1fr;
 		}
 
 		.scheduler-card {
