@@ -20,6 +20,15 @@
     return localizePath(targetPath, locale);
   }
 
+  // /meet has no locale-prefixed route (no /meet under src/routes/[lang=lang]),
+  // so unlike hrefFor's other call sites this can't just prefix the current
+  // locale onto it — that would point at a route that doesn't exist. Links to
+  // the bare path for now; swap to hrefFor('/meet') if a localized /meet is
+  // ever added.
+  function meetHref() {
+    return '/meet';
+  }
+
   onMount(() => {
     function onScroll() {
       scrolled = window.scrollY > 80;
@@ -87,6 +96,7 @@
       <div class="nav-desktop-only">
         <AccessibilitySettings />
       </div>
+      <a href={meetHref()} class="nav-signup nav-desktop-only">Meet</a>
       <!-- Login/Sign Up removed from nav per request (2026-08-14) — steering
       traffic to the iOS app instead of web signup. /login and /join stay live
       and reachable directly; this is a nav-surfacing change only, not a route
@@ -147,6 +157,7 @@
       <div class="nav-panel-settings">
         <AccessibilitySettings />
       </div>
+      <a href={meetHref()} class="nav-panel-signup" onclick={closeMenu}>Meet</a>
       <!-- Login/Sign Up removed from nav per request (2026-08-14) — see the
       matching desktop comment above.
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
