@@ -11,7 +11,10 @@
 	const customNavRoutes = ['/meet'];
 	// Shared site nav (Nav.svelte) was dropped site-wide 2026-08-14; restored
 	// here for /blog only (2026-10) — every other route stays as it was.
-	const sharedNavRoutes = ['/blog'];
+	// Covers both the unprefixed English index and its locale-prefixed
+	// duplicates (/de/blog, /es/blog), since pre-removal the nav rendered on
+	// all of them via this same root layout.
+	const sharedNavRoutes = ['/blog', '/[lang=lang]/blog'];
 	const isStandalone = $derived(
 		standaloneRoutes.some(
 			(r) => page.route.id === r || (page.route.id?.startsWith(r + '/') ?? false)

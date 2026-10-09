@@ -80,12 +80,13 @@
           {/each}
         </div>
       {/if}
-      <!-- Hidden per request — bubble opens bionic reading / language / font-size /
-      high-contrast tools. Component + i18n infra untouched, just no trigger rendered.
+      <!-- Re-enabled (2026-10) — bubble opens bionic reading / language / font-size /
+      high-contrast tools. Was hidden 2026-07-29, before the nav itself was later
+      dropped site-wide; now that Nav only renders on the blog pages, restoring
+      this trigger there only. -->
       <div class="nav-desktop-only">
         <AccessibilitySettings />
       </div>
-      -->
       <!-- Login/Sign Up removed from nav per request (2026-08-14) — steering
       traffic to the iOS app instead of web signup. /login and /join stay live
       and reachable directly; this is a nav-surfacing change only, not a route
@@ -141,12 +142,11 @@
           {/each}
         </div>
       {/if}
-      <!-- Accessibility / display settings — above login. Hidden per request, same as
-      the desktop trigger above; component + i18n infra untouched.
+      <!-- Accessibility / display settings — above login. Re-enabled (2026-10),
+      same as the desktop trigger above. -->
       <div class="nav-panel-settings">
         <AccessibilitySettings />
       </div>
-      -->
       <!-- Login/Sign Up removed from nav per request (2026-08-14) — see the
       matching desktop comment above.
       <a href="https://dashboard.sqrz.com/login" class="nav-panel-link nav-panel-login" onclick={closeMenu}>Login</a>
