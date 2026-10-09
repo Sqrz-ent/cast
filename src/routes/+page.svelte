@@ -197,12 +197,7 @@
 
     <div class="featured-cta">
       <p class="featured-cta-hint">Want to be featured?</p>
-      <a
-        href="https://meetings.hubspot.com/willvilla/sqrz-grow-discovery-call"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-accent"
-      >Apply for SQRZ Grow →</a>
+      <a href="/meet" class="btn-accent">Apply for SQRZ Grow →</a>
     </div>
   </div>
 </section>
