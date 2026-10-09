@@ -648,19 +648,24 @@
 
 	.contact-section {
 		padding-bottom: 120px;
+		background: #fff;
+		color: #111;
+	}
+
+	.contact-section .eyebrow {
+		color: #8b5b00;
 	}
 
 	.contact-grid {
 		display: grid;
-		grid-template-columns: minmax(0, 0.78fr) minmax(360px, 1.22fr);
+		justify-items: center;
+		text-align: center;
 		gap: clamp(28px, 6vw, 72px);
-		align-items: start;
 	}
 
 	.contact-copy {
-		position: sticky;
-		top: 96px;
 		display: grid;
+		justify-items: center;
 		gap: 18px;
 	}
 
@@ -734,13 +739,8 @@
 		}
 
 		.story-grid,
-		.mobile-demo-grid,
-		.contact-grid {
+		.mobile-demo-grid {
 			grid-template-columns: 1fr;
-		}
-
-		.contact-copy {
-			position: static;
 		}
 	}
 
