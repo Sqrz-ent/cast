@@ -105,7 +105,7 @@
   .journal-hero {
     position: relative;
     min-height: 88vh;
-    padding: 86px 0 96px;
+    padding: 150px 0 96px;
     background:
       linear-gradient(90deg, rgba(5, 5, 5, 0.96) 0%, rgba(5, 5, 5, 0.82) 52%, rgba(5, 5, 5, 0.58) 100%),
       radial-gradient(circle at 78% 26%, rgba(245, 166, 35, 0.16), transparent 35%),
@@ -362,7 +362,7 @@
     .container { padding: 0 20px; }
     .journal-hero {
       min-height: 85vh;
-      padding: 64px 0 68px;
+      padding: 128px 0 68px;
     }
     .hero-grid {
       grid-template-columns: 1fr;

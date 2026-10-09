@@ -1,6 +1,7 @@
 <script>
 	import Analytics from '$lib/Analytics.svelte';
 	import CookieConsent from '$lib/components/CookieConsent.svelte';
+	import Nav from '$lib/components/Nav.svelte';
 	import { page } from '$app/state';
 	import { getLocaleFromPathname, localizePath } from '$lib/i18n';
 
@@ -8,12 +9,16 @@
 
 	const standaloneRoutes = ['/studio', '/kdk', '/venues'];
 	const customNavRoutes = ['/meet'];
+	// Shared site nav (Nav.svelte) was dropped site-wide 2026-08-14; restored
+	// here for /blog only (2026-10) — every other route stays as it was.
+	const sharedNavRoutes = ['/blog'];
 	const isStandalone = $derived(
 		standaloneRoutes.some(
 			(r) => page.route.id === r || (page.route.id?.startsWith(r + '/') ?? false)
 		)
 	);
 	const hasCustomNav = $derived(customNavRoutes.includes(page.route.id ?? ''));
+	const showSharedNav = $derived(sharedNavRoutes.includes(page.route.id ?? ''));
 	const currentLocale = $derived(getLocaleFromPathname(page.url.pathname));
 
 	function hrefFor(path) {
@@ -31,6 +36,7 @@
 	/>
 </svelte:head>
 
+{#if showSharedNav}<Nav />{/if}
 {@render children()}
 {#if !isStandalone}<CookieConsent />{/if}
 
