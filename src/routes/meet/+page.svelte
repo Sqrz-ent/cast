@@ -158,6 +158,27 @@
 		</div>
 	</section>
 
+	<section class="story-section" id="about">
+		<div class="container story-grid">
+			<div>
+				<p class="eyebrow">From operator to builder</p>
+				<h2>I started in the real world before I started building software.</h2>
+			</div>
+			<div class="story-copy">
+				<p>
+					I began as a DJ and spent years around stages, artists, venues and production teams. The
+					patterns were always the same: opportunity came through messy channels, bookings needed
+					structure, and the business side often lived in a pile of messages, invoices and tabs.
+				</p>
+				<p>
+					SQRZ came from that friction. What started as a way to make creative work easier to book
+					has become a broader system for profiles, collaboration, payments, campaigns and client
+					operations.
+				</p>
+			</div>
+		</div>
+	</section>
+
 	<section class="mobile-demo-section">
 		<div class="container mobile-demo-grid">
 			<div class="mobile-demo-copy">
@@ -219,27 +240,6 @@
 						>Not a specific app demo. A simple guide to the kind of launch path I can help with.</span
 					>
 				</div>
-			</div>
-		</div>
-	</section>
-
-	<section class="story-section" id="about">
-		<div class="container story-grid">
-			<div>
-				<p class="eyebrow">From operator to builder</p>
-				<h2>I started in the real world before I started building software.</h2>
-			</div>
-			<div class="story-copy">
-				<p>
-					I began as a DJ and spent years around stages, artists, venues and production teams. The
-					patterns were always the same: opportunity came through messy channels, bookings needed
-					structure, and the business side often lived in a pile of messages, invoices and tabs.
-				</p>
-				<p>
-					SQRZ came from that friction. What started as a way to make creative work easier to book
-					has become a broader system for profiles, collaboration, payments, campaigns and client
-					operations.
-				</p>
 			</div>
 		</div>
 	</section>
