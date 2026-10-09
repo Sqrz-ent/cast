@@ -144,10 +144,7 @@
 			<div class="hero-copy">
 				<p class="eyebrow">Meet the builder behind SQRZ</p>
 				<h1>Hi, I'm Will Villa.</h1>
-				<p class="lead">
-					I build complete systems for people working in music, events and creative industries:
-					profiles, booking flows, payments, operations, tracking and the glue between them.
-				</p>
+				<p class="lead">I build mobile apps for creators and advertising.</p>
 				<div class="hero-actions">
 					<button type="button" class="button primary" onclick={scrollToContact}>Meet me</button>
 					<a class="button secondary" href={emailUrl} onclick={() => onEmailClick('hero')}
@@ -162,18 +159,12 @@
 		<div class="container story-grid">
 			<div>
 				<p class="eyebrow">From operator to builder</p>
-				<h2>I started in the real world before I started building software.</h2>
+				<h2>Sound engineer turned developer.</h2>
 			</div>
 			<div class="story-copy">
 				<p>
-					I began as a DJ and spent years around stages, artists, venues and production teams. The
-					patterns were always the same: opportunity came through messy channels, bookings needed
-					structure, and the business side often lived in a pile of messages, invoices and tabs.
-				</p>
-				<p>
-					SQRZ came from that friction. What started as a way to make creative work easier to book
-					has become a broader system for profiles, collaboration, payments, campaigns and client
-					operations.
+					I'm Will. I spent years behind consoles and on stages as a DJ and sound engineer. Today I
+					build apps, starting with SQRZ, which helps artists promote themselves and get booked.
 				</p>
 			</div>
 		</div>
@@ -183,14 +174,11 @@
 		<div class="container mobile-demo-grid">
 			<div class="mobile-demo-copy">
 				<p class="eyebrow">Interactive demo</p>
-				<h2>From app idea to launch path.</h2>
+				<h2>From idea to app.</h2>
 				<p>
-					A simple iPhone mockup for the kind of mobile product process I can help with: shape the
-					idea, prototype the first screens, connect the data layer, test it, and prepare it for the
-					App Store.
-				</p>
-				<p class="demo-disclaimer">
-					This is a guide, not a real app preview. It is here to show the process.
+					Most app ideas start without a plan, and that's fine. I help you shape your vision, find
+					the problem it actually solves, and turn it into a working iPhone app, from first screens
+					to App Store.
 				</p>
 			</div>
 
@@ -248,11 +236,6 @@
 		<div class="container contact-grid">
 			<div class="contact-copy">
 				<p class="eyebrow">Work with me</p>
-				<h2>Have a system you want to build or untangle?</h2>
-				<p>
-					Book a short discovery call if you want to talk through SQRZ, a creative operations
-					system, a booking flow, or a product idea that needs to become real.
-				</p>
 				<a class="email-link" href={emailUrl} onclick={() => onEmailClick('contact')}
 					>will@sqrz.com</a
 				>
@@ -479,21 +462,11 @@
 	}
 
 	.mobile-demo-copy p:not(.eyebrow),
-	.demo-disclaimer,
 	.launch-caption span {
 		color: rgba(255, 255, 255, 0.68);
 		font-size: 1rem;
 		font-weight: 300;
 		line-height: 1.7;
-	}
-
-	.demo-disclaimer {
-		display: inline-flex;
-		width: fit-content;
-		padding: 10px 12px;
-		border: 1px solid rgba(245, 166, 35, 0.22);
-		border-radius: 8px;
-		background: rgba(245, 166, 35, 0.08);
 	}
 
 	.app-launch-visual {
