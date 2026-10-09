@@ -4,7 +4,6 @@
   export let data;
 
   const posts = data.posts ?? [];
-  const topics = ['All', 'Getting booked', 'Audience', 'Pricing', 'Growth', 'Platforms'];
   const locale = normalizeLocale(data.locale);
   const pathPrefix = locales[locale].pathPrefix;
   const dateLocale = locale === 'en' ? 'en-GB' : locale;
@@ -37,16 +36,6 @@
       <p class="subtitle">
         Practical writing on positioning, pricing, audience building, and the business systems behind independent professionals.
       </p>
-    </div>
-  </section>
-
-  <section class="journal-section">
-    <div class="container">
-      <div class="topic-row" aria-label="Article topics">
-        {#each topics as topic, index}
-          <button class:active={index === 0} type="button">{topic}</button>
-        {/each}
-      </div>
     </div>
   </section>
 
@@ -134,11 +123,6 @@
     min-height: calc(88vh - 246px);
   }
 
-  .journal-section {
-    padding: 52px 0 72px;
-    background: #050505;
-  }
-
   .archive-section {
     padding: 94px 0 110px;
     background: #f5f0eb;
@@ -197,30 +181,6 @@
     font-weight: 300;
     color: rgba(255,255,255,0.62);
     line-height: 1.7;
-  }
-
-  .topic-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .topic-row button {
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 999px;
-    padding: 9px 13px;
-    background: transparent;
-    color: rgba(255,255,255,0.56);
-    font: inherit;
-    font-size: 0.78rem;
-    font-weight: 700;
-  }
-
-  .topic-row button.active {
-    border-color: rgba(245,166,35,0.48);
-    background: rgba(245,166,35,0.12);
-    color: #F5A623;
   }
 
   .card-meta span,
@@ -411,14 +371,8 @@
       min-height: calc(85vh - 196px);
     }
     h1 { font-size: clamp(58px, 17vw, 82px); }
-    .journal-section { padding: 42px 0 64px; }
     .archive-section { padding: 72px 0; }
     .grid { grid-template-columns: 1fr; }
     .page-header { margin-bottom: 28px; }
-    .topic-row {
-      overflow-x: auto;
-      flex-wrap: nowrap;
-      padding-bottom: 4px;
-    }
   }
 </style>
