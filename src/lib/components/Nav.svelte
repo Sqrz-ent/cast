@@ -6,7 +6,7 @@
 
   let scrolled = $state(false);
   let menuOpen = $state(false);
-  let joinUrl = $state('https://dashboard.sqrz.com/join');
+  const joinUrl = 'https://dashboard.sqrz.com/join';
   const showLanguageSwitcher = false;
   const currentLocale = $derived(getLocaleFromPathname($page.url.pathname));
   const barePath = $derived(stripLocalePrefix($page.url.pathname));
@@ -36,11 +36,6 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener('scroll', onScroll);
-  });
-
-  onMount(() => {
-    const ref = localStorage.getItem('sqrz_ref');
-    if (ref) joinUrl = `https://dashboard.sqrz.com/join?ref=${ref}`;
   });
 
   $effect(() => {
