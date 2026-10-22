@@ -7,7 +7,10 @@
 
 	let { children } = $props();
 
-	const standaloneRoutes = ['/studio', '/kdk', '/venues'];
+	// '/auth/facebook' added 2026-10-22 — the Facebook OAuth HTTPS bridge page
+	// must never load Analytics/CookieConsent/Nav/footer (no tracking scripts
+	// of any kind on a page that's relaying an OAuth token through the URL).
+	const standaloneRoutes = ['/studio', '/kdk', '/venues', '/auth/facebook'];
 	const customNavRoutes = ['/meet'];
 	// Shared site nav (Nav.svelte) was dropped site-wide 2026-08-14; restored
 	// here for /blog only (2026-10) — every other route stays as it was.
