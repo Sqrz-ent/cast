@@ -110,7 +110,7 @@
 <section id="showcase" class="feature-section light">
   <div class="container feature-inner reverse">
     <div class="feature-visual">
-      <PhoneFrame src="/images/studio/01_Showcase_new.png" alt="SQRZ profile screen" label="Profile Screen" />
+      <PhoneFrame src="/images/studio/01_Showcase.png" alt="SQRZ profile screen" label="Profile Screen" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Showcase Your<br><em>Best Work</em></h2>
