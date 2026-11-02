@@ -96,7 +96,7 @@
 <section id="grow" class="feature-section light">
   <div class="container feature-inner">
     <div class="feature-visual">
-      <PhoneFrame src="/images/studio/03_Grow.png" alt="SQRZ Grow campaigns screen" label="Grow Screen" />
+      <PhoneFrame src="/images/studio/03_Grow_new.png" alt="SQRZ Grow campaigns screen" label="Grow Screen" />
     </div>
     <div class="feature-text">
       <h2 class="section-headline">Run ads.<br><em>Get booked.</em></h2>
